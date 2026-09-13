@@ -7,7 +7,6 @@ ejected into an app with the CLI.
 
 | Package | Role |
 | --- | --- |
-| `@sklop/tokens` | DTCG JSON → `tokens.css` (custom properties) + `tokens.json` |
 | `@sklop/react` | Components. Ships compiled `dist/` and raw source in `registry/` |
 | `@sklop/cli` | `sklop add <component>` copies source from the installed `@sklop/react` |
 
@@ -21,16 +20,7 @@ ejected into an app with the CLI.
 - **CSS Modules in, plain CSS out.** Consumers never compile our `.module.css`; the build emits
   stable class names `sk-{Component}-{class}` in `@sklop/react/styles.css`. Ejected copies are
   raw `.module.css`.
-- **Layers.** Tokens live in `@layer sklop.tokens`, components in `@layer sklop.components`.
-  Every CSS file declares `@layer sklop.tokens, sklop.components;` first.
-- **Token grammar:** `--sk-{category|component}[-{slot}]-{property}[--{modifier}]`. Logical
-  only: no `left/right/top/bottom/width/height`. The generator throws on violations.
-- **Tiers.** Primitives hold literals. Semantics alias primitives and never reuse a primitive's
-  name (that makes a `var()` cycle). Component properties are read in module CSS only.
-- **Every `var()` ends in a literal fallback**, so a missing token still renders:
-  `var(--sk-button-label-padding--inline, var(--sk-space-inset--label, 8px))`.
-- **Themes and motion** are attributes: `data-sk-theme="light|dark"`, `data-sk-motion="reduced|off"`.
-  Media-query fallbacks guard on the attribute's absence (`:root:not([data-sk-motion])`).
+- **Layers.** Component styles live in `@layer sklop.components`.
 - **Icon + label controls:** the label sits in its own padded box, `gap: 0`. Container
   padding insets the icon; label padding insets the text.
 - **A component folder is self-contained:** `Name.tsx`, `Name.module.css`, `index.ts`, tests.

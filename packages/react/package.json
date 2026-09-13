@@ -41,9 +41,6 @@
     "typecheck": "tsc -p tsconfig.json",
     "check:pack": "publint && pnpm pack --out node_modules/.pack/react.tgz && attw node_modules/.pack/react.tgz --profile esm-only --exclude-entrypoints styles.css"
   },
-  "dependencies": {
-    "@sklop/tokens": "workspace:^"
-  },
   "peerDependencies": {
     "react": ">=19"
   },
