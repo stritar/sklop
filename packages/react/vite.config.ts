@@ -3,7 +3,7 @@ import { basename } from 'node:path';
 import react from '@vitejs/plugin-react';
 import { defineConfig } from 'vite';
 
-// Stable, readable class names: Button.module.css `.label` → `sk-Button-label`.
+// Stable, readable class names: Name.module.css `.label` → `sk-Name-label`.
 const scopedName = (local: string, filename: string) =>
   `sk-${basename(filename).replace(/\.module\.css.*$/, '')}-${local}`;
 

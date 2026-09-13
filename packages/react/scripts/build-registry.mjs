@@ -1,6 +1,14 @@
 #!/usr/bin/env node
 // Copies component source into registry/ and writes registry.json for `sklop add`.
-import { cpSync, mkdirSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import {
+  cpSync,
+  existsSync,
+  mkdirSync,
+  readdirSync,
+  readFileSync,
+  rmSync,
+  writeFileSync,
+} from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -14,9 +22,11 @@ const IMPORT = /(?:import|export)[^'"]*from\s*['"]([^'"]+)['"]|import\s*['"]([^'
 const isSource = (f) => /\.(tsx?|css)$/.test(f) && !/\.test\.tsx?$/.test(f) && f !== 'index.ts';
 
 rmSync(outDir, { recursive: true, force: true });
+mkdirSync(outDir);
 const components = [];
+const names = existsSync(componentsDir) ? readdirSync(componentsDir).sort() : [];
 
-for (const name of readdirSync(componentsDir).sort()) {
+for (const name of names) {
   const files = readdirSync(join(componentsDir, name)).filter(isSource).sort();
   const dependencies = new Set();
   const registryDependencies = new Set();
@@ -51,4 +61,4 @@ writeFileSync(
   join(outDir, 'registry.json'),
   `${JSON.stringify({ version: pkg.version, components }, null, 2)}\n`,
 );
-console.log(`@sklop/react registry: ${components.map((c) => c.name).join(', ')}`);
+console.log(`@sklop/react registry: ${components.map((c) => c.name).join(', ') || '(empty)'}`);

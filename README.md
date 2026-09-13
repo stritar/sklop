@@ -10,24 +10,16 @@ An AI-native React UI library you can use from npm, or copy into your app and ow
 npm install @sklop/react
 ```
 
-```tsx
-import '@sklop/react/styles.css';
-import { Button } from '@sklop/react';
-```
-
-## Style
-
-Target stable classes: `.sk-Button-label { … }`. Sklop styles sit in a CSS layer, so your CSS
-wins.
+No components yet.
 
 ## Own a component
 
 ```sh
-npx @sklop/cli add button
+npx @sklop/cli add <component>
 ```
 
-Copies `Button.tsx` and `Button.module.css` into `src/components/sklop/`. Change the folder
-with `sklop.json`: `{ "componentsDir": "app/ui" }`.
+Copies the component's `.tsx` and `.module.css` into `src/components/sklop/`. Change the
+folder with `sklop.json`: `{ "componentsDir": "app/ui" }`.
 
 ## License
 

@@ -21,7 +21,6 @@
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
     },
-    "./styles.css": "./dist/styles.css",
     "./registry.json": "./registry/registry.json",
     "./package.json": "./package.json"
   },
@@ -37,9 +36,9 @@
   },
   "scripts": {
     "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-registry.mjs",
-    "test": "vitest run",
+    "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json",
-    "check:pack": "publint && pnpm pack --out node_modules/.pack/react.tgz && attw node_modules/.pack/react.tgz --profile esm-only --exclude-entrypoints styles.css"
+    "check:pack": "publint && pnpm pack --out node_modules/.pack/react.tgz && attw node_modules/.pack/react.tgz --profile esm-only"
   },
   "peerDependencies": {
     "react": ">=19"

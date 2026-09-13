@@ -19,7 +19,8 @@ ejected into an app with the CLI.
 
 - **CSS Modules in, plain CSS out.** Consumers never compile our `.module.css`; the build emits
   stable class names `sk-{Component}-{class}` in `@sklop/react/styles.css`. Ejected copies are
-  raw `.module.css`.
+  raw `.module.css`. No components exist yet, so the `./styles.css` export is removed; the first
+  component adds it back.
 - **Layers.** Component styles live in `@layer sklop.components`.
 - **Icon + label controls:** the label sits in its own padded box, `gap: 0`. Container
   padding insets the icon; label padding insets the text.
