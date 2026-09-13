@@ -1,0 +1,56 @@
+{
+  "name": "@sklop/react",
+  "version": "0.0.1",
+  "description": "An AI-native React component library.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "react",
+    "components",
+    "design-system",
+    "ai",
+    "css-modules"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sklop.git",
+    "directory": "packages/react"
+  },
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./registry.json": "./registry/registry.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "registry"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-registry.mjs",
+    "test": "vitest run --passWithNoTests",
+    "typecheck": "tsc -p tsconfig.json",
+    "check:pack": "publint && pnpm pack --out node_modules/.pack/react.tgz && attw node_modules/.pack/react.tgz --profile esm-only"
+  },
+  "peerDependencies": {
+    "react": ">=19"
+  },
+  "devDependencies": {
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^30.0.1",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0",
+    "vite": "^8.3.0"
+  }
+}
