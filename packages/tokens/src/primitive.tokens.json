@@ -1,0 +1,53 @@
+{
+  "$description": "PLACEHOLDER seed. Real values come from the Figma import.",
+  "color": {
+    "neutral": {
+      "0000": { "$type": "color", "$value": "#ffffff" },
+      "0100": { "$type": "color", "$value": "#f2f2f2" },
+      "0400": { "$type": "color", "$value": "#a3a3a3" },
+      "0700": { "$type": "color", "$value": "#636363" },
+      "1000": { "$type": "color", "$value": "#262626" },
+      "1100": { "$type": "color", "$value": "#141414" }
+    },
+    "accent": {
+      "0400": { "$type": "color", "$value": "#7c93f0" },
+      "0600": { "$type": "color", "$value": "#3456d6" }
+    }
+  },
+  "space": {
+    "0100": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } },
+    "0200": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } },
+    "0300": { "$type": "dimension", "$value": { "value": 12, "unit": "px" } },
+    "0400": { "$type": "dimension", "$value": { "value": 16, "unit": "px" } }
+  },
+  "radius": {
+    "0100": { "$type": "dimension", "$value": { "value": 4, "unit": "px" } },
+    "0200": { "$type": "dimension", "$value": { "value": 8, "unit": "px" } }
+  },
+  "font": {
+    "family": {
+      "sans": {
+        "$type": "fontFamily",
+        "$value": ["system-ui", "-apple-system", "Segoe UI", "Roboto", "sans-serif"]
+      }
+    },
+    "size": {
+      "0100": { "$type": "dimension", "$value": { "value": 0.875, "unit": "rem" } },
+      "0200": { "$type": "dimension", "$value": { "value": 1, "unit": "rem" } }
+    },
+    "weight": {
+      "0400": { "$type": "fontWeight", "$value": 400 },
+      "0500": { "$type": "fontWeight", "$value": 500 }
+    }
+  },
+  "motion": {
+    "duration": {
+      "0000": { "$type": "duration", "$value": { "value": 0, "unit": "ms" } },
+      "0100": { "$type": "duration", "$value": { "value": 100, "unit": "ms" } },
+      "0200": { "$type": "duration", "$value": { "value": 200, "unit": "ms" } }
+    },
+    "easing": {
+      "decelerate": { "$type": "cubicBezier", "$value": [0.2, 0, 0, 1] }
+    }
+  }
+}

@@ -1,0 +1,13 @@
+node_modules/
+dist/
+registry/
+coverage/
+*.tsbuildinfo
+.DS_Store
+.env*
+*.log
+
+# local agent config
+*.local.*
+.claude/settings.local.json
+.claude/.cc-writes/

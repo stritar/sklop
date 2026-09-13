@@ -1,0 +1,58 @@
+/* DRAFT: pipeline proof. Visual design pending. */
+@layer sklop.tokens, sklop.components;
+
+@layer sklop.components {
+  .root {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    min-block-size: var(--sk-button-container-size--block, 2.5rem);
+    padding-block: 0;
+    padding-inline: var(
+      --sk-button-container-padding--inline,
+      var(--sk-space-inset--control, 16px)
+    );
+    border: 0;
+    border-radius: var(--sk-button-container-radius--default, var(--sk-radius--control, 8px));
+    background-color: var(
+      --sk-button-container-color--default,
+      var(--sk-color-fill--accent, #3456d6)
+    );
+    color: var(--sk-button-label-color--default, var(--sk-color-text--on-accent, #ffffff));
+    font-family: var(--sk-font-family--ui, system-ui, sans-serif);
+    font-size: var(--sk-font-size--control, 0.875rem);
+    font-weight: var(--sk-font-weight--control, 500);
+    line-height: 1;
+    cursor: pointer;
+    transition: background-color var(--sk-motion-duration--fast, 100ms)
+      var(--sk-motion-easing--standard, cubic-bezier(0.2, 0, 0, 1));
+  }
+
+  .root:hover:not(:disabled) {
+    background-color: color-mix(
+      in oklab,
+      var(--sk-button-container-color--default, var(--sk-color-fill--accent, #3456d6)),
+      currentColor 12%
+    );
+  }
+
+  .root:focus-visible {
+    outline: 2px solid var(--sk-color-border--focus, #3456d6);
+    outline-offset: 2px;
+  }
+
+  .root:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+
+  .icon {
+    display: inline-flex;
+    flex-shrink: 0;
+  }
+
+  .label {
+    padding-inline: var(--sk-button-label-padding--inline, var(--sk-space-inset--label, 8px));
+  }
+}
