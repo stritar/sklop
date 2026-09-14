@@ -21,6 +21,7 @@ export default defineConfig({
   },
   test: {
     environment: 'jsdom',
+    setupFiles: ['./test/setup.ts'],
     // 'scoped' makes Vitest use generateScopedName, so tests see real class names.
     css: { include: /.+/, modules: { classNameStrategy: 'scoped' } },
   },
