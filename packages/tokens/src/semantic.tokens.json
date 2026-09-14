@@ -547,7 +547,32 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:11", "1:17"]
+              "figma": ["1:11", "1:17"],
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.13}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.2307692307692308
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.16}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.25
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.18}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.1111111111111112
+                  }
+                }
+              }
             }
           }
         },
@@ -563,7 +588,32 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:30"]
+              "figma": ["1:30"],
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.11}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4545454545454546
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.14}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4285714285714286
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.15}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.3333333333333333
+                  }
+                }
+              }
             }
           }
         }
@@ -582,7 +632,32 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:12", "1:18"]
+              "figma": ["1:12", "1:18"],
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.13}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.2307692307692308
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.16}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.25
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.18}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.1111111111111112
+                  }
+                }
+              }
             }
           }
         },
@@ -598,7 +673,32 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:21"]
+              "figma": ["1:21"],
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.11}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4545454545454546
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.14}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4285714285714286
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.15}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.3333333333333333
+                  }
+                }
+              }
             }
           }
         }
@@ -617,7 +717,32 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:27"]
+              "figma": ["1:27"],
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.13}",
+                    "fontWeight": "{primitive.font.weight.medium}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 2.1538461538461537
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.16}",
+                    "fontWeight": "{primitive.font.weight.medium}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.75
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.18}",
+                    "fontWeight": "{primitive.font.weight.medium}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.5555555555555556
+                  }
+                }
+              }
             }
           }
         }
@@ -632,7 +757,13 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:29.gap"]
+              "figma": ["1:29.gap"],
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.2}",
+                  "spacious": "{primitive.space.6}"
+                }
+              }
             }
           }
         },
@@ -650,7 +781,14 @@
                 "1:13.gap",
                 "1:23.gap",
                 "1:28.gap"
-              ]
+              ],
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.6}",
+                  "comfortable": "{primitive.space.10}",
+                  "spacious": "{primitive.space.12}"
+                }
+              }
             }
           }
         }
@@ -669,7 +807,14 @@
                 "1:6.padding.3",
                 "1:22.padding.1",
                 "1:22.padding.3"
-              ]
+              ],
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.6}",
+                  "comfortable": "{primitive.space.10}",
+                  "spacious": "{primitive.space.12}"
+                }
+              }
             }
           }
         },
@@ -679,7 +824,14 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:20.padding.1", "1:20.padding.3"]
+              "figma": ["1:20.padding.1", "1:20.padding.3"],
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.12}",
+                  "comfortable": "{primitive.space.20}",
+                  "spacious": "{primitive.space.24}"
+                }
+              }
             }
           }
         }
@@ -740,7 +892,14 @@
                 "1:36.height",
                 "1:7.height",
                 "1:13.height"
-              ]
+              ],
+              "axes": {
+                "density": {
+                  "compact": "{primitive.size.24}",
+                  "comfortable": "{primitive.size.32}",
+                  "spacious": "{primitive.size.36}"
+                }
+              }
             }
           }
         },
@@ -750,7 +909,14 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:22.height"]
+              "figma": ["1:22.height"],
+              "axes": {
+                "density": {
+                  "compact": "{primitive.size.36}",
+                  "comfortable": "{primitive.size.48}",
+                  "spacious": "{primitive.size.52}"
+                }
+              }
             }
           }
         }
@@ -764,17 +930,39 @@
         "$extensions": {
           "sklop": {
             "origin": "sample",
-            "figma": ["1:5.radius"]
+            "figma": ["1:5.radius"],
+            "axes": {
+              "radius": {
+                "sharp": "{primitive.radius.4}",
+                "soft": "{primitive.radius.16}",
+                "round": "{primitive.radius.20}"
+              }
+            }
           }
         }
       },
-      "full": {
+      "pill": {
         "$value": "{primitive.radius.9999}",
-        "$description": "Pills and circles.",
+        "$description": "Pills: controls and bars with fully round ends, such as the prompt bar. Only the sharp radius scale squares them off.",
         "$extensions": {
           "sklop": {
             "origin": "sample",
-            "figma": ["1:22.radius", "1:24.radius", "1:36.radius"]
+            "figma": ["1:22.radius"],
+            "axes": {
+              "radius": {
+                "sharp": "{primitive.radius.8}"
+              }
+            }
+          }
+        }
+      },
+      "circle": {
+        "$value": "{primitive.radius.9999}",
+        "$description": "Circles: square controls and avatars, such as icon buttons. Round on every radius scale.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:24.radius", "1:36.radius"]
           }
         }
       }

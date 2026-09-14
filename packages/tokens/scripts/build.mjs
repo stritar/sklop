@@ -36,6 +36,25 @@ export const AXES = {
     default: 'default',
     categories: ['color'],
   },
+  density: {
+    attribute: 'data-sk-density',
+    values: ['compact', 'default', 'comfortable', 'spacious'],
+    default: 'default',
+    categories: ['space', 'size'],
+  },
+  // rem cannot scale a subtree, so each step re-emits the typography shorthands as literals.
+  'font-scale': {
+    attribute: 'data-sk-font-scale',
+    values: ['small', 'medium', 'large', 'extra-large'],
+    default: 'medium',
+    categories: ['font'],
+  },
+  radius: {
+    attribute: 'data-sk-radius',
+    values: ['sharp', 'default', 'soft', 'round'],
+    default: 'default',
+    categories: ['radius'],
+  },
 };
 /** Axis pairs that may vary one token together, in registry order. */
 export const CROSS = [['theme', 'preset']];

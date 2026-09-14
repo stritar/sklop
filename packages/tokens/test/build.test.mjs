@@ -97,6 +97,26 @@ describe('generated CSS', () => {
     }
   });
 
+  it('gives every density, font scale and radius value a complete block', () => {
+    for (const axis of ['density', 'font-scale', 'radius']) {
+      const varied = variedBy(axis);
+      expect(varied.length, axis).toBeGreaterThan(0);
+      for (const value of AXES[axis].values) {
+        expect(block(`[${AXES[axis].attribute}="${value}"]`), `${axis} ${value}`).toEqual(
+          expectedBlock(varied, { ...DEFAULTS, [axis]: value }),
+        );
+      }
+    }
+  });
+
+  it('keeps circles round on every radius scale', () => {
+    expect(semantic.find((t) => t.path === 'semantic.radius.circle').varies).toEqual([]);
+    expect(variedBy('radius').map((t) => t.path)).toEqual([
+      'semantic.radius.lg',
+      'semantic.radius.pill',
+    ]);
+  });
+
   it('keeps color-scheme out of :root and preset blocks', () => {
     const withScheme = top
       .filter((b) => !b.selector.startsWith('@media') && 'color-scheme' in b.declarations)

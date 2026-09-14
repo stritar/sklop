@@ -443,6 +443,18 @@
         }
       },
       "size": {
+        "11": {
+          "$value": {
+            "value": 11,
+            "unit": "px"
+          },
+          "$description": "11px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
         "12": {
           "$value": {
             "value": 12,
@@ -455,6 +467,18 @@
             }
           }
         },
+        "13": {
+          "$value": {
+            "value": 13,
+            "unit": "px"
+          },
+          "$description": "13px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
         "14": {
           "$value": {
             "value": 14,
@@ -464,6 +488,42 @@
           "$extensions": {
             "sklop": {
               "origin": "sample"
+            }
+          }
+        },
+        "15": {
+          "$value": {
+            "value": 15,
+            "unit": "px"
+          },
+          "$description": "15px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "16": {
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "16px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "18": {
+          "$value": {
+            "value": 18,
+            "unit": "px"
+          },
+          "$description": "18px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
             }
           }
         },
@@ -516,6 +576,18 @@
       }
     },
     "space": {
+      "2": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        },
+        "$description": "2px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "4": {
         "$value": {
           "value": 4,
@@ -525,6 +597,18 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "6": {
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        },
+        "$description": "6px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -540,6 +624,30 @@
           }
         }
       },
+      "10": {
+        "$value": {
+          "value": 10,
+          "unit": "px"
+        },
+        "$description": "10px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "12": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "12px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "16": {
         "$value": {
           "value": 16,
@@ -549,6 +657,30 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "20": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "20px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "24": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "24px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -579,6 +711,18 @@
           }
         }
       },
+      "24": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "24px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "28": {
         "$value": {
           "value": 28,
@@ -588,6 +732,30 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "32": {
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "32px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "36": {
+        "$value": {
+          "value": 36,
+          "unit": "px"
+        },
+        "$description": "36px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -603,9 +771,57 @@
           }
         }
       },
+      "48": {
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "48px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "52": {
+        "$value": {
+          "value": 52,
+          "unit": "px"
+        },
+        "$description": "52px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "$type": "dimension"
     },
     "radius": {
+      "4": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "4px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "8": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "8px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "12": {
         "$value": {
           "value": 12,
@@ -615,6 +831,30 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "16": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "16px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "20": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "20px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },

@@ -44,7 +44,8 @@
     --sk-size-control-lg: 44px;
 
     --sk-radius-lg: 12px;
-    --sk-radius-full: 9999px;
+    --sk-radius-pill: 9999px;
+    --sk-radius-circle: 9999px;
 
     --sk-border-width-default: 1px;
 
@@ -160,6 +161,98 @@
     --sk-color-accent-subtle: #dddde4;
     --sk-color-accent-border: #a4a3b4;
     --sk-color-accent-text: #25242e;
+  }
+
+  [data-sk-density="compact"] {
+    --sk-space-gap-xs: 2px;
+    --sk-space-gap-sm: 6px;
+    --sk-space-inset-sm: 6px;
+    --sk-space-inset-lg: 12px;
+
+    --sk-size-control-sm: 24px;
+    --sk-size-control-lg: 36px;
+  }
+
+  [data-sk-density="default"] {
+    --sk-space-gap-xs: 4px;
+    --sk-space-gap-sm: 8px;
+    --sk-space-inset-sm: 8px;
+    --sk-space-inset-lg: 16px;
+
+    --sk-size-control-sm: 28px;
+    --sk-size-control-lg: 44px;
+  }
+
+  [data-sk-density="comfortable"] {
+    --sk-space-gap-xs: 4px;
+    --sk-space-gap-sm: 10px;
+    --sk-space-inset-sm: 10px;
+    --sk-space-inset-lg: 20px;
+
+    --sk-size-control-sm: 32px;
+    --sk-size-control-lg: 48px;
+  }
+
+  [data-sk-density="spacious"] {
+    --sk-space-gap-xs: 6px;
+    --sk-space-gap-sm: 12px;
+    --sk-space-inset-sm: 12px;
+    --sk-space-inset-lg: 24px;
+
+    --sk-size-control-sm: 36px;
+    --sk-size-control-lg: 52px;
+  }
+
+  [data-sk-font-scale="small"] {
+    --sk-font-label-md: 600 0.8125rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-label-sm: 600 0.6875rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-body-md: 400 0.8125rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-body-sm: 400 0.6875rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-input-md: 500 0.8125rem/1.75rem Figtree, system-ui, sans-serif;
+  }
+
+  [data-sk-font-scale="medium"] {
+    --sk-font-label-md: 600 0.875rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-label-sm: 600 0.75rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-body-md: 400 0.875rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-body-sm: 400 0.75rem/1rem Figtree, system-ui, sans-serif;
+    --sk-font-input-md: 500 0.875rem/1.75rem Figtree, system-ui, sans-serif;
+  }
+
+  [data-sk-font-scale="large"] {
+    --sk-font-label-md: 600 1rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-label-sm: 600 0.875rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-body-md: 400 1rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-body-sm: 400 0.875rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-input-md: 500 1rem/1.75rem Figtree, system-ui, sans-serif;
+  }
+
+  [data-sk-font-scale="extra-large"] {
+    --sk-font-label-md: 600 1.125rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-label-sm: 600 0.9375rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-body-md: 400 1.125rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-body-sm: 400 0.9375rem/1.25rem Figtree, system-ui, sans-serif;
+    --sk-font-input-md: 500 1.125rem/1.75rem Figtree, system-ui, sans-serif;
+  }
+
+  [data-sk-radius="sharp"] {
+    --sk-radius-lg: 4px;
+    --sk-radius-pill: 8px;
+  }
+
+  [data-sk-radius="default"] {
+    --sk-radius-lg: 12px;
+    --sk-radius-pill: 9999px;
+  }
+
+  [data-sk-radius="soft"] {
+    --sk-radius-lg: 16px;
+    --sk-radius-pill: 9999px;
+  }
+
+  [data-sk-radius="round"] {
+    --sk-radius-lg: 20px;
+    --sk-radius-pill: 9999px;
   }
 
   [data-sk-theme="light"][data-sk-preset="neutral"] {
