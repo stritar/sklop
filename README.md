@@ -12,6 +12,20 @@ npm install @sklop/react
 
 No components yet.
 
+## Tokens
+
+```sh
+npm install @sklop/tokens
+```
+
+```ts
+import '@sklop/tokens/tokens.css';
+```
+
+Colours, type, spacing, sizes, shape and motion as CSS custom properties, such as
+`--sk-color-text-primary`. Load the Figtree font in your app. See
+[packages/tokens](packages/tokens/README.md).
+
 ## Own a component
 
 ```sh

@@ -1,0 +1,592 @@
+{
+  "primitive": {
+    "color": {
+      "$type": "color",
+      "white": {
+        "$value": {
+          "colorSpace": "srgb",
+          "components": [1, 1, 1],
+          "hex": "#ffffff"
+        },
+        "$description": "White, sampled from Figma node 1:5.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:5.fill"]
+          }
+        }
+      },
+      "neutral": {
+        "50": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.9686, 0.9686, 0.9765],
+            "hex": "#f7f7f9"
+          },
+          "$description": "Sampled from Figma node 1:3.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:3.fill"]
+            }
+          }
+        },
+        "100": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.9451, 0.9451, 0.9569],
+            "hex": "#f1f1f4"
+          },
+          "$description": "Sampled from Figma node 1:19.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:19.fill"]
+            }
+          }
+        },
+        "150": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.8667, 0.8667, 0.8941],
+            "hex": "#dddde4"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.8996 0.0095 286.2).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "200": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.7922, 0.7882, 0.8314],
+            "hex": "#cac9d4"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.84 0.0152 290.3).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "300": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.6431, 0.6392, 0.7059],
+            "hex": "#a4a3b4"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.7217 0.0244 288.5).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "400": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.549, 0.549, 0.6196],
+            "hex": "#8c8c9e"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.6461 0.0266 285.6).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "500": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.4627, 0.4588, 0.5294],
+            "hex": "#767587"
+          },
+          "$description": "Sampled from Figma node 1:12.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:12.fill"]
+            }
+          }
+        },
+        "700": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.2392, 0.2353, 0.2902],
+            "hex": "#3d3c4a"
+          },
+          "$description": "Sampled from Figma node 1:11.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:11.fill"]
+            }
+          }
+        }
+      },
+      "coral": {
+        "50": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 0.9569, 0.9608],
+            "hex": "#fff4f5"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.976 0.0119 11).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "200": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 0.7059, 0.7176],
+            "hex": "#ffb4b7"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.8413 0.0877 16.5).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "300": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 0.4392, 0.502],
+            "hex": "#ff7080"
+          },
+          "$description": "Sampled from Figma node 1:36.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:36.fill"]
+            }
+          }
+        },
+        "350": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.9843, 0.3451, 0.4353],
+            "hex": "#fb586f"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.6839 0.1978 15.9).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "400": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.9647, 0.2314, 0.3725],
+            "hex": "#f63b5f"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.6454 0.2206 15.7).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "500": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.8039, 0.2157, 0.3176],
+            "hex": "#cd3751"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.5697 0.1856 15.8).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "950": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0431, 0.0157, 0.0078],
+            "hex": "#0b0402"
+          },
+          "$description": "Sampled from Figma node 1:38.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:38.fill"]
+            }
+          }
+        }
+      },
+      "neutral-alpha": {
+        "40": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0588, 0.0549, 0.0784],
+            "alpha": 0.4,
+            "hex": "#0f0e14"
+          },
+          "$description": "Generated: neutral step 900 at 40% alpha.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        }
+      },
+      "black-alpha": {
+        "1": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.0118,
+            "hex": "#000000"
+          },
+          "$description": "Shadow colour #00000003, sampled from Figma node 1:4.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:4.effects.4.color", "1:4.effects.5.color", "1:4.effects.6.color"]
+            }
+          }
+        },
+        "2": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.0196,
+            "hex": "#000000"
+          },
+          "$description": "Shadow colour #00000005, sampled from Figma node 1:4.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:4.effects.2.color", "1:4.effects.3.color"]
+            }
+          }
+        },
+        "3": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0, 0, 0],
+            "alpha": 0.0314,
+            "hex": "#000000"
+          },
+          "$description": "Shadow colour #00000008, sampled from Figma node 1:4.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:4.effects.1.color"]
+            }
+          }
+        }
+      }
+    },
+    "font": {
+      "family": {
+        "$type": "fontFamily",
+        "figtree": {
+          "$value": ["Figtree", "system-ui", "sans-serif"],
+          "$description": "Figtree, sampled. The system-ui and sans-serif fallbacks are added, not sampled.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        }
+      },
+      "size": {
+        "12": {
+          "$value": {
+            "value": 12,
+            "unit": "px"
+          },
+          "$description": "12px type.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        },
+        "14": {
+          "$value": {
+            "value": 14,
+            "unit": "px"
+          },
+          "$description": "14px type.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        },
+        "$type": "dimension"
+      },
+      "weight": {
+        "$type": "fontWeight",
+        "regular": {
+          "$value": 400,
+          "$description": "Regular weight.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        },
+        "medium": {
+          "$value": 500,
+          "$description": "Medium weight.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        },
+        "semibold": {
+          "$value": 600,
+          "$description": "Semibold weight.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        }
+      },
+      "letter-spacing": {
+        "0": {
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          },
+          "$description": "No letter spacing. Every sampled text node uses 0%.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        },
+        "$type": "dimension"
+      }
+    },
+    "space": {
+      "4": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "4px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "8": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "8px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "16": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "16px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "$type": "dimension"
+    },
+    "size": {
+      "12": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "12px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "16": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "16px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "28": {
+        "$value": {
+          "value": 28,
+          "unit": "px"
+        },
+        "$description": "28px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "44": {
+        "$value": {
+          "value": 44,
+          "unit": "px"
+        },
+        "$description": "44px.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "$type": "dimension"
+    },
+    "radius": {
+      "12": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "12px corners.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "9999": {
+        "$value": {
+          "value": 9999,
+          "unit": "px"
+        },
+        "$description": "Fully rounded. The sample uses 999, 9999 and 99999 for the same pill shape.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample"
+          }
+        }
+      },
+      "$type": "dimension"
+    },
+    "border": {
+      "width": {
+        "1": {
+          "$value": {
+            "value": 1,
+            "unit": "px"
+          },
+          "$description": "1px.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample"
+            }
+          }
+        },
+        "$type": "dimension"
+      }
+    },
+    "motion": {
+      "duration": {
+        "1": {
+          "$value": {
+            "value": 1,
+            "unit": "ms"
+          },
+          "$description": "Effectively instant. Reduced motion uses it so transition and animation end events still fire.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "100": {
+          "$value": {
+            "value": 100,
+            "unit": "ms"
+          },
+          "$description": "100ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "200": {
+          "$value": {
+            "value": 200,
+            "unit": "ms"
+          },
+          "$description": "200ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "300": {
+          "$value": {
+            "value": 300,
+            "unit": "ms"
+          },
+          "$description": "300ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "$type": "duration"
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "standard": {
+          "$value": [0.2, 0, 0, 1],
+          "$description": "Quick start, long gentle settle.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "decelerate": {
+          "$value": [0, 0, 0.2, 1],
+          "$description": "Starts at full speed and slows to a stop.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "accelerate": {
+          "$value": [0.3, 0, 1, 0.3],
+          "$description": "Starts slowly and speeds up until it leaves.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        }
+      }
+    }
+  }
+}
