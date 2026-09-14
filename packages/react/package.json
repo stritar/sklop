@@ -1,6 +1,6 @@
 {
   "name": "@sklop/react",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "An AI-native React component library.",
   "license": "MIT",
   "type": "module",
