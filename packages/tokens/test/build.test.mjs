@@ -1,14 +1,51 @@
+import { cpSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
-import { buildTokens, MODES, readSource } from '../scripts/build.mjs';
+import { AXES, buildTokens, CROSS, readSource, staleFiles } from '../scripts/build.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
+const DEFAULTS = Object.fromEntries(Object.entries(AXES).map(([axis, def]) => [axis, def.default]));
 
-describe('source', () => {
+/** Top-level rules at one indent: selector, raw body and declarations. */
+function blocks(css, indent) {
+  const pattern = new RegExp(
+    `^ {${indent}}(\\S[^\\n{]*) \\{\\n([\\s\\S]*?)\\n {${indent}}\\}$`,
+    'gm',
+  );
+  return [...css.matchAll(pattern)].map(([, selector, body]) => ({
+    selector,
+    body,
+    declarations: Object.fromEntries(
+      [...body.matchAll(/^\s+([a-z-]+): ([^;]+);$/gm)].map(([, name, value]) => [name, value]),
+    ),
+  }));
+}
+
+/** The value a token should declare for concrete axis values. */
+const valueIn = (token, combo) => {
+  const key = token.varies
+    .filter((axis) => combo[axis] !== DEFAULTS[axis])
+    .map((axis) => `${axis}.${combo[axis]}`)
+    .join('+');
+  return token.variants[key] ?? token.value;
+};
+const expectedBlock = (tokens, combo, scheme) => ({
+  ...(scheme ? { 'color-scheme': scheme } : {}),
+  ...Object.fromEntries(tokens.map((t) => [t.name, valueIn(t, combo)])),
+});
+
+describe('generated CSS', () => {
   const { css, json } = buildTokens(readSource(root));
   const semantic = json.filter((t) => t.tier === 'semantic');
-  const [base, reduced] = css.split(MODES['reduced-motion']);
-  const declared = (block) => [...block.matchAll(/^\s+(--sk-[a-z0-9-]+): ([^;]+);$/gm)];
+  const top = blocks(css, 2);
+  const block = (selector) => top.find((b) => b.selector === selector)?.declarations;
+  const mediaRule = top.find((b) => b.selector === '@media (prefers-color-scheme: dark)');
+  const inMedia = (selector) =>
+    blocks(mediaRule.body, 4).find((b) => b.selector === selector)?.declarations;
+  const variedBy = (...axes) =>
+    semantic.filter((t) => axes.every((axis) => t.varies.includes(axis)));
 
   it('declares the layer order before any tokens', () => {
     expect(css.indexOf('@layer sklop.tokens, sklop.components;')).toBeLessThan(
@@ -16,27 +53,89 @@ describe('source', () => {
     );
   });
 
-  it('emits every semantic token once, as a literal', () => {
-    const names = declared(base).map(([, name]) => name);
-    expect(names).toEqual(semantic.map((t) => t.name));
+  it('puts every semantic default on :root, and only custom properties', () => {
+    expect(block(':root')).toEqual(expectedBlock(semantic, DEFAULTS));
     expect(css).not.toContain('var(');
-  });
-
-  it('keeps primitives out of the CSS', () => {
-    expect(json.filter((t) => t.tier === 'primitive').every((t) => t.name === null)).toBe(true);
     expect(css).not.toContain('primitive');
+    expect(json.filter((t) => t.tier === 'primitive').every((t) => t.name === null)).toBe(true);
   });
 
-  it('sets nothing on :root except custom properties', () => {
-    const lines = css.split('\n').filter((line) => /^\s+(?!--)[a-z-]+:/.test(line));
-    expect(lines).toEqual([]);
-  });
-
-  it('collapses every duration, and only durations, under reduced motion', () => {
-    const durations = semantic.filter((t) => t.type === 'duration');
-    expect(declared(reduced).map(([, name, value]) => [name, value])).toEqual(
-      durations.map((t) => [t.name, '1ms']),
+  it('gives every theme a complete block that declares its colour scheme', () => {
+    const themed = variedBy('theme');
+    for (const theme of ['light', 'dark']) {
+      expect(block(`[data-sk-theme="${theme}"]`)).toEqual(
+        expectedBlock(themed, { ...DEFAULTS, theme }, theme),
+      );
+    }
+    expect(block('[data-sk-theme="system"]')).toEqual(expectedBlock(themed, DEFAULTS, 'light'));
+    expect(inMedia('[data-sk-theme="system"]')).toEqual(
+      expectedBlock(themed, { ...DEFAULTS, theme: 'dark' }, 'dark'),
     );
+  });
+
+  it('gives every preset a block, and every explicit theme and preset pair a compound block', () => {
+    const preset = variedBy('preset');
+    const both = variedBy('theme', 'preset');
+    for (const value of ['default', 'neutral']) {
+      expect(block(`[data-sk-preset="${value}"]`)).toEqual(
+        expectedBlock(preset, { ...DEFAULTS, preset: value }),
+      );
+      for (const theme of ['light', 'dark', 'system']) {
+        const selector = `[data-sk-theme="${theme}"][data-sk-preset="${value}"]`;
+        if (theme === 'light' && value === 'default') {
+          expect(block(selector)).toBeUndefined();
+          continue;
+        }
+        const concrete = theme === 'system' ? 'light' : theme;
+        expect(block(selector)).toEqual(
+          expectedBlock(both, { ...DEFAULTS, theme: concrete, preset: value }),
+        );
+      }
+      expect(inMedia(`[data-sk-theme="system"][data-sk-preset="${value}"]`)).toEqual(
+        expectedBlock(both, { ...DEFAULTS, theme: 'dark', preset: value }),
+      );
+    }
+  });
+
+  it('keeps color-scheme out of :root and preset blocks', () => {
+    const withScheme = top
+      .filter((b) => !b.selector.startsWith('@media') && 'color-scheme' in b.declarations)
+      .map((b) => b.selector);
+    expect(withScheme).toEqual([
+      '[data-sk-theme="light"]',
+      '[data-sk-theme="dark"]',
+      '[data-sk-theme="system"]',
+    ]);
+  });
+
+  it('varies every colour and the shadow by theme, and only accent roles by preset', () => {
+    const colours = semantic.filter((t) => ['color', 'shadow'].includes(t.type));
+    expect(colours.filter((t) => !t.varies.includes('theme')).map((t) => t.path)).toEqual([]);
+    expect(variedBy('preset').map((t) => t.path)).toEqual([
+      'semantic.color.text.on-accent',
+      'semantic.color.border.focus',
+      'semantic.color.accent.solid',
+      'semantic.color.accent.solid-hover',
+      'semantic.color.accent.subtle',
+      'semantic.color.accent.border',
+      'semantic.color.accent.text',
+    ]);
+  });
+});
+
+describe('drift check', () => {
+  it('finds the committed generated files up to date', () => {
+    expect(staleFiles(root)).toEqual([]);
+  });
+
+  it('flags a hand-edited or missing generated file', () => {
+    const copy = mkdtempSync(join(tmpdir(), 'sklop-tokens-'));
+    cpSync(join(root, 'src'), join(copy, 'src'), { recursive: true });
+    cpSync(join(root, 'generated'), join(copy, 'generated'), { recursive: true });
+    expect(staleFiles(copy)).toEqual([]);
+    writeFileSync(join(copy, 'generated', 'tokens.css'), '/* edited by hand */\n');
+    rmSync(join(copy, 'generated', 'tokens.json'));
+    expect(staleFiles(copy)).toEqual(['tokens.css', 'tokens.json']);
   });
 });
 
@@ -57,10 +156,10 @@ describe('guards', () => {
       color: { $type: 'color', text: { $value: '{primitive.color.black}', ...meta() } },
     },
   });
-  const build = (edit) => {
+  const build = (edit, registry) => {
     const source = minimal();
     edit(source);
-    return () => buildTokens(source);
+    return () => buildTokens(source, registry);
   };
 
   it('builds the minimal source', () => {
@@ -75,6 +174,36 @@ describe('guards', () => {
     expect(
       build((s) => Object.assign(s.semantic.space.gap, { Tight: s.semantic.space.gap.xs })),
     ).toThrow(/lowercase/);
+  });
+
+  it('rejects names outside the grammar', () => {
+    expect(
+      build((s) =>
+        Object.assign(s.semantic, {
+          mood: { $type: 'color', calm: { $value: '{primitive.color.black}', ...meta() } },
+        }),
+      ),
+    ).toThrow(/"mood" is not a category/);
+    expect(
+      build((s) =>
+        Object.assign(s.semantic.space, {
+          one: { two: { three: { four: { $value: '{primitive.space.4}', ...meta() } } } },
+        }),
+      ),
+    ).toThrow(/\{category\}\.\{role\}\[\.\{variant\}\]\[\.\{state\}\]/);
+  });
+
+  it('rejects a physical direction in a name', () => {
+    expect(
+      build((s) =>
+        Object.assign(s.semantic.space.gap, {
+          'inset-left': { $value: '{primitive.space.4}', ...meta() },
+        }),
+      ),
+    ).toThrow(/"inset-left" names a physical direction/);
+    expect(
+      build((s) => Object.assign(s.primitive.space, { top: { $value: px(4), ...meta() } })),
+    ).toThrow(/"top" names a physical direction/);
   });
 
   it('rejects a token without $type, $description or origin', () => {
@@ -172,25 +301,6 @@ describe('guards', () => {
     ).toThrow(/already the name/);
   });
 
-  it('rejects unknown modes and modes on primitives', () => {
-    expect(
-      build((s) =>
-        Object.assign(
-          s.semantic.space.gap.xs,
-          meta('proposed', { modes: { dark: '{primitive.space.4}' } }),
-        ),
-      ),
-    ).toThrow(/unknown mode/);
-    expect(
-      build((s) =>
-        Object.assign(
-          s.primitive.space[4],
-          meta('proposed', { modes: { 'reduced-motion': px(0) } }),
-        ),
-      ),
-    ).toThrow(/only semantic tokens take modes/);
-  });
-
   it('rejects an unused primitive', () => {
     expect(
       build((s) => Object.assign(s.primitive.space, { 8: { $value: px(8), ...meta() } })),
@@ -215,6 +325,94 @@ describe('guards', () => {
     expect(build(on({ diverges: { from: ['1:12.fill'], reason: 'Too light.' } }))).toThrow(
       /diverges.date/,
     );
+  });
+
+  describe('axes', () => {
+    const white = (s) =>
+      Object.assign(s.primitive.color, {
+        white: { $value: color('#ffffff', [1, 1, 1]), ...meta() },
+      });
+    const vary = (sklop, registry) =>
+      build((s) => {
+        white(s);
+        Object.assign(s.semantic.color.text, meta('proposed', sklop));
+      }, registry);
+    const W = '{primitive.color.white}';
+
+    it('accept a dark value and a complete cross product', () => {
+      expect(vary({ axes: { theme: { dark: W } } })).not.toThrow();
+      expect(
+        vary({
+          axes: { preset: { neutral: W } },
+          cross: { 'theme.dark+preset.neutral': '{primitive.color.black}' },
+        }),
+      ).not.toThrow();
+    });
+
+    it('reject modes, axis values on primitives, unknown axes and default values', () => {
+      expect(vary({ modes: { 'reduced-motion': W } })).toThrow(/sklop.modes/);
+      expect(
+        build((s) =>
+          Object.assign(
+            s.primitive.space[4],
+            meta('proposed', { axes: { theme: { dark: px(8) } } }),
+          ),
+        ),
+      ).toThrow(/only semantic tokens vary/);
+      expect(vary({ axes: { mood: { dark: W } } })).toThrow(/unknown axis "mood"/);
+      expect(vary({ axes: { theme: { light: W } } })).toThrow(/no non-default value "light"/);
+    });
+
+    it('reject an axis varying a category it does not own', () => {
+      expect(
+        build((s) =>
+          Object.assign(
+            s.semantic.space.gap.xs,
+            meta('proposed', { axes: { theme: { dark: '{primitive.space.4}' } } }),
+          ),
+        ),
+      ).toThrow(/theme axis does not vary space tokens/);
+    });
+
+    it('require every cross value, under a well-formed key', () => {
+      expect(vary({ axes: { theme: { dark: W }, preset: { neutral: W } } })).toThrow(
+        /needs cross "theme\.dark\+preset\.neutral"/,
+      );
+      expect(vary({ cross: { 'preset.neutral+theme.dark': W } })).toThrow(/cross key/);
+    });
+
+    it('reject two axes that are not a declared pair', () => {
+      const mood = {
+        attribute: 'data-sk-mood',
+        values: ['calm', 'loud'],
+        default: 'calm',
+        categories: ['color'],
+      };
+      const registry = { axes: { ...AXES, mood }, cross: CROSS };
+      expect(vary({ axes: { theme: { dark: W }, mood: { loud: W } } }, registry)).toThrow(
+        /axes theme, mood vary this token together, but only a declared pair may/,
+      );
+    });
+
+    it('gate documented pairs in every theme and preset', () => {
+      expect(
+        build((s) => {
+          white(s);
+          Object.assign(s.semantic.color, {
+            page: {
+              $value: W,
+              ...meta('proposed', { axes: { theme: { dark: '{primitive.color.black}' } } }),
+            },
+          });
+          Object.assign(
+            s.semantic.color.text,
+            meta('proposed', { contrast: [{ on: 'page', min: 4.5 }] }),
+          );
+        }),
+      ).toThrow(
+        /semantic\.color\.text on page \(theme dark\): 1\.00:1 is below the documented 4\.5:1/,
+      );
+    });
   });
 
   describe('documented contrast pairs', () => {

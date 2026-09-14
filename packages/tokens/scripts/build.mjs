@@ -1,12 +1,45 @@
 #!/usr/bin/env node
-// DTCG source → dist/tokens.css (semantic custom properties, resolved to literals) + dist/tokens.json.
-// Zero dependencies; throws on any rule break.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+// DTCG source → generated/tokens.css (semantic custom properties, resolved to literals, one block per axis
+// value) + generated/tokens.json. `--check` fails when the committed files differ. Zero dependencies.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const TIERS = ['primitive', 'semantic'];
-export const MODES = { 'reduced-motion': '@media (prefers-reduced-motion: reduce)' };
+export const CATEGORIES = [
+  'color',
+  'font',
+  'space',
+  'size',
+  'radius',
+  'border',
+  'shadow',
+  'motion',
+];
+/**
+ * Runtime axes, each a data attribute. An element without the attribute takes the default. `system`, where
+ * present, follows a media query. The provider writes every attribute on one element, because a token two
+ * axes vary is only right when both attributes sit together.
+ */
+export const AXES = {
+  theme: {
+    attribute: 'data-sk-theme',
+    values: ['light', 'dark'],
+    default: 'light',
+    categories: ['color', 'shadow'],
+    colorScheme: true,
+    system: { query: '(prefers-color-scheme: dark)', value: 'dark' },
+  },
+  preset: {
+    attribute: 'data-sk-preset',
+    values: ['default', 'neutral'],
+    default: 'default',
+    categories: ['color'],
+  },
+};
+/** Axis pairs that may vary one token together, in registry order. */
+export const CROSS = [['theme', 'preset']];
+const PHYSICAL = /(^|-)(left|right|top|bottom|horizontal|vertical)(-|$)/;
 const ORIGINS = ['sample', 'generated', 'proposed'];
 const SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ALIAS = /^\{([^{}]+)\}$/;
@@ -188,6 +221,23 @@ export function contrastRatio(a, b) {
   return (light + 0.05) / (dark + 0.05);
 }
 
+/** Name grammar: {tier}.{category}.{role}[.{variant}][.{state}], never a physical direction. */
+function checkName(token) {
+  const [tier, category, ...rest] = token.path;
+  if (!CATEGORIES.includes(category)) {
+    throw new Error(`${token.id}: "${category}" is not a category (${CATEGORIES.join(', ')})`);
+  }
+  if (tier === 'semantic' && (rest.length < 1 || rest.length > 3)) {
+    throw new Error(`${token.id}: semantic names are {category}.{role}[.{variant}][.{state}]`);
+  }
+  const physical = token.path.find((segment) => PHYSICAL.test(segment));
+  if (physical) {
+    throw new Error(
+      `${token.id}: "${physical}" names a physical direction; use start, end, block or inline`,
+    );
+  }
+}
+
 /** Provenance and documented pairs, checked for shape. */
 function checkMetadata(token) {
   const { anchor, diverges, approved, contrast } = token.sklop;
@@ -268,7 +318,16 @@ function format(type, value) {
 
 export const cssName = (path) => `--sk-${path.slice(1).join('-')}`;
 
-export function buildTokens(source) {
+const variantKey = (entries) => entries.map(([axis, value]) => `${axis}.${value}`).join('+');
+
+/** The resolved value a semantic token takes for concrete axis values. */
+function pick(token, combo, axes) {
+  const active = token.varies.filter((axis) => combo[axis] !== axes[axis].default);
+  const key = variantKey(active.map((axis) => [axis, combo[axis]]));
+  return token.variants.get(key) ?? token.base;
+}
+
+export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
   for (const key of Object.keys(source)) {
     if (!TIERS.includes(key)) throw new Error(`${key}: unknown tier; use primitive or semantic`);
   }
@@ -289,6 +348,9 @@ export function buildTokens(source) {
       );
     }
     checkMetadata(token);
+    checkName(token);
+    if ('modes' in token.sklop)
+      throw new Error(`${token.id}: sklop.modes is replaced by sklop.axes`);
   }
 
   const aliasTarget = (ref, type, where) => {
@@ -355,12 +417,16 @@ export function buildTokens(source) {
       throw new Error(`${token.id}: composites belong in the semantic tier`);
     if (containsAlias(token.raw))
       throw new Error(`${token.id}: primitives hold literals, not aliases`);
-    if (token.sklop.modes) throw new Error(`${token.id}: only semantic tokens take modes`);
+    if (token.sklop.axes || token.sklop.cross) {
+      throw new Error(`${token.id}: only semantic tokens vary by axis`);
+    }
     checkLiteral(token.type, token.raw, token.id);
     token.css = format(token.type, token.raw);
     token.alias = null;
-    token.modes = {};
   }
+
+  const nonDefault = (axis) => axes[axis].values.filter((value) => value !== axes[axis].default);
+  const isPair = (a, b) => cross.some(([x, y]) => x === a && y === b);
 
   const names = new Map();
   for (const token of tokens.filter((t) => t.tier === 'semantic')) {
@@ -374,14 +440,67 @@ export function buildTokens(source) {
     if (clash) throw new Error(`${token.id}: ${token.name} is already the name of ${clash}`);
     names.set(token.name, token.id);
 
-    const { value, alias } = resolve(token, token.raw, token.id);
-    token.value = value;
-    token.css = format(token.type, value);
-    token.alias = alias;
-    token.modes = {};
-    for (const [mode, raw] of Object.entries(token.sklop.modes ?? {})) {
-      if (!MODES[mode]) throw new Error(`${token.id}: unknown mode "${mode}"`);
-      token.modes[mode] = format(token.type, resolve(token, raw, `${token.id} (${mode})`).value);
+    const resolved = (raw, where) => {
+      const { value, alias } = resolve(token, raw, where);
+      return { value, alias, css: format(token.type, value) };
+    };
+    token.base = resolved(token.raw, token.id);
+    token.css = token.base.css;
+    token.variants = new Map();
+    const varied = new Set();
+    const vary = (axis) => {
+      if (!axes[axis]) throw new Error(`${token.id}: unknown axis "${axis}"`);
+      if (!axes[axis].categories.includes(token.path[1])) {
+        throw new Error(`${token.id}: the ${axis} axis does not vary ${token.path[1]} tokens`);
+      }
+      varied.add(axis);
+    };
+    for (const [axis, values] of Object.entries(token.sklop.axes ?? {})) {
+      vary(axis);
+      for (const [value, raw] of Object.entries(values)) {
+        if (!nonDefault(axis).includes(value)) {
+          throw new Error(`${token.id}: ${axis} has no non-default value "${value}"`);
+        }
+        token.variants.set(`${axis}.${value}`, resolved(raw, `${token.id} (${axis} ${value})`));
+      }
+    }
+    for (const [key, raw] of Object.entries(token.sklop.cross ?? {})) {
+      const parts = key.split('+').map((part) => part.split('.'));
+      const valid =
+        parts.length === 2 &&
+        isPair(parts[0][0], parts[1][0]) &&
+        parts.every(
+          ([axis, value, extra]) => extra === undefined && nonDefault(axis).includes(value),
+        );
+      if (!valid) {
+        throw new Error(
+          `${token.id}: cross key "${key}" must be axis.value+axis.value for a declared pair, with non-default values`,
+        );
+      }
+      for (const [axis] of parts) vary(axis);
+      token.variants.set(key, resolved(raw, `${token.id} (${key})`));
+    }
+    token.varies = Object.keys(axes).filter((axis) => varied.has(axis));
+    if (token.varies.length > 1) {
+      const [a, b, extra] = token.varies;
+      if (extra || !isPair(a, b)) {
+        throw new Error(
+          `${token.id}: axes ${token.varies.join(', ')} vary this token together, but only a declared pair may`,
+        );
+      }
+      for (const va of nonDefault(a)) {
+        for (const vb of nonDefault(b)) {
+          const key = variantKey([
+            [a, va],
+            [b, vb],
+          ]);
+          if (!token.variants.has(key)) {
+            throw new Error(
+              `${token.id}: ${a} and ${b} both vary this token, so it needs cross "${key}"`,
+            );
+          }
+        }
+      }
     }
   }
 
@@ -395,84 +514,174 @@ export function buildTokens(source) {
   }
 
   const semantic = tokens.filter((t) => t.tier === 'semantic');
-  for (const token of semantic.filter((t) => t.sklop.contrast)) {
-    for (const pair of token.sklop.contrast) {
-      const background = byId.get(`semantic.color.${pair.on}`);
-      if (background?.type !== 'color') {
-        throw new Error(`${token.id}: contrast pair names unknown colour role "${pair.on}"`);
-      }
-      for (const color of [token.value, background.value]) {
-        if (color.alpha !== undefined && color.alpha !== 1) {
-          throw new Error(`${token.id} on ${pair.on}: contrast needs opaque colours`);
+  const defaults = Object.fromEntries(
+    Object.entries(axes).map(([axis, def]) => [axis, def.default]),
+  );
+
+  // Every documented pair holds in every combination of the axes that vary colour.
+  const colorAxes = Object.keys(axes).filter((axis) => axes[axis].categories.includes('color'));
+  const combos = colorAxes.reduce(
+    (list, axis) =>
+      list.flatMap((combo) => axes[axis].values.map((value) => ({ ...combo, [axis]: value }))),
+    [defaults],
+  );
+  for (const combo of combos) {
+    const label = colorAxes
+      .filter((axis) => combo[axis] !== axes[axis].default)
+      .map((axis) => `${axis} ${combo[axis]}`)
+      .join(', ');
+    for (const token of semantic.filter((t) => t.sklop.contrast)) {
+      for (const pair of token.sklop.contrast) {
+        const background = byId.get(`semantic.color.${pair.on}`);
+        if (background?.type !== 'color') {
+          throw new Error(`${token.id}: contrast pair names unknown colour role "${pair.on}"`);
         }
-      }
-      const ratio = contrastRatio(token.value.hex, background.value.hex);
-      if (pair.min && ratio < pair.min) {
-        throw new Error(
-          `${token.id} on ${pair.on}: ${ratio.toFixed(2)}:1 is below the documented ${pair.min}:1`,
-        );
+        const where = `${token.id} on ${pair.on}${label ? ` (${label})` : ''}`;
+        const colors = [pick(token, combo, axes).value, pick(background, combo, axes).value];
+        if (colors.some((color) => color.alpha !== undefined && color.alpha !== 1)) {
+          throw new Error(`${where}: contrast needs opaque colours`);
+        }
+        const ratio = contrastRatio(colors[0].hex, colors[1].hex);
+        if (pair.min && ratio < pair.min) {
+          throw new Error(`${where}: ${ratio.toFixed(2)}:1 is below the documented ${pair.min}:1`);
+        }
       }
     }
   }
-  const declarations = (list, pick, indent) =>
-    list
-      .map((token, i) => {
-        const gap = i > 0 && list[i - 1].path[1] !== token.path[1] ? '\n' : '';
-        return `${gap}${indent}${token.name}: ${pick(token)};`;
-      })
-      .join('\n');
+
+  return { css: emitCss(semantic, { axes, cross, defaults }), json: tokens.map(toJson) };
+}
+
+/**
+ * `:root` holds every default. Each axis value gets a block declaring every token that axis varies, so a
+ * nested scope restores what an ancestor changed. Declared pairs get compound blocks, which outrank the
+ * single ones, and `system` values repeat inside their media query.
+ */
+function emitCss(semantic, { axes, cross, defaults }) {
+  const attr = (axis, value) => `[${axes[axis].attribute}="${value}"]`;
+  const choices = (axis) => [...axes[axis].values, ...(axes[axis].system ? ['system'] : [])];
+  const concrete = (axis, value, inMedia) =>
+    value !== 'system' ? value : inMedia ? axes[axis].system.value : axes[axis].default;
+  const lines = (list, combo, indent) =>
+    list.map((token, i) => {
+      const gap = i > 0 && list[i - 1].path[1] !== token.path[1] ? '\n' : '';
+      return `${gap}${indent}${token.name}: ${pick(token, combo, axes).css};`;
+    });
+  const block = (selector, body, indent) =>
+    `${indent}${selector} {\n${body.join('\n')}\n${indent}}\n`;
+
+  const rules = [block(':root', lines(semantic, defaults, '    '), '  ')];
+  const media = new Map();
+  const place = (query, text) => {
+    if (query) media.set(query, [...(media.get(query) ?? []), text]);
+    else rules.push(text);
+  };
+
+  for (const axis of Object.keys(axes)) {
+    const varied = semantic.filter((t) => t.varies.includes(axis));
+    if (!varied.length) continue;
+    for (const value of choices(axis)) {
+      for (const inMedia of value === 'system' ? [false, true] : [false]) {
+        const combo = { ...defaults, [axis]: concrete(axis, value, inMedia) };
+        const indent = inMedia ? '    ' : '  ';
+        const scheme = axes[axis].colorScheme ? [`${indent}  color-scheme: ${combo[axis]};`] : [];
+        const body = [...scheme, ...lines(varied, combo, `${indent}  `)];
+        place(inMedia && axes[axis].system.query, block(attr(axis, value), body, indent));
+      }
+    }
+  }
+  for (const [a, b] of cross) {
+    if (axes[a].system && axes[b].system)
+      throw new Error(`${a} and ${b} cannot both follow the system`);
+    const varied = semantic.filter((t) => t.varies.includes(a) && t.varies.includes(b));
+    for (const va of varied.length ? choices(a) : []) {
+      for (const vb of choices(b)) {
+        if (va === axes[a].default && vb === axes[b].default) continue;
+        const system = va === 'system' ? a : vb === 'system' ? b : null;
+        for (const inMedia of system ? [false, true] : [false]) {
+          const combo = {
+            ...defaults,
+            [a]: concrete(a, va, inMedia),
+            [b]: concrete(b, vb, inMedia),
+          };
+          const indent = inMedia ? '    ' : '  ';
+          const text = block(
+            attr(a, va) + attr(b, vb),
+            lines(varied, combo, `${indent}  `),
+            indent,
+          );
+          place(inMedia && axes[system].system.query, text);
+        }
+      }
+    }
+  }
 
   let css = `/* Generated by @sklop/tokens. Do not edit. */
 @layer sklop.tokens, sklop.components;
 
 @layer sklop.tokens {
-  :root {
-${declarations(semantic, (t) => t.css, '    ')}
-  }
-`;
-  for (const [mode, query] of Object.entries(MODES)) {
-    const moded = semantic.filter((t) => t.modes[mode]);
-    if (!moded.length) continue;
-    css += `
-  ${query} {
-    :root {
-${declarations(moded, (t) => t.modes[mode], '      ')}
-    }
-  }
-`;
-  }
-  css += '}\n';
-
-  const json = tokens.map((token) => ({
-    name: token.name ?? null,
-    path: token.id,
-    tier: token.tier,
-    type: token.type,
-    value: token.css,
-    alias: token.alias,
-    origin: token.sklop.origin,
-    figma: token.sklop.figma ?? [],
-    diverges: token.sklop.diverges ?? null,
-    approved: token.sklop.approved ?? null,
-    contrast: token.sklop.contrast ?? [],
-    description: token.description,
-    modes: token.modes,
-  }));
-
-  return { css, json };
+${rules.join('\n')}`;
+  for (const [query, blocks] of media) css += `\n  @media ${query} {\n${blocks.join('\n')}  }\n`;
+  return `${css}}\n`;
 }
+
+const toJson = (token) => ({
+  name: token.name ?? null,
+  path: token.id,
+  tier: token.tier,
+  type: token.type,
+  value: token.css,
+  alias: token.tier === 'semantic' ? token.base.alias : null,
+  varies: token.varies ?? [],
+  variants: Object.fromEntries([...(token.variants ?? [])].map(([key, v]) => [key, v.css])),
+  origin: token.sklop.origin,
+  figma: token.sklop.figma ?? [],
+  diverges: token.sklop.diverges ?? null,
+  approved: token.sklop.approved ?? null,
+  contrast: token.sklop.contrast ?? [],
+  description: token.description,
+});
 
 export function readSource(root) {
   const read = (file) => JSON.parse(readFileSync(join(root, 'src', file), 'utf8'));
   return { ...read('primitive.tokens.json'), ...read('semantic.tokens.json') };
 }
 
+/** The committed files under generated/, as text. */
+export function generateFiles(source) {
+  const { css, json } = buildTokens(source);
+  return { 'tokens.css': css, 'tokens.json': `${JSON.stringify(json, null, 2)}\n` };
+}
+
+/** Generated files that are missing or differ from a fresh build of `root`'s source. */
+export function staleFiles(root) {
+  const fresh = generateFiles(readSource(root));
+  return Object.keys(fresh).filter((file) => {
+    const path = join(root, 'generated', file);
+    return !existsSync(path) || readFileSync(path, 'utf8') !== fresh[file];
+  });
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-  const { css, json } = buildTokens(readSource(root));
-  mkdirSync(join(root, 'dist'), { recursive: true });
-  writeFileSync(join(root, 'dist', 'tokens.css'), css);
-  writeFileSync(join(root, 'dist', 'tokens.json'), `${JSON.stringify(json, null, 2)}\n`);
-  const count = json.filter((t) => t.tier === 'semantic').length;
-  console.log(`@sklop/tokens: ${count} semantic tokens from ${json.length - count} primitives`);
+  if (process.argv.includes('--check')) {
+    const stale = staleFiles(root);
+    if (stale.length) {
+      console.error(
+        `@sklop/tokens: ${stale.map((file) => `generated/${file}`).join(', ')} does not match src/. Run pnpm --filter @sklop/tokens generate:tokens and commit the result.`,
+      );
+      process.exit(1);
+    }
+    console.log('@sklop/tokens: generated/ matches src/');
+  } else {
+    const files = generateFiles(readSource(root));
+    mkdirSync(join(root, 'generated'), { recursive: true });
+    for (const [file, text] of Object.entries(files))
+      writeFileSync(join(root, 'generated', file), text);
+    console.log(
+      `@sklop/tokens: wrote ${Object.keys(files)
+        .map((file) => `generated/${file}`)
+        .join(', ')}`,
+    );
+  }
 }

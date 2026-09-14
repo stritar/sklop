@@ -26,16 +26,30 @@ export const HUE_FROM = { neutral: [50, 100, 500, 700], coral: [300] };
 export const WHITE = '1:5';
 /** Node whose effect colours with alpha become black-alpha steps, named by rounded percent. */
 export const SHADOW = '1:4';
-/** A ladder step with alpha, written as {ramp}-alpha.{percent}. */
-export const SCRIM = { ramp: 'neutral', step: 900, alpha: 0.4 };
-/** Roles that must use the lightest step meeting a WCAG minimum on every listed background. */
+/** Ladder steps with alpha, written as {ramp}-alpha.{percent}: the light and the dark scrim. */
+export const SCRIMS = [
+  { ramp: 'neutral', step: 900, alpha: 0.4 },
+  { ramp: 'neutral', step: 950, alpha: 0.6 },
+];
+const FILLS = ['bg.page', 'bg.raised', 'bg.hover', 'bg.active'];
+/**
+ * Roles that must use the step closest to their backgrounds that still meets a WCAG minimum: the lightest
+ * passing step in the light theme, the darkest in the dark theme.
+ */
 export const GATES = [
+  { role: 'text.secondary', min: 4.5, on: FILLS },
   { role: 'border.strong', min: 3, on: ['bg.page', 'bg.raised'] },
   { role: 'border.focus', min: 3, on: ['bg.page', 'bg.raised'] },
   { role: 'accent.text', min: 4.5, on: ['bg.page', 'bg.raised'] },
+  { role: 'text.secondary', min: 4.5, on: FILLS, theme: 'dark' },
+  { role: 'border.strong', min: 3, on: ['bg.page', 'bg.raised'], theme: 'dark' },
+  { role: 'border.focus', min: 3, on: ['bg.page', 'bg.raised'], theme: 'dark' },
 ];
 /** Roles a foreground must keep a WCAG minimum on. */
-export const FLOORS = [{ role: 'accent.solid-hover', min: 4.5, foreground: 'text.on-accent' }];
+export const FLOORS = [
+  { role: 'accent.solid-hover', min: 4.5, foreground: 'text.on-accent' },
+  { role: 'accent.solid-hover', min: 4.5, foreground: 'text.on-accent', theme: 'dark' },
+];
 
 export const STEPS = Array.from({ length: 19 }, (_, i) => (i + 1) * 50);
 const REF = /^\{primitive\.color\.([a-z-]+)(?:\.(\d+))?\}$/;
@@ -198,16 +212,16 @@ export function generateColors({ fixture, semantic }) {
     }
   }
 
-  const scrimKey = `${SCRIM.ramp}-alpha`;
-  const scrimStep = Math.round(SCRIM.alpha * 100);
-  if (referenced[scrimKey]?.has(scrimStep)) {
-    tree[scrimKey] = {
-      [scrimStep]: colorToken(slots[SCRIM.ramp][SCRIM.step], {
-        alpha: SCRIM.alpha,
-        origin: 'generated',
-        description: `Generated: ${SCRIM.ramp} step ${SCRIM.step} at ${scrimStep}% alpha.`,
-      }),
-    };
+  for (const scrim of SCRIMS) {
+    const key = `${scrim.ramp}-alpha`;
+    const percent = Math.round(scrim.alpha * 100);
+    if (!referenced[key]?.has(percent)) continue;
+    tree[key] ??= {};
+    tree[key][percent] = colorToken(slots[scrim.ramp][scrim.step], {
+      alpha: scrim.alpha,
+      origin: 'generated',
+      description: `Generated: ${scrim.ramp} step ${scrim.step} at ${percent}% alpha.`,
+    });
   }
 
   tree['black-alpha'] = {};
@@ -236,45 +250,58 @@ export function generateColors({ fixture, semantic }) {
     }
   }
 
-  const roleHex = (role) => {
+  /** The primitive a role aliases in a theme: its dark axis value, else its base value. */
+  const roleHex = (role, theme = 'light') => {
     const [group, name] = role.split('.');
-    const ref = semantic.semantic?.color?.[group]?.[name]?.$value;
+    const token = semantic.semantic?.color?.[group]?.[name];
+    const dark = theme === 'dark' ? token?.$extensions?.sklop?.axes?.theme?.dark : undefined;
+    const ref = dark ?? token?.$value;
     const match = typeof ref === 'string' ? ref.match(REF) : null;
     if (!match) throw new Error(`semantic.color.${role} must alias a colour primitive`);
     const [, ramp, step] = match;
-    const token = step ? tree[ramp]?.[step] : tree[ramp];
-    return { ramp, step: step && Number(step), hex: token.$value.hex };
+    const primitive = step ? tree[ramp]?.[step] : tree[ramp];
+    return { ramp, step: step && Number(step), hex: primitive.$value.hex };
   };
 
   const errors = [];
   const checks = [];
   for (const gate of GATES) {
-    const role = roleHex(gate.role);
-    const backgrounds = gate.on.map(roleHex);
+    const theme = gate.theme ?? 'light';
+    const role = roleHex(gate.role, theme);
+    const backgrounds = gate.on.map((bg) => roleHex(bg, theme));
     const ratio = (hex) => Math.min(...backgrounds.map((bg) => wcagContrast(hex, bg.hex)));
-    const lightest = STEPS.find((step) => ratio(slots[role.ramp][step]) >= gate.min);
+    const passing = STEPS.filter((step) => ratio(slots[role.ramp][step]) >= gate.min);
+    const [word, closest] =
+      theme === 'dark' ? ['darkest', passing.at(-1)] : ['lightest', passing[0]];
     checks.push(
-      `${gate.role} = ${role.ramp}.${role.step}: ${ratio(role.hex).toFixed(2)}:1 on ${gate.on.join(' and ')} (min ${gate.min}, lightest passing ${role.ramp}.${lightest})`,
+      `${theme}: ${gate.role} = ${role.ramp}.${role.step}: ${ratio(role.hex).toFixed(2)}:1 on ${gate.on.join(', ')} (min ${gate.min}, ${word} passing ${role.ramp}.${closest})`,
     );
-    if (role.step !== lightest) {
+    if (role.step !== closest) {
       errors.push(
-        `semantic.color.${gate.role} uses ${role.ramp}.${role.step}; the lightest step meeting ${gate.min}:1 is ${role.ramp}.${lightest}`,
+        `${theme}: semantic.color.${gate.role} uses ${role.ramp}.${role.step}; the ${word} step meeting ${gate.min}:1 is ${role.ramp}.${closest}`,
       );
     }
   }
   for (const floor of FLOORS) {
-    const background = roleHex(floor.role);
-    const ratio = wcagContrast(roleHex(floor.foreground).hex, background.hex);
-    checks.push(`${floor.foreground} on ${floor.role}: ${ratio.toFixed(2)}:1 (min ${floor.min})`);
+    const theme = floor.theme ?? 'light';
+    const background = roleHex(floor.role, theme);
+    const ratio = wcagContrast(roleHex(floor.foreground, theme).hex, background.hex);
+    checks.push(
+      `${theme}: ${floor.foreground} on ${floor.role}: ${ratio.toFixed(2)}:1 (min ${floor.min})`,
+    );
     if (ratio < floor.min) {
       errors.push(
-        `${floor.foreground} on ${floor.role} is ${ratio.toFixed(2)}:1, below ${floor.min}:1`,
+        `${theme}: ${floor.foreground} on ${floor.role} is ${ratio.toFixed(2)}:1, below ${floor.min}:1`,
       );
     }
   }
 
-  const page = roleHex('bg.page').hex;
-  const raised = roleHex('bg.raised').hex;
+  const grounds = [
+    roleHex('bg.page'),
+    roleHex('bg.raised'),
+    roleHex('bg.page', 'dark'),
+    roleHex('bg.raised', 'dark'),
+  ].map((g) => g.hex);
   const rows = Object.entries(tree)
     .filter(([key]) => !key.startsWith('$'))
     .flatMap(([group, value]) =>
@@ -286,12 +313,12 @@ export function generateColors({ fixture, semantic }) {
       const { hex, alpha } = token.$value;
       const contrast =
         alpha === undefined
-          ? `${wcagContrast(hex, page).toFixed(2)}  ${wcagContrast(hex, raised).toFixed(2)}`
+          ? grounds.map((ground) => wcagContrast(hex, ground).toFixed(2).padEnd(6)).join('  ')
           : '';
       return `${name.padEnd(18)}${token.$extensions.sklop.origin.padEnd(11)}${hex}${alpha === undefined ? '       ' : ` a${alpha.toFixed(2)}  `}${oklchText(hex).padEnd(29)}${contrast}`;
     });
   const report = [
-    'step              origin     hex             oklch                        vs page  vs raised',
+    'step              origin     hex             oklch                        page    raised  dark page  dark raised',
     ...rows,
     '',
     ...checks,

@@ -73,6 +73,19 @@
             }
           }
         },
+        "250": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.7176, 0.7137, 0.7686],
+            "hex": "#b7b6c4"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.7814 0.0197 289.2).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
         "300": {
           "$value": {
             "colorSpace": "srgb",
@@ -148,6 +161,58 @@
               "anchor": true
             }
           }
+        },
+        "750": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.1882, 0.1882, 0.2353],
+            "hex": "#30303c"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.3142 0.0213 285.1).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "800": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.1451, 0.1412, 0.1804],
+            "hex": "#25242e"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.2657 0.0185 289.7).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "850": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.098, 0.098, 0.1255],
+            "hex": "#191920"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.2166 0.0136 285.2).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "900": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0588, 0.0549, 0.0784],
+            "hex": "#0f0e14"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.1679 0.0125 292.6).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
         }
       },
       "coral": {
@@ -171,6 +236,19 @@
             "hex": "#ffb4b7"
           },
           "$description": "Generated on the shared lightness ladder: oklch(0.8413 0.0877 16.5).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "250": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 0.5804, 0.6118],
+            "hex": "#ff949c"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.7812 0.1288 15.7).",
           "$extensions": {
             "sklop": {
               "origin": "generated"
@@ -231,6 +309,32 @@
             }
           }
         },
+        "700": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.3961, 0.149, 0.1765],
+            "hex": "#65262d"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.3628 0.091 16.1).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "800": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.2353, 0.0941, 0.1098],
+            "hex": "#3c181c"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.2641 0.0568 14.9).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
         "950": {
           "$value": {
             "colorSpace": "srgb",
@@ -256,6 +360,20 @@
             "hex": "#0f0e14"
           },
           "$description": "Generated: neutral step 900 at 40% alpha.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "60": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0196, 0.0196, 0.0314],
+            "alpha": 0.6,
+            "hex": "#050508"
+          },
+          "$description": "Generated: neutral step 950 at 60% alpha.",
           "$extensions": {
             "sklop": {
               "origin": "generated"
@@ -533,18 +651,6 @@
     },
     "motion": {
       "duration": {
-        "1": {
-          "$value": {
-            "value": 1,
-            "unit": "ms"
-          },
-          "$description": "Effectively instant. Reduced motion uses it so transition and animation end events still fire.",
-          "$extensions": {
-            "sklop": {
-              "origin": "proposed"
-            }
-          }
-        },
         "100": {
           "$value": {
             "value": 100,

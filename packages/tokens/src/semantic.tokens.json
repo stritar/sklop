@@ -6,37 +6,102 @@
         "page": {
           "$value": "{primitive.color.neutral.50}",
           "$description": "Page background.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:3.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:3.fill"],
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.850}"
+                }
+              }
+            }
+          }
         },
         "surface": {
           "$value": "{primitive.color.white}",
           "$description": "Flat surfaces on the page, such as cards and panels. The same white as raised, without the shadow.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.800}"
+                }
+              }
+            }
+          }
         },
         "raised": {
           "$value": "{primitive.color.white}",
           "$description": "Surfaces that float above the page: popovers, menus, the prompt bar. Pair with shadow-raised.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:5.fill", "1:22.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:5.fill", "1:22.fill"],
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.800}"
+                }
+              }
+            }
+          }
         },
         "sunken": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Wells set into a surface, such as a code block.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.900}"
+                }
+              }
+            }
+          }
         },
         "hover": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Fill behind a transparent row or control under the pointer.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.750}"
+                }
+              }
+            }
+          }
         },
         "active": {
           "$value": "{primitive.color.neutral.150}",
           "$description": "Fill behind a transparent row or control while pressed or selected.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.700}"
+                }
+              }
+            }
+          }
         },
         "overlay": {
           "$value": "{primitive.color.neutral-alpha.40}",
           "$description": "Scrim behind modal layers.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral-alpha.60}"
+                }
+              }
+            }
+          }
         }
       },
       "text": {
@@ -54,13 +119,36 @@
                 "1:10.fill",
                 "1:16.fill"
               ],
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.100}"
+                }
+              },
               "contrast": [
-                { "on": "bg.page", "min": 4.5 },
-                { "on": "bg.surface", "min": 4.5 },
-                { "on": "bg.raised", "min": 4.5 },
-                { "on": "bg.hover", "min": 4.5 },
-                { "on": "bg.active", "min": 4.5 },
-                { "on": "accent.subtle", "min": 4.5 }
+                {
+                  "on": "bg.page",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.hover",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.active",
+                  "min": 4.5
+                },
+                {
+                  "on": "accent.subtle",
+                  "min": 4.5
+                }
               ]
             }
           }
@@ -84,12 +172,32 @@
                 "date": "2026-09-14"
               },
               "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.250}"
+                }
+              },
               "contrast": [
-                { "on": "bg.page", "min": 4.5 },
-                { "on": "bg.surface", "min": 4.5 },
-                { "on": "bg.raised", "min": 4.5 },
-                { "on": "bg.hover", "min": 4.5 },
-                { "on": "bg.active", "min": 4.5 }
+                {
+                  "on": "bg.page",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.hover",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.active",
+                  "min": 4.5
+                }
               ]
             }
           }
@@ -100,8 +208,16 @@
           "$extensions": {
             "sklop": {
               "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.600}"
+                }
+              },
               "contrast": [
-                { "on": "bg.raised", "exempt": "Disabled controls are exempt from WCAG 1.4.3." }
+                {
+                  "on": "bg.raised",
+                  "exempt": "Disabled controls are exempt from WCAG 1.4.3."
+                }
               ]
             }
           }
@@ -109,7 +225,16 @@
         "inverse": {
           "$value": "{primitive.color.white}",
           "$description": "Text and icons on dark fills.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.850}"
+                }
+              }
+            }
+          }
         },
         "on-accent": {
           "$value": "{primitive.color.coral.950}",
@@ -118,9 +243,23 @@
             "sklop": {
               "origin": "sample",
               "figma": ["1:38.fill"],
+              "axes": {
+                "preset": {
+                  "neutral": "{primitive.color.white}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.850}"
+              },
               "contrast": [
-                { "on": "accent.solid", "min": 4.5 },
-                { "on": "accent.solid-hover", "min": 4.5 }
+                {
+                  "on": "accent.solid",
+                  "min": 4.5
+                },
+                {
+                  "on": "accent.solid-hover",
+                  "min": 4.5
+                }
               ]
             }
           }
@@ -130,12 +269,32 @@
         "separator": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Lines that divide content, such as the rule above a hint.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:19.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:19.fill"],
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.750}"
+                }
+              }
+            }
+          }
         },
         "subtle": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Hairline edge of raised surfaces. The ring inside shadow-raised uses the same colour.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:4.effects.0.color"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:4.effects.0.color"],
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.750}"
+                }
+              }
+            }
+          }
         },
         "default": {
           "$value": "{primitive.color.neutral.200}",
@@ -143,6 +302,11 @@
           "$extensions": {
             "sklop": {
               "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.700}"
+                }
+              },
               "contrast": [
                 {
                   "on": "bg.raised",
@@ -158,10 +322,24 @@
           "$extensions": {
             "sklop": {
               "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.500}"
+                }
+              },
               "contrast": [
-                { "on": "bg.page", "min": 3 },
-                { "on": "bg.surface", "min": 3 },
-                { "on": "bg.raised", "min": 3 }
+                {
+                  "on": "bg.page",
+                  "min": 3
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 3
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 3
+                }
               ]
             }
           }
@@ -172,10 +350,30 @@
           "$extensions": {
             "sklop": {
               "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.500}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.700}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.100}"
+              },
               "contrast": [
-                { "on": "bg.page", "min": 3 },
-                { "on": "bg.surface", "min": 3 },
-                { "on": "bg.raised", "min": 3 }
+                {
+                  "on": "bg.page",
+                  "min": 3
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 3
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 3
+                }
               ]
             }
           }
@@ -189,6 +387,17 @@
             "sklop": {
               "origin": "sample",
               "figma": ["1:36.fill"],
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.250}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.700}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.100}"
+              },
               "contrast": [
                 {
                   "on": "bg.page",
@@ -205,17 +414,62 @@
         "solid-hover": {
           "$value": "{primitive.color.coral.350}",
           "$description": "accent-solid under the pointer. text-on-accent stays at least 4.5:1 on it.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.200}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.800}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.50}"
+              }
+            }
+          }
         },
         "subtle": {
           "$value": "{primitive.color.coral.50}",
           "$description": "Tinted background for selected or highlighted items.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.800}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.150}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.700}"
+              }
+            }
+          }
         },
         "border": {
           "$value": "{primitive.color.coral.200}",
           "$description": "Border of accent-tinted items.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.700}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.300}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.600}"
+              }
+            }
+          }
         },
         "text": {
           "$value": "{primitive.color.coral.500}",
@@ -223,11 +477,34 @@
           "$extensions": {
             "sklop": {
               "origin": "generated",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.250}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.800}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.50}"
+              },
               "contrast": [
-                { "on": "bg.page", "min": 4.5 },
-                { "on": "bg.surface", "min": 4.5 },
-                { "on": "bg.raised", "min": 4.5 },
-                { "on": "accent.subtle", "min": 4.5 }
+                {
+                  "on": "bg.page",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 4.5
+                },
+                {
+                  "on": "accent.subtle",
+                  "min": 4.5
+                }
               ]
             }
           }
@@ -267,7 +544,12 @@
             "lineHeight": 1.1428571428571428
           },
           "$description": "Labels and item titles. 14px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:11", "1:17"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:11", "1:17"]
+            }
+          }
         },
         "sm": {
           "$value": {
@@ -278,7 +560,12 @@
             "lineHeight": 1.3333333333333333
           },
           "$description": "Compact control labels, such as a model picker. 12px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:30"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:30"]
+            }
+          }
         }
       },
       "body": {
@@ -292,7 +579,12 @@
             "lineHeight": 1.1428571428571428
           },
           "$description": "Descriptions and body text. 14px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:12", "1:18"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:12", "1:18"]
+            }
+          }
         },
         "sm": {
           "$value": {
@@ -303,7 +595,12 @@
             "lineHeight": 1.3333333333333333
           },
           "$description": "Hints and helper text. 12px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:21"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:21"]
+            }
+          }
         }
       },
       "input": {
@@ -317,7 +614,12 @@
             "lineHeight": 2
           },
           "$description": "Typed input text. 14px on a 28px line box, the height of size-control-sm.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:27"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:27"]
+            }
+          }
         }
       }
     },
@@ -327,7 +629,12 @@
         "xs": {
           "$value": "{primitive.space.4}",
           "$description": "Tight gap between a label and its glyph, such as a chevron.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:29.gap"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:29.gap"]
+            }
+          }
         },
         "sm": {
           "$value": "{primitive.space.8}",
@@ -370,7 +677,10 @@
           "$value": "{primitive.space.16}",
           "$description": "Padding for text set directly against a surface edge, such as a hint.",
           "$extensions": {
-            "sklop": { "origin": "sample", "figma": ["1:20.padding.1", "1:20.padding.3"] }
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:20.padding.1", "1:20.padding.3"]
+            }
           }
         }
       }
@@ -381,7 +691,12 @@
         "sm": {
           "$value": "{primitive.size.12}",
           "$description": "Small glyphs beside text, such as a chevron.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:31.width", "1:31.height"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:31.width", "1:31.height"]
+            }
+          }
         },
         "md": {
           "$value": "{primitive.size.16}",
@@ -432,7 +747,12 @@
         "lg": {
           "$value": "{primitive.size.44}",
           "$description": "Large input containers, such as the prompt bar.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:22.height"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:22.height"]
+            }
+          }
         }
       }
     },
@@ -441,13 +761,21 @@
       "lg": {
         "$value": "{primitive.radius.12}",
         "$description": "Raised surfaces such as popovers.",
-        "$extensions": { "sklop": { "origin": "sample", "figma": ["1:5.radius"] } }
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:5.radius"]
+          }
+        }
       },
       "full": {
         "$value": "{primitive.radius.9999}",
         "$description": "Pills and circles.",
         "$extensions": {
-          "sklop": { "origin": "sample", "figma": ["1:22.radius", "1:24.radius", "1:36.radius"] }
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:22.radius", "1:24.radius", "1:36.radius"]
+          }
         }
       }
     },
@@ -458,7 +786,10 @@
           "$value": "{primitive.border.width.1}",
           "$description": "Hairline borders and separators.",
           "$extensions": {
-            "sklop": { "origin": "sample", "figma": ["1:19.height", "1:4.effects.0.spread"] }
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:19.height", "1:4.effects.0.spread"]
+            }
           }
         }
       }
@@ -469,56 +800,284 @@
         "$value": [
           {
             "color": "{primitive.color.black-alpha.1}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 0.5, "unit": "px" },
-            "blur": { "value": 1.3, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0.5,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 1.3,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.1}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 1.2, "unit": "px" },
-            "blur": { "value": 3.1, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 1.2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 3.1,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.1}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 2.3, "unit": "px" },
-            "blur": { "value": 5.8, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2.3,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 5.8,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.2}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 4, "unit": "px" },
-            "blur": { "value": 10.5, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 4,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 10.5,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.2}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 7.5, "unit": "px" },
-            "blur": { "value": 19, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 7.5,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 19,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.3}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 18, "unit": "px" },
-            "blur": { "value": 47, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 18,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 47,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.neutral.100}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 0, "unit": "px" },
-            "blur": { "value": 0, "unit": "px" },
-            "spread": { "value": 1, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 0,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 1,
+              "unit": "px"
+            }
           }
         ],
         "$description": "Elevation for raised surfaces: the Figma effect style shadow. Six soft layers and a 1px ring, in CSS paint order.",
-        "$extensions": { "sklop": { "origin": "sample", "figma": ["1:4.effects"] } }
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:4.effects"],
+            "axes": {
+              "theme": {
+                "dark": [
+                  {
+                    "color": "{primitive.color.black-alpha.1}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 0.5,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 1.3,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.1}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 1.2,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 3.1,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.1}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 2.3,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 5.8,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.2}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 4,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 10.5,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.2}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 7.5,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 19,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.3}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 18,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 47,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.neutral.750}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 1,
+                      "unit": "px"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "motion": {
@@ -529,8 +1088,7 @@
           "$description": "Small elements, such as a tooltip appearing or a chip dismissing.",
           "$extensions": {
             "sklop": {
-              "origin": "proposed",
-              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+              "origin": "proposed"
             }
           }
         },
@@ -539,8 +1097,7 @@
           "$description": "The default, such as a dropdown opening or a focus ring.",
           "$extensions": {
             "sklop": {
-              "origin": "proposed",
-              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+              "origin": "proposed"
             }
           }
         },
@@ -549,8 +1106,7 @@
           "$description": "Medium elements, such as a dialog entering or a panel sliding in.",
           "$extensions": {
             "sklop": {
-              "origin": "proposed",
-              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+              "origin": "proposed"
             }
           }
         }
@@ -560,17 +1116,29 @@
         "standard": {
           "$value": "{primitive.motion.easing.standard}",
           "$description": "Elements changing state or moving within the view.",
-          "$extensions": { "sklop": { "origin": "proposed" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
         },
         "enter": {
           "$value": "{primitive.motion.easing.decelerate}",
           "$description": "Elements entering the view.",
-          "$extensions": { "sklop": { "origin": "proposed" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
         },
         "exit": {
           "$value": "{primitive.motion.easing.accelerate}",
           "$description": "Elements leaving the view.",
-          "$extensions": { "sklop": { "origin": "proposed" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
         }
       }
     }
