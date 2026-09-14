@@ -1,0 +1,23 @@
+/* Hub chrome uses --hub-* only, so editing a Sklop token never restyles it. */
+:root {
+  --hub-bg: #ffffff;
+  --hub-text: #1f1f29;
+  --hub-font: 400 0.875rem / 1.25rem Figtree, system-ui, sans-serif;
+  --hub-space: 1rem;
+}
+
+body {
+  margin: 0;
+  background: var(--hub-bg);
+  color: var(--hub-text);
+  font: var(--hub-font);
+}
+
+.hub-page {
+  padding: var(--hub-space);
+}
+
+.hub-page h1 {
+  margin-block: 0 var(--hub-space);
+  font-size: 1.25rem;
+}

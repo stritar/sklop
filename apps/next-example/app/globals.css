@@ -1,0 +1,15 @@
+body {
+  margin: 0;
+  background: var(--sk-color-bg-page, #f7f7f9);
+  color: var(--sk-color-text-primary, #3d3c4a);
+  font: var(--sk-font-body-md, 400 0.875rem / 1rem Figtree, system-ui, sans-serif);
+}
+
+main {
+  padding: var(--sk-space-inset-lg, 1rem);
+}
+
+h1 {
+  margin-block: 0 var(--sk-space-gap-sm, 0.5rem);
+  font: var(--sk-font-label-md, 600 0.875rem / 1rem Figtree, system-ui, sans-serif);
+}

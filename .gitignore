@@ -6,6 +6,10 @@ coverage/
 .DS_Store
 .env*
 *.log
+.next/
+next-env.d.ts
+test-results/
+playwright-report/
 
 # local agent config
 *.local.*
