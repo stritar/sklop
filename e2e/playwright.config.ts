@@ -10,6 +10,8 @@ export default defineConfig({
   outputDir: '../test-results',
   forbidOnly: ci,
   retries: ci ? 1 : 0,
+  // CI never writes baselines as a side effect: a missing one fails until the baseline workflow adds it.
+  updateSnapshots: ci ? 'none' : 'missing',
   reporter: ci
     ? [['list'], ['html', { outputFolder: '../playwright-report', open: 'never' }]]
     : 'list',

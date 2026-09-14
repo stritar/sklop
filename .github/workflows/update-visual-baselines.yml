@@ -1,9 +1,12 @@
 name: Update visual baselines
 
-# Run by hand on a branch after an intended visual change. Screenshots must come from the
-# same container as the e2e job, so they are never produced on a laptop.
+# Run after an intended visual change. Screenshots must come from the same container as the
+# e2e job, so they are never produced on a laptop. GitHub only dispatches workflows that exist on
+# the default branch, so before this file is merged, add the label to the pull request instead.
 on:
   workflow_dispatch:
+  pull_request:
+    types: [labeled]
 
 permissions:
   contents: write
@@ -14,12 +17,16 @@ env:
 
 jobs:
   update:
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'update-visual-baselines'
     runs-on: ubuntu-latest
     container:
       image: mcr.microsoft.com/playwright:v1.63.0-noble
       options: --user 1001
     steps:
       - uses: actions/checkout@v5
+        with:
+          # A pull request run checks out its branch, not the merge commit, so the commit can be pushed.
+          ref: ${{ github.head_ref || github.ref }}
       - uses: pnpm/action-setup@v4
       - uses: actions/setup-node@v5
         with:

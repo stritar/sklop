@@ -2,7 +2,10 @@
 :root {
   --hub-bg: #ffffff;
   --hub-text: #1f1f29;
+  --hub-muted: #55546a;
+  --hub-border: #d6d6e0;
   --hub-font: 400 0.875rem / 1.25rem Figtree, system-ui, sans-serif;
+  --hub-font-heading: 600 1.25rem / 1.75rem Figtree, system-ui, sans-serif;
   --hub-space: 1rem;
 }
 
@@ -13,11 +16,40 @@ body {
   font: var(--hub-font);
 }
 
-.hub-page {
+.hub-header {
   padding: var(--hub-space);
+  border-block-end: 1px solid var(--hub-border);
 }
 
-.hub-page h1 {
-  margin-block: 0 var(--hub-space);
-  font-size: 1.25rem;
+.hub-header h1 {
+  margin: 0;
+  font: var(--hub-font-heading);
+}
+
+.hub-header p {
+  margin-block: 0.25rem 0.75rem;
+  color: var(--hub-muted);
+}
+
+.hub-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.hub-field {
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  color: var(--hub-muted);
+}
+
+.hub-field select {
+  padding-block: 0.25rem;
+  padding-inline: 0.5rem;
+  border: 1px solid var(--hub-border);
+  border-radius: 0.375rem;
+  background: var(--hub-bg);
+  color: var(--hub-text);
+  font: var(--hub-font);
 }

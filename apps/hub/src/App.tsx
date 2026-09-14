@@ -1,12 +1,5 @@
-import { SklopProvider } from '@sklop/react';
+import { TokensPage } from './tokens-page/TokensPage.js';
 
 export function App() {
-  return (
-    <main className="hub-page">
-      <h1>Sklop hub</h1>
-      <SklopProvider scope="element">
-        <p>Token page coming next.</p>
-      </SklopProvider>
-    </main>
-  );
+  return <TokensPage />;
 }

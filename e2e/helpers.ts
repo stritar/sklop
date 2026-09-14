@@ -13,8 +13,21 @@ export function watchConsole(page: Page) {
   return problems;
 }
 
-/** Fails with each violated axe rule, measured on the real rendered page. */
+/** Fails with each violated axe rule, measured on the real rendered page once transitions settle. */
 export async function expectNoAxeViolations(page: Page) {
+  // A colour mid-transition measures as neither theme; looping animations never settle, so skip them.
+  await page.waitForFunction(() =>
+    document
+      .getAnimations()
+      .every(
+        (animation) =>
+          animation.playState !== 'running' ||
+          animation.effect?.getTiming().iterations === Number.POSITIVE_INFINITY,
+      ),
+  );
   const { violations } = await new AxeBuilder({ page }).analyze();
-  expect(violations.map((v) => `${v.id}: ${v.help}`)).toEqual([]);
+  const report = violations.map(
+    (v) => `${v.id}: ${v.help} (${v.nodes.map((node) => node.target.join(' ')).join('; ')})`,
+  );
+  expect(report).toEqual([]);
 }

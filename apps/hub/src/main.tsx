@@ -3,6 +3,7 @@ import '@fontsource/figtree/500.css';
 import '@fontsource/figtree/600.css';
 import '@sklop/tokens/tokens.css';
 import './hub.css';
+import './tokens-page/tokens-page.css';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { App } from './App.js';
