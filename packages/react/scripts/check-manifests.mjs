@@ -2,7 +2,7 @@
 // Every component folder has its files and a valid manifest, is in the registry, and ships styles.
 import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs';
 import { createRequire } from 'node:module';
-import { dirname, join } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const COMPONENT = /^[A-Z][A-Za-z0-9]*$/;
@@ -10,11 +10,26 @@ const SEGMENTS = /^[a-z0-9]+(-[a-z0-9]+)*$/;
 const PHYSICAL = /(^|-)(left|right|top|bottom|horizontal|vertical)(-|$)/;
 const MANIFEST_KEYS = new Set(['name', 'description', 'parts', 'states', 'tokens']);
 
+/** Semantic tokens from @sklop/tokens/tokens.json, keyed by path without the tier ("color.bg.raised"). */
+export function semanticTokens(tokensJson) {
+  return new Map(
+    tokensJson
+      .filter((t) => t.tier === 'semantic')
+      .map((t) => [t.path.replace(/^semantic\./, ''), t]),
+  );
+}
+
 /** Semantic token paths without the tier, such as "color.bg.raised". */
 export function semanticPaths(tokensJson) {
-  return new Set(
-    tokensJson.filter((t) => t.tier === 'semantic').map((t) => t.path.replace(/^semantic\./, '')),
+  return new Set(semanticTokens(tokensJson).keys());
+}
+
+/** The installed @sklop/tokens/tokens.json, resolved from a package root. */
+export function readTokensJson(packageRoot) {
+  const path = createRequire(join(resolve(packageRoot), 'package.json')).resolve(
+    '@sklop/tokens/tokens.json',
   );
+  return JSON.parse(readFileSync(path, 'utf8'));
 }
 
 const uniqueNames = (list) =>
@@ -89,14 +104,11 @@ export function checkComponents({ componentsDir, registry, packageJson, semantic
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
   const read = (path) => JSON.parse(readFileSync(path, 'utf8'));
-  const tokensJson = read(
-    createRequire(join(root, 'package.json')).resolve('@sklop/tokens/tokens.json'),
-  );
   const problems = checkComponents({
     componentsDir: join(root, 'src', 'components'),
     registry: read(join(root, 'registry', 'registry.json')),
     packageJson: read(join(root, 'package.json')),
-    semantic: semanticPaths(tokensJson),
+    semantic: semanticPaths(readTokensJson(root)),
   });
   for (const problem of problems) console.error(problem);
   if (problems.length) process.exit(1);

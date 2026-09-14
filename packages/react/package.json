@@ -35,7 +35,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-registry.mjs && node scripts/check-manifests.mjs",
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-registry.mjs && node scripts/check-manifests.mjs && node scripts/generate-component-tokens.mjs --check",
+    "generate:component-tokens": "node scripts/generate-component-tokens.mjs",
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json",
     "check:pack": "publint && pnpm pack --out node_modules/.pack/react.tgz && attw node_modules/.pack/react.tgz --profile esm-only"
