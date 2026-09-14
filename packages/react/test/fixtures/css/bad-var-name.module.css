@@ -1,0 +1,4 @@
+.root {
+  --local-gap: 0;
+  color: var(--brand-text, #3d3c4a);
+}

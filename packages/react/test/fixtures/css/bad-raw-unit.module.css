@@ -1,0 +1,10 @@
+.root {
+  gap: 16px;
+  transition-duration: 200ms;
+}
+
+@media (width >= 640px) {
+  .root {
+    gap: 0;
+  }
+}

@@ -1,0 +1,3 @@
+.root {
+  --sk-sample-root-bg: var(--sk-color-bg-raised, #ffffff);
+}

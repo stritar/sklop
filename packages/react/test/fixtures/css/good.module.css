@@ -1,0 +1,38 @@
+/* @sklop:generated:start */
+.bubble {
+  --_sk-sample-bubble-bg-agent: var(
+    --sk-sample-bubble-bg-agent,
+    var(--sk-color-bg-raised, #ffffff)
+  );
+}
+/* @sklop:generated:end */
+
+.root {
+  display: flex;
+  gap: 0;
+  margin: 0 auto;
+  padding-block: var(--sk-space-inset-sm, 0.5rem);
+  padding-inline: var(--sk-space-inset-lg, 1rem);
+  inline-size: 100%;
+  border-start-start-radius: var(--sk-radius-lg, 0.75rem);
+  text-align: start;
+  font: var(--sk-font-label-md, 600 0.875rem / 1rem Figtree, system-ui, sans-serif);
+  transition: var(--sk-motion-transition-hover, background-color 100ms cubic-bezier(0.2, 0, 0, 1));
+}
+
+.bubble {
+  background: var(--_sk-sample-bubble-bg-agent, #ffffff);
+  color: var(--sk-color-text-primary, #3d3c4a);
+}
+
+@media (width >= 40rem) {
+  .root {
+    gap: var(--sk-space-gap-sm, 0.5rem);
+  }
+}
+
+@media (forced-colors: active) {
+  .bubble {
+    border: var(--sk-border-width-default, 1px) solid CanvasText;
+  }
+}
