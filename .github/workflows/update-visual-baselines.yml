@@ -1,0 +1,50 @@
+name: Update visual baselines
+
+# Run by hand on a branch after an intended visual change. Screenshots must come from the
+# same container as the e2e job, so they are never produced on a laptop.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  NEXT_TELEMETRY_DISABLED: 1
+  SKLOP_VISUAL: 1
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    container:
+      image: mcr.microsoft.com/playwright:v1.63.0-noble
+      options: --user 1001
+    steps:
+      - uses: actions/checkout@v5
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v5
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm test:e2e --update-snapshots
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-report
+          path: playwright-report
+          retention-days: 7
+      # A push made with GITHUB_TOKEN starts no workflow, so re-run CI after this commit lands.
+      - name: Commit changed baselines
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add e2e
+          if git diff --cached --quiet; then
+            echo 'Baselines unchanged'
+            exit 0
+          fi
+          git commit -m 'Update visual regression baselines' \
+            -m 'Regenerated on CI Linux in the Playwright container, so they match the e2e job exactly.'
+          git push
