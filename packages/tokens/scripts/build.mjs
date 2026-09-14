@@ -55,9 +55,36 @@ export const AXES = {
     default: 'default',
     categories: ['radius'],
   },
+  'motion-personality': {
+    attribute: 'data-sk-motion-personality',
+    values: ['crisp', 'soft', 'playful'],
+    default: 'crisp',
+    categories: ['motion'],
+  },
+  // Reduced keeps durations, so fades and colour changes stay visible, and drops travel and scale.
+  // Off is instant. An element without the attribute follows the system preference.
+  motion: {
+    attribute: 'data-sk-motion',
+    values: ['full', 'reduced', 'off'],
+    default: 'full',
+    categories: ['motion'],
+    system: { query: '(prefers-reduced-motion: reduce)', value: 'reduced' },
+    absent: 'system',
+  },
 };
-/** Axis pairs that may vary one token together, in registry order. */
-export const CROSS = [['theme', 'preset']];
+/**
+ * Axis pairs that may vary one token together, in registry order. Every combination of non-default values
+ * needs a cross value, unless the pair names an axis that `wins`: its value then applies whatever the
+ * other axis says, as the motion level does over the personality.
+ */
+export const CROSS = [
+  { axes: ['theme', 'preset'] },
+  { axes: ['motion-personality', 'motion'], wins: 'motion' },
+];
+/** Semantic types that may alias a primitive of another type. */
+const COMPATIBLE = { easing: ['cubicBezier', 'linear'] };
+/** UI motion stays under this; looping animations are exempt. */
+const MAX_UI_MS = 300;
 const PHYSICAL = /(^|-)(left|right|top|bottom|horizontal|vertical)(-|$)/;
 const ORIGINS = ['sample', 'generated', 'proposed'];
 const SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
@@ -104,6 +131,12 @@ const COMPOSITES = {
     },
     optional: {},
     literal: ['lineHeight'],
+  },
+  // DTCG's transition has no property list; a component writes one `transition` declaration.
+  transition: {
+    parts: { properties: 'properties', duration: 'duration', timingFunction: 'easing' },
+    optional: {},
+    literal: ['properties'],
   },
 };
 
@@ -197,6 +230,26 @@ function checkLiteral(type, value, where) {
         value[2] > 1
       ) {
         fail('cubicBezier needs [x1, y1, x2, y2] with both x from 0 to 1');
+      }
+      return;
+    case 'linear':
+      if (
+        !Array.isArray(value?.points) ||
+        value.points.length < 3 ||
+        value.points.some((n) => typeof n !== 'number') ||
+        value.points[0] !== 0 ||
+        value.points.at(-1) !== 1
+      ) {
+        fail('linear needs { points: [0, …, 1] }: evenly spaced outputs from 0 to 1');
+      }
+      return;
+    case 'properties':
+      if (
+        !Array.isArray(value) ||
+        !value.length ||
+        value.some((name) => typeof name !== 'string' || !SEGMENT.test(name) || PHYSICAL.test(name))
+      ) {
+        fail('properties needs a list of logical CSS property names');
       }
       return;
     case 'fontFamily':
@@ -302,6 +355,14 @@ function format(type, value) {
       return `${num(value.value)}${value.unit}`;
     case 'cubicBezier':
       return `cubic-bezier(${value.map(num).join(', ')})`;
+    case 'linear':
+      return `linear(${value.points.map(num).join(', ')})`;
+    case 'easing':
+      return Array.isArray(value) ? format('cubicBezier', value) : format('linear', value);
+    case 'transition': {
+      const timing = `${format('duration', value.duration)} ${format('easing', value.timingFunction)}`;
+      return value.properties.map((property) => `${property} ${timing}`).join(', ');
+    }
     case 'fontFamily':
       return [value].flat().map(family).join(', ');
     case 'fontWeight':
@@ -340,11 +401,22 @@ export const cssName = (path) => `--sk-${path.slice(1).join('-')}`;
 const variantKey = (entries) => entries.map(([axis, value]) => `${axis}.${value}`).join('+');
 
 /** The resolved value a semantic token takes for concrete axis values. */
-function pick(token, combo, axes) {
+function pick(token, combo, { axes, cross }) {
   const active = token.varies.filter((axis) => combo[axis] !== axes[axis].default);
-  const key = variantKey(active.map((axis) => [axis, combo[axis]]));
-  return token.variants.get(key) ?? token.base;
+  const variant = (...list) => token.variants.get(variantKey(list.map((a) => [a, combo[a]])));
+  if (active.length === 2) {
+    const wins = cross.find((pair) => pair.axes.join() === active.join())?.wins;
+    const other = active.find((axis) => axis !== wins);
+    return variant(...active) ?? (wins && (variant(wins) ?? variant(other))) ?? token.base;
+  }
+  return (active.length === 1 && variant(active[0])) || token.base;
 }
+
+/** Milliseconds a duration or transition value runs for. */
+const runtime = (type, value) => {
+  const duration = type === 'transition' ? value.duration : value;
+  return duration.unit === 's' ? duration.value * 1000 : duration.value;
+};
 
 export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
   for (const key of Object.keys(source)) {
@@ -378,7 +450,7 @@ export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
     if (target.tier !== 'primitive') {
       throw new Error(`${where}: ${ref} is not a primitive; semantic tokens alias primitives only`);
     }
-    if (target.type !== type)
+    if (target.type !== type && !COMPATIBLE[type]?.includes(target.type))
       throw new Error(`${where}: expects ${type} but ${ref} is ${target.type}`);
     used.add(target.id);
     return target;
@@ -445,7 +517,7 @@ export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
   }
 
   const nonDefault = (axis) => axes[axis].values.filter((value) => value !== axes[axis].default);
-  const isPair = (a, b) => cross.some(([x, y]) => x === a && y === b);
+  const pairOf = (a, b) => cross.find(({ axes: [x, y] }) => x === a && y === b);
 
   const names = new Map();
   for (const token of tokens.filter((t) => t.tier === 'semantic')) {
@@ -487,7 +559,7 @@ export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
       const parts = key.split('+').map((part) => part.split('.'));
       const valid =
         parts.length === 2 &&
-        isPair(parts[0][0], parts[1][0]) &&
+        pairOf(parts[0][0], parts[1][0]) &&
         parts.every(
           ([axis, value, extra]) => extra === undefined && nonDefault(axis).includes(value),
         );
@@ -500,14 +572,25 @@ export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
       token.variants.set(key, resolved(raw, `${token.id} (${key})`));
     }
     token.varies = Object.keys(axes).filter((axis) => varied.has(axis));
+    if (['duration', 'transition'].includes(token.type) && token.path[2] !== 'loop') {
+      for (const { value } of [token.base, ...token.variants.values()]) {
+        const ms = runtime(token.type, value);
+        if (ms >= MAX_UI_MS) {
+          throw new Error(
+            `${token.id}: ${ms}ms; UI motion stays under ${MAX_UI_MS}ms, and only motion.loop tokens run longer`,
+          );
+        }
+      }
+    }
     if (token.varies.length > 1) {
       const [a, b, extra] = token.varies;
-      if (extra || !isPair(a, b)) {
+      const pair = !extra && pairOf(a, b);
+      if (!pair) {
         throw new Error(
           `${token.id}: axes ${token.varies.join(', ')} vary this token together, but only a declared pair may`,
         );
       }
-      for (const va of nonDefault(a)) {
+      for (const va of pair.wins ? [] : nonDefault(a)) {
         for (const vb of nonDefault(b)) {
           const key = variantKey([
             [a, va],
@@ -556,7 +639,11 @@ export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
           throw new Error(`${token.id}: contrast pair names unknown colour role "${pair.on}"`);
         }
         const where = `${token.id} on ${pair.on}${label ? ` (${label})` : ''}`;
-        const colors = [pick(token, combo, axes).value, pick(background, combo, axes).value];
+        const registry = { axes, cross };
+        const colors = [
+          pick(token, combo, registry).value,
+          pick(background, combo, registry).value,
+        ];
         if (colors.some((color) => color.alpha !== undefined && color.alpha !== 1)) {
           throw new Error(`${where}: contrast needs opaque colours`);
         }
@@ -574,7 +661,8 @@ export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
 /**
  * `:root` holds every default. Each axis value gets a block declaring every token that axis varies, so a
  * nested scope restores what an ancestor changed. Declared pairs get compound blocks, which outrank the
- * single ones, and `system` values repeat inside their media query.
+ * single ones, and `system` values repeat inside their media query. An axis that follows the system when
+ * its attribute is absent also gets `:not([attribute])` blocks there.
  */
 function emitCss(semantic, { axes, cross, defaults }) {
   const attr = (axis, value) => `[${axes[axis].attribute}="${value}"]`;
@@ -584,7 +672,7 @@ function emitCss(semantic, { axes, cross, defaults }) {
   const lines = (list, combo, indent) =>
     list.map((token, i) => {
       const gap = i > 0 && list[i - 1].path[1] !== token.path[1] ? '\n' : '';
-      return `${gap}${indent}${token.name}: ${pick(token, combo, axes).css};`;
+      return `${gap}${indent}${token.name}: ${pick(token, combo, { axes, cross }).css};`;
     });
   const block = (selector, body, indent) =>
     `${indent}${selector} {\n${body.join('\n')}\n${indent}}\n`;
@@ -609,7 +697,9 @@ function emitCss(semantic, { axes, cross, defaults }) {
       }
     }
   }
-  for (const [a, b] of cross) {
+  for (const {
+    axes: [a, b],
+  } of cross) {
     if (axes[a].system && axes[b].system)
       throw new Error(`${a} and ${b} cannot both follow the system`);
     const varied = semantic.filter((t) => t.varies.includes(a) && t.varies.includes(b));
@@ -631,6 +721,26 @@ function emitCss(semantic, { axes, cross, defaults }) {
           );
           place(inMedia && axes[system].system.query, text);
         }
+      }
+    }
+  }
+  for (const [axis, def] of Object.entries(axes)) {
+    if (def.absent !== 'system') continue;
+    const absent = `:not([${def.attribute}])`;
+    const varied = semantic.filter((t) => t.varies.includes(axis));
+    const combo = { ...defaults, [axis]: def.system.value };
+    if (varied.length)
+      place(def.system.query, block(`:root${absent}`, lines(varied, combo, '      '), '    '));
+    for (const { axes: pair } of cross.filter(({ axes: pair }) => pair.includes(axis))) {
+      const other = pair.find((a) => a !== axis);
+      const both = varied.filter((t) => t.varies.includes(other));
+      for (const value of both.length ? axes[other].values : []) {
+        const text = block(
+          `${attr(other, value)}${absent}`,
+          lines(both, { ...combo, [other]: value }, '      '),
+          '    ',
+        );
+        place(def.system.query, text);
       }
     }
   }

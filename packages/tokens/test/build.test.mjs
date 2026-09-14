@@ -2,6 +2,7 @@ import { cpSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
 import { AXES, buildTokens, CROSS, readSource, staleFiles } from '../scripts/build.mjs';
 
@@ -23,13 +24,17 @@ function blocks(css, indent) {
   }));
 }
 
-/** The value a token should declare for concrete axis values. */
+/** The value a token should declare for concrete axis values. A pair's winning axis overrides the other. */
 const valueIn = (token, combo) => {
-  const key = token.varies
-    .filter((axis) => combo[axis] !== DEFAULTS[axis])
-    .map((axis) => `${axis}.${combo[axis]}`)
-    .join('+');
-  return token.variants[key] ?? token.value;
+  const active = token.varies.filter((axis) => combo[axis] !== DEFAULTS[axis]);
+  const variant = (...axes) =>
+    token.variants[axes.map((axis) => `${axis}.${combo[axis]}`).join('+')];
+  if (active.length === 2) {
+    const wins = CROSS.find((pair) => pair.axes.join() === active.join())?.wins;
+    const other = active.find((axis) => axis !== wins);
+    return variant(...active) ?? (wins && (variant(wins) ?? variant(other))) ?? token.value;
+  }
+  return (active.length === 1 && variant(active[0])) || token.value;
 };
 const expectedBlock = (tokens, combo, scheme) => ({
   ...(scheme ? { 'color-scheme': scheme } : {}),
@@ -107,6 +112,87 @@ describe('generated CSS', () => {
         );
       }
     }
+  });
+
+  it('gives every motion personality and level a block, and each explicit pair a compound', () => {
+    for (const axis of ['motion-personality', 'motion']) {
+      for (const value of AXES[axis].values) {
+        expect(block(`[${AXES[axis].attribute}="${value}"]`), `${axis} ${value}`).toEqual(
+          expectedBlock(variedBy(axis), { ...DEFAULTS, [axis]: value }),
+        );
+      }
+    }
+    const both = variedBy('motion-personality', 'motion');
+    for (const personality of AXES['motion-personality'].values) {
+      for (const level of [...AXES.motion.values, 'system']) {
+        if (personality === 'crisp' && level === 'full') continue;
+        const selector = `[data-sk-motion-personality="${personality}"][data-sk-motion="${level}"]`;
+        const combo = {
+          ...DEFAULTS,
+          'motion-personality': personality,
+          motion: level === 'system' ? 'full' : level,
+        };
+        expect(block(selector), selector).toEqual(expectedBlock(both, combo));
+      }
+    }
+  });
+
+  it('follows the reduced-motion preference when no level is set', () => {
+    const reduce = top.find((b) => b.selector === '@media (prefers-reduced-motion: reduce)');
+    const rule = (selector) =>
+      blocks(reduce.body, 4).find((b) => b.selector === selector)?.declarations;
+    const reduced = { ...DEFAULTS, motion: 'reduced' };
+    expect(rule(':root:not([data-sk-motion])')).toEqual(expectedBlock(variedBy('motion'), reduced));
+    expect(rule('[data-sk-motion="system"]')).toEqual(expectedBlock(variedBy('motion'), reduced));
+    for (const personality of AXES['motion-personality'].values) {
+      const combo = { ...reduced, 'motion-personality': personality };
+      const both = variedBy('motion-personality', 'motion');
+      expect(rule(`[data-sk-motion-personality="${personality}"]:not([data-sk-motion])`)).toEqual(
+        expectedBlock(both, combo),
+      );
+    }
+  });
+
+  it('drops travel and scale but keeps timing under reduced motion, and is instant when off', () => {
+    const motion = semantic.filter((t) => t.path.startsWith('semantic.motion.'));
+    for (const personality of AXES['motion-personality'].values) {
+      const at = (level) => (t) =>
+        valueIn(t, { ...DEFAULTS, 'motion-personality': personality, motion: level });
+      for (const token of motion) {
+        const [full, reduced, off] = ['full', 'reduced', 'off'].map((level) => at(level)(token));
+        const where = `${personality}: ${token.path}`;
+        if (token.path.endsWith('.travel')) {
+          expect([reduced, off], where).toEqual(['0px', '0px']);
+        } else if (token.path.endsWith('.scale')) {
+          expect([reduced, off], where).toEqual(['1', '1']);
+        } else {
+          expect(reduced, where).toBe(full);
+        }
+        if (
+          ['duration', 'transition'].includes(token.type) &&
+          !/\.(loop|stream)\./.test(token.path)
+        ) {
+          expect(
+            [...off.matchAll(/(\d+)ms/g)].map(([, ms]) => ms),
+            where,
+          ).toEqual(expect.arrayContaining([expect.stringMatching(/^[01]$/)]));
+          expect(
+            [...off.matchAll(/(\d+)ms/g)].every(([, ms]) => Number(ms) <= 1),
+            where,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
+  it('emits motion levels after personalities', () => {
+    expect(css.indexOf('[data-sk-motion-personality="playful"] {')).toBeLessThan(
+      css.indexOf('[data-sk-motion="reduced"] {'),
+    );
+  });
+
+  it('stays within its compressed size budget', () => {
+    expect(gzipSync(css).length).toBeLessThan(6000);
   });
 
   it('keeps circles round on every radius scale', () => {
@@ -432,6 +518,88 @@ describe('guards', () => {
       ).toThrow(
         /semantic\.color\.text on page \(theme dark\): 1\.00:1 is below the documented 4\.5:1/,
       );
+    });
+  });
+
+  describe('motion types', () => {
+    const ms = (value) => ({ value, unit: 'ms' });
+    const P = (path) => `{primitive.motion.${path}}`;
+    const withMotion = (edit = () => {}) =>
+      build((s) => {
+        Object.assign(s.primitive, {
+          motion: {
+            duration: {
+              $type: 'duration',
+              100: { $value: ms(100), ...meta() },
+              300: { $value: ms(300), ...meta() },
+            },
+            easing: {
+              $type: 'cubicBezier',
+              standard: { $value: [0.2, 0, 0, 1], ...meta() },
+              spring: { $type: 'linear', $value: { points: [0, 1.1, 1] }, ...meta() },
+            },
+          },
+        });
+        Object.assign(s.semantic, {
+          motion: {
+            duration: { $type: 'duration', fast: { $value: P('duration.100'), ...meta() } },
+            loop: { $type: 'duration', pulse: { $value: P('duration.300'), ...meta() } },
+            easing: {
+              $type: 'easing',
+              standard: { $value: P('easing.standard'), ...meta() },
+              enter: { $value: P('easing.spring'), ...meta() },
+            },
+            transition: {
+              $type: 'transition',
+              base: {
+                $value: {
+                  properties: ['opacity', 'color'],
+                  duration: P('duration.100'),
+                  timingFunction: P('easing.standard'),
+                },
+                ...meta(),
+              },
+            },
+          },
+        });
+        edit(s);
+      });
+
+    it('formats cubic and spring easings and transition lists', () => {
+      const { css } = withMotion()();
+      expect(css).toContain('--sk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);');
+      expect(css).toContain('--sk-motion-easing-enter: linear(0, 1.1, 1);');
+      expect(css).toContain(
+        '--sk-motion-transition-base: opacity 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);',
+      );
+    });
+
+    it('rejects UI motion of 300ms or more, but lets loops run longer', () => {
+      expect(
+        withMotion((s) =>
+          Object.assign(s.semantic.motion.duration, {
+            slow: { $value: P('duration.300'), ...meta() },
+          }),
+        ),
+      ).toThrow(/300ms; UI motion stays under 300ms/);
+    });
+
+    it('rejects a malformed spring, a physical transition property and a wrong easing type', () => {
+      expect(
+        withMotion((s) =>
+          Object.assign(s.primitive.motion.easing.spring, { $value: { points: [0, 1] } }),
+        ),
+      ).toThrow(/linear needs/);
+      expect(
+        withMotion((s) => {
+          s.semantic.motion.transition.base.$value.properties = ['margin-left'];
+        }),
+      ).toThrow(/logical CSS property names/);
+      expect(
+        withMotion((s) =>
+          Object.assign(s.semantic.motion.easing.standard, { $value: P('duration.100') }),
+        ),
+      ).toThrow(/expects easing but \{primitive\.motion\.duration\.100\} is duration/);
     });
   });
 

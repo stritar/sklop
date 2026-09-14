@@ -53,10 +53,29 @@
 
     --sk-motion-duration-fast: 100ms;
     --sk-motion-duration-normal: 200ms;
-    --sk-motion-duration-moderate: 300ms;
+    --sk-motion-duration-moderate: 250ms;
     --sk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
     --sk-motion-easing-enter: cubic-bezier(0, 0, 0.2, 1);
     --sk-motion-easing-exit: cubic-bezier(0.3, 0, 1, 0.3);
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-focus: outline-color 1ms cubic-bezier(0.2, 0, 0, 1), outline-offset 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-easing: cubic-bezier(0, 0, 0.2, 1);
+    --sk-motion-enter-travel: 4px;
+    --sk-motion-enter-scale: 0.96;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-easing: cubic-bezier(0.3, 0, 1, 0.3);
+    --sk-motion-exit-travel: 4px;
+    --sk-motion-exit-scale: 0.96;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 0.97;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+    --sk-motion-stream-cadence: 30ms;
+    --sk-motion-loop-pulse: 1200ms;
+    --sk-motion-loop-shimmer: 1600ms;
+    --sk-motion-loop-indeterminate: 1400ms;
   }
 
   [data-sk-theme="light"] {
@@ -255,6 +274,150 @@
     --sk-radius-pill: 9999px;
   }
 
+  [data-sk-motion-personality="crisp"] {
+    --sk-motion-duration-fast: 100ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 250ms;
+    --sk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-easing-enter: cubic-bezier(0, 0, 0.2, 1);
+    --sk-motion-easing-exit: cubic-bezier(0.3, 0, 1, 0.3);
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-easing: cubic-bezier(0, 0, 0.2, 1);
+    --sk-motion-enter-travel: 4px;
+    --sk-motion-enter-scale: 0.96;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-easing: cubic-bezier(0.3, 0, 1, 0.3);
+    --sk-motion-exit-travel: 4px;
+    --sk-motion-exit-scale: 0.96;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 0.97;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+    --sk-motion-stream-cadence: 30ms;
+  }
+
+  [data-sk-motion-personality="soft"] {
+    --sk-motion-duration-fast: 150ms;
+    --sk-motion-duration-normal: 220ms;
+    --sk-motion-duration-moderate: 280ms;
+    --sk-motion-easing-standard: cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-easing-enter: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --sk-motion-easing-exit: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --sk-motion-transition-hover: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-transition-base: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1), translate 220ms cubic-bezier(0.4, 0, 0.2, 1), scale 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-enter-duration: 220ms;
+    --sk-motion-enter-easing: cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --sk-motion-enter-travel: 6px;
+    --sk-motion-enter-scale: 0.98;
+    --sk-motion-exit-duration: 160ms;
+    --sk-motion-exit-easing: cubic-bezier(0.55, 0.085, 0.68, 0.53);
+    --sk-motion-exit-travel: 6px;
+    --sk-motion-exit-scale: 0.98;
+    --sk-motion-press-duration: 160ms;
+    --sk-motion-press-scale: 0.98;
+    --sk-motion-release-duration: 110ms;
+    --sk-motion-stagger-step: 40ms;
+    --sk-motion-stream-cadence: 45ms;
+  }
+
+  [data-sk-motion-personality="playful"] {
+    --sk-motion-duration-fast: 120ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 260ms;
+    --sk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-easing-enter: linear(0, 0.098, 0.306, 0.531, 0.726, 0.871, 0.965, 1.018, 1.042, 1.046, 1.04, 1.03, 1.02, 1.011, 1.005, 1.001, 0.999, 0.998, 0.998, 0.998, 1);
+    --sk-motion-easing-exit: cubic-bezier(0.3, 0, 1, 0.3);
+    --sk-motion-transition-hover: background-color 120ms cubic-bezier(0.2, 0, 0, 1), border-color 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 260ms;
+    --sk-motion-enter-easing: linear(0, 0.098, 0.306, 0.531, 0.726, 0.871, 0.965, 1.018, 1.042, 1.046, 1.04, 1.03, 1.02, 1.011, 1.005, 1.001, 0.999, 0.998, 0.998, 0.998, 1);
+    --sk-motion-enter-travel: 8px;
+    --sk-motion-enter-scale: 0.94;
+    --sk-motion-exit-duration: 120ms;
+    --sk-motion-exit-easing: cubic-bezier(0.3, 0, 1, 0.3);
+    --sk-motion-exit-travel: 8px;
+    --sk-motion-exit-scale: 0.94;
+    --sk-motion-press-duration: 140ms;
+    --sk-motion-press-scale: 0.95;
+    --sk-motion-release-duration: 90ms;
+    --sk-motion-stagger-step: 50ms;
+    --sk-motion-stream-cadence: 30ms;
+  }
+
+  [data-sk-motion="full"] {
+    --sk-motion-duration-fast: 100ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 250ms;
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-travel: 4px;
+    --sk-motion-enter-scale: 0.96;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-travel: 4px;
+    --sk-motion-exit-scale: 0.96;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 0.97;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+  }
+
+  [data-sk-motion="reduced"] {
+    --sk-motion-duration-fast: 100ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 250ms;
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+  }
+
+  [data-sk-motion="off"] {
+    --sk-motion-duration-fast: 1ms;
+    --sk-motion-duration-normal: 1ms;
+    --sk-motion-duration-moderate: 1ms;
+    --sk-motion-transition-hover: background-color 1ms cubic-bezier(0.2, 0, 0, 1), border-color 1ms cubic-bezier(0.2, 0, 0, 1), color 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 1ms cubic-bezier(0.2, 0, 0, 1), transform 1ms cubic-bezier(0.2, 0, 0, 1), translate 1ms cubic-bezier(0.2, 0, 0, 1), scale 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 1ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 1ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 1ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 1ms;
+    --sk-motion-stagger-step: 0ms;
+  }
+
+  [data-sk-motion="system"] {
+    --sk-motion-duration-fast: 100ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 250ms;
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-travel: 4px;
+    --sk-motion-enter-scale: 0.96;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-travel: 4px;
+    --sk-motion-exit-scale: 0.96;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 0.97;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+  }
+
   [data-sk-theme="light"][data-sk-preset="neutral"] {
     --sk-color-text-on-accent: #ffffff;
     --sk-color-border-focus: #3d3c4a;
@@ -305,6 +468,204 @@
     --sk-color-accent-text: #25242e;
   }
 
+  [data-sk-motion-personality="crisp"][data-sk-motion="reduced"] {
+    --sk-motion-duration-fast: 100ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 250ms;
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+  }
+
+  [data-sk-motion-personality="crisp"][data-sk-motion="off"] {
+    --sk-motion-duration-fast: 1ms;
+    --sk-motion-duration-normal: 1ms;
+    --sk-motion-duration-moderate: 1ms;
+    --sk-motion-transition-hover: background-color 1ms cubic-bezier(0.2, 0, 0, 1), border-color 1ms cubic-bezier(0.2, 0, 0, 1), color 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 1ms cubic-bezier(0.2, 0, 0, 1), transform 1ms cubic-bezier(0.2, 0, 0, 1), translate 1ms cubic-bezier(0.2, 0, 0, 1), scale 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 1ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 1ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 1ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 1ms;
+    --sk-motion-stagger-step: 0ms;
+  }
+
+  [data-sk-motion-personality="crisp"][data-sk-motion="system"] {
+    --sk-motion-duration-fast: 100ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 250ms;
+    --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 200ms;
+    --sk-motion-enter-travel: 4px;
+    --sk-motion-enter-scale: 0.96;
+    --sk-motion-exit-duration: 150ms;
+    --sk-motion-exit-travel: 4px;
+    --sk-motion-exit-scale: 0.96;
+    --sk-motion-press-duration: 120ms;
+    --sk-motion-press-scale: 0.97;
+    --sk-motion-release-duration: 80ms;
+    --sk-motion-stagger-step: 30ms;
+  }
+
+  [data-sk-motion-personality="soft"][data-sk-motion="full"] {
+    --sk-motion-duration-fast: 150ms;
+    --sk-motion-duration-normal: 220ms;
+    --sk-motion-duration-moderate: 280ms;
+    --sk-motion-transition-hover: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-transition-base: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1), translate 220ms cubic-bezier(0.4, 0, 0.2, 1), scale 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-enter-duration: 220ms;
+    --sk-motion-enter-travel: 6px;
+    --sk-motion-enter-scale: 0.98;
+    --sk-motion-exit-duration: 160ms;
+    --sk-motion-exit-travel: 6px;
+    --sk-motion-exit-scale: 0.98;
+    --sk-motion-press-duration: 160ms;
+    --sk-motion-press-scale: 0.98;
+    --sk-motion-release-duration: 110ms;
+    --sk-motion-stagger-step: 40ms;
+  }
+
+  [data-sk-motion-personality="soft"][data-sk-motion="reduced"] {
+    --sk-motion-duration-fast: 150ms;
+    --sk-motion-duration-normal: 220ms;
+    --sk-motion-duration-moderate: 280ms;
+    --sk-motion-transition-hover: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-transition-base: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1), translate 220ms cubic-bezier(0.4, 0, 0.2, 1), scale 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-enter-duration: 220ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 160ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 160ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 110ms;
+    --sk-motion-stagger-step: 40ms;
+  }
+
+  [data-sk-motion-personality="soft"][data-sk-motion="off"] {
+    --sk-motion-duration-fast: 1ms;
+    --sk-motion-duration-normal: 1ms;
+    --sk-motion-duration-moderate: 1ms;
+    --sk-motion-transition-hover: background-color 1ms cubic-bezier(0.2, 0, 0, 1), border-color 1ms cubic-bezier(0.2, 0, 0, 1), color 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 1ms cubic-bezier(0.2, 0, 0, 1), transform 1ms cubic-bezier(0.2, 0, 0, 1), translate 1ms cubic-bezier(0.2, 0, 0, 1), scale 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 1ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 1ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 1ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 1ms;
+    --sk-motion-stagger-step: 0ms;
+  }
+
+  [data-sk-motion-personality="soft"][data-sk-motion="system"] {
+    --sk-motion-duration-fast: 150ms;
+    --sk-motion-duration-normal: 220ms;
+    --sk-motion-duration-moderate: 280ms;
+    --sk-motion-transition-hover: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-transition-base: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1), translate 220ms cubic-bezier(0.4, 0, 0.2, 1), scale 220ms cubic-bezier(0.4, 0, 0.2, 1);
+    --sk-motion-enter-duration: 220ms;
+    --sk-motion-enter-travel: 6px;
+    --sk-motion-enter-scale: 0.98;
+    --sk-motion-exit-duration: 160ms;
+    --sk-motion-exit-travel: 6px;
+    --sk-motion-exit-scale: 0.98;
+    --sk-motion-press-duration: 160ms;
+    --sk-motion-press-scale: 0.98;
+    --sk-motion-release-duration: 110ms;
+    --sk-motion-stagger-step: 40ms;
+  }
+
+  [data-sk-motion-personality="playful"][data-sk-motion="full"] {
+    --sk-motion-duration-fast: 120ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 260ms;
+    --sk-motion-transition-hover: background-color 120ms cubic-bezier(0.2, 0, 0, 1), border-color 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 260ms;
+    --sk-motion-enter-travel: 8px;
+    --sk-motion-enter-scale: 0.94;
+    --sk-motion-exit-duration: 120ms;
+    --sk-motion-exit-travel: 8px;
+    --sk-motion-exit-scale: 0.94;
+    --sk-motion-press-duration: 140ms;
+    --sk-motion-press-scale: 0.95;
+    --sk-motion-release-duration: 90ms;
+    --sk-motion-stagger-step: 50ms;
+  }
+
+  [data-sk-motion-personality="playful"][data-sk-motion="reduced"] {
+    --sk-motion-duration-fast: 120ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 260ms;
+    --sk-motion-transition-hover: background-color 120ms cubic-bezier(0.2, 0, 0, 1), border-color 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 260ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 120ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 140ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 90ms;
+    --sk-motion-stagger-step: 50ms;
+  }
+
+  [data-sk-motion-personality="playful"][data-sk-motion="off"] {
+    --sk-motion-duration-fast: 1ms;
+    --sk-motion-duration-normal: 1ms;
+    --sk-motion-duration-moderate: 1ms;
+    --sk-motion-transition-hover: background-color 1ms cubic-bezier(0.2, 0, 0, 1), border-color 1ms cubic-bezier(0.2, 0, 0, 1), color 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 1ms cubic-bezier(0.2, 0, 0, 1), transform 1ms cubic-bezier(0.2, 0, 0, 1), translate 1ms cubic-bezier(0.2, 0, 0, 1), scale 1ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 1ms;
+    --sk-motion-enter-travel: 0px;
+    --sk-motion-enter-scale: 1;
+    --sk-motion-exit-duration: 1ms;
+    --sk-motion-exit-travel: 0px;
+    --sk-motion-exit-scale: 1;
+    --sk-motion-press-duration: 1ms;
+    --sk-motion-press-scale: 1;
+    --sk-motion-release-duration: 1ms;
+    --sk-motion-stagger-step: 0ms;
+  }
+
+  [data-sk-motion-personality="playful"][data-sk-motion="system"] {
+    --sk-motion-duration-fast: 120ms;
+    --sk-motion-duration-normal: 200ms;
+    --sk-motion-duration-moderate: 260ms;
+    --sk-motion-transition-hover: background-color 120ms cubic-bezier(0.2, 0, 0, 1), border-color 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+    --sk-motion-enter-duration: 260ms;
+    --sk-motion-enter-travel: 8px;
+    --sk-motion-enter-scale: 0.94;
+    --sk-motion-exit-duration: 120ms;
+    --sk-motion-exit-travel: 8px;
+    --sk-motion-exit-scale: 0.94;
+    --sk-motion-press-duration: 140ms;
+    --sk-motion-press-scale: 0.95;
+    --sk-motion-release-duration: 90ms;
+    --sk-motion-stagger-step: 50ms;
+  }
+
   @media (prefers-color-scheme: dark) {
     [data-sk-theme="system"] {
       color-scheme: dark;
@@ -352,6 +713,152 @@
       --sk-color-accent-subtle: #3d3c4a;
       --sk-color-accent-border: #58576a;
       --sk-color-accent-text: #f7f7f9;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    [data-sk-motion="system"] {
+      --sk-motion-duration-fast: 100ms;
+      --sk-motion-duration-normal: 200ms;
+      --sk-motion-duration-moderate: 250ms;
+      --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-enter-duration: 200ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 150ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 120ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 80ms;
+      --sk-motion-stagger-step: 30ms;
+    }
+
+    [data-sk-motion-personality="crisp"][data-sk-motion="system"] {
+      --sk-motion-duration-fast: 100ms;
+      --sk-motion-duration-normal: 200ms;
+      --sk-motion-duration-moderate: 250ms;
+      --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-enter-duration: 200ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 150ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 120ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 80ms;
+      --sk-motion-stagger-step: 30ms;
+    }
+
+    [data-sk-motion-personality="soft"][data-sk-motion="system"] {
+      --sk-motion-duration-fast: 150ms;
+      --sk-motion-duration-normal: 220ms;
+      --sk-motion-duration-moderate: 280ms;
+      --sk-motion-transition-hover: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --sk-motion-transition-base: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1), translate 220ms cubic-bezier(0.4, 0, 0.2, 1), scale 220ms cubic-bezier(0.4, 0, 0.2, 1);
+      --sk-motion-enter-duration: 220ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 160ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 160ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 110ms;
+      --sk-motion-stagger-step: 40ms;
+    }
+
+    [data-sk-motion-personality="playful"][data-sk-motion="system"] {
+      --sk-motion-duration-fast: 120ms;
+      --sk-motion-duration-normal: 200ms;
+      --sk-motion-duration-moderate: 260ms;
+      --sk-motion-transition-hover: background-color 120ms cubic-bezier(0.2, 0, 0, 1), border-color 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-enter-duration: 260ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 120ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 140ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 90ms;
+      --sk-motion-stagger-step: 50ms;
+    }
+
+    :root:not([data-sk-motion]) {
+      --sk-motion-duration-fast: 100ms;
+      --sk-motion-duration-normal: 200ms;
+      --sk-motion-duration-moderate: 250ms;
+      --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-enter-duration: 200ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 150ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 120ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 80ms;
+      --sk-motion-stagger-step: 30ms;
+    }
+
+    [data-sk-motion-personality="crisp"]:not([data-sk-motion]) {
+      --sk-motion-duration-fast: 100ms;
+      --sk-motion-duration-normal: 200ms;
+      --sk-motion-duration-moderate: 250ms;
+      --sk-motion-transition-hover: background-color 100ms cubic-bezier(0.2, 0, 0, 1), border-color 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-enter-duration: 200ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 150ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 120ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 80ms;
+      --sk-motion-stagger-step: 30ms;
+    }
+
+    [data-sk-motion-personality="soft"]:not([data-sk-motion]) {
+      --sk-motion-duration-fast: 150ms;
+      --sk-motion-duration-normal: 220ms;
+      --sk-motion-duration-moderate: 280ms;
+      --sk-motion-transition-hover: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), border-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+      --sk-motion-transition-base: opacity 220ms cubic-bezier(0.4, 0, 0.2, 1), transform 220ms cubic-bezier(0.4, 0, 0.2, 1), translate 220ms cubic-bezier(0.4, 0, 0.2, 1), scale 220ms cubic-bezier(0.4, 0, 0.2, 1);
+      --sk-motion-enter-duration: 220ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 160ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 160ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 110ms;
+      --sk-motion-stagger-step: 40ms;
+    }
+
+    [data-sk-motion-personality="playful"]:not([data-sk-motion]) {
+      --sk-motion-duration-fast: 120ms;
+      --sk-motion-duration-normal: 200ms;
+      --sk-motion-duration-moderate: 260ms;
+      --sk-motion-transition-hover: background-color 120ms cubic-bezier(0.2, 0, 0, 1), border-color 120ms cubic-bezier(0.2, 0, 0, 1), color 120ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-transition-base: opacity 200ms cubic-bezier(0.2, 0, 0, 1), transform 200ms cubic-bezier(0.2, 0, 0, 1), translate 200ms cubic-bezier(0.2, 0, 0, 1), scale 200ms cubic-bezier(0.2, 0, 0, 1);
+      --sk-motion-enter-duration: 260ms;
+      --sk-motion-enter-travel: 0px;
+      --sk-motion-enter-scale: 1;
+      --sk-motion-exit-duration: 120ms;
+      --sk-motion-exit-travel: 0px;
+      --sk-motion-exit-scale: 1;
+      --sk-motion-press-duration: 140ms;
+      --sk-motion-press-scale: 1;
+      --sk-motion-release-duration: 90ms;
+      --sk-motion-stagger-step: 50ms;
     }
   }
 }
