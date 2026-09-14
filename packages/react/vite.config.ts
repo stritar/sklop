@@ -15,7 +15,7 @@ export default defineConfig({
     cssCodeSplit: false,
     sourcemap: true,
     rollupOptions: {
-      external: [/^react($|\/)/, /^react-dom($|\/)/],
+      external: [/^react($|\/)/, /^react-dom($|\/)/, /^@sklop\/tokens($|\/)/],
       output: { preserveModules: true, preserveModulesRoot: 'src', entryFileNames: '[name].js' },
     },
   },

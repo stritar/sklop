@@ -35,7 +35,7 @@
     "access": "public"
   },
   "scripts": {
-    "build": "vite build && tsc -p tsconfig.build.json && node scripts/build-registry.mjs && node scripts/check-manifests.mjs && node scripts/generate-component-tokens.mjs --check",
+    "build": "vite build && tsc -p tsconfig.build.json && node scripts/check-dist.mjs && node scripts/build-registry.mjs && node scripts/check-manifests.mjs && node scripts/generate-component-tokens.mjs --check",
     "generate:component-tokens": "node scripts/generate-component-tokens.mjs",
     "test": "vitest run --passWithNoTests",
     "typecheck": "tsc -p tsconfig.json",
