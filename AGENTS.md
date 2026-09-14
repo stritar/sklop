@@ -32,3 +32,8 @@ ejected into an app with the CLI.
 
 Changesets + npm Trusted Publishing from `.github/workflows/publish.yml`. No npm tokens in the
 repo or CI secrets.
+
+## Roadmap
+
+`ROADMAP.md` is the only roadmap: phases, component coverage, settled decisions and the
+definition of done. Phase status lines are edited there and nowhere else.
