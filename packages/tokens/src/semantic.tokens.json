@@ -1,0 +1,489 @@
+{
+  "semantic": {
+    "color": {
+      "$type": "color",
+      "bg": {
+        "page": {
+          "$value": "{primitive.color.neutral.50}",
+          "$description": "Page background.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:3.fill"] } }
+        },
+        "surface": {
+          "$value": "{primitive.color.white}",
+          "$description": "Flat surfaces on the page, such as cards and panels. The same white as raised, without the shadow.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "raised": {
+          "$value": "{primitive.color.white}",
+          "$description": "Surfaces that float above the page: popovers, menus, the prompt bar. Pair with shadow-raised.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:5.fill", "1:22.fill"] } }
+        },
+        "sunken": {
+          "$value": "{primitive.color.neutral.100}",
+          "$description": "Wells set into a surface, such as a code block.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "hover": {
+          "$value": "{primitive.color.neutral.100}",
+          "$description": "Fill behind a transparent row or control under the pointer.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "active": {
+          "$value": "{primitive.color.neutral.150}",
+          "$description": "Fill behind a transparent row or control while pressed or selected.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "overlay": {
+          "$value": "{primitive.color.neutral-alpha.40}",
+          "$description": "Scrim behind modal layers.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        }
+      },
+      "text": {
+        "primary": {
+          "$value": "{primitive.color.neutral.700}",
+          "$description": "Default text and icons: labels, typed input.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:11.fill",
+                "1:17.fill",
+                "1:27.fill",
+                "1:30.fill",
+                "1:10.fill",
+                "1:16.fill"
+              ]
+            }
+          }
+        },
+        "secondary": {
+          "$value": "{primitive.color.neutral.500}",
+          "$description": "Supporting text and icons: descriptions, hints, toolbar icons. Meets 4.5:1 on raised and surface only.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:12.fill",
+                "1:18.fill",
+                "1:21.fill",
+                "1:26.fill",
+                "1:32.fill",
+                "1:35.fill"
+              ]
+            }
+          }
+        },
+        "disabled": {
+          "$value": "{primitive.color.neutral.300}",
+          "$description": "Text and icons of disabled controls.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "inverse": {
+          "$value": "{primitive.color.white}",
+          "$description": "Text and icons on dark fills.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "on-accent": {
+          "$value": "{primitive.color.coral.950}",
+          "$description": "Text and icons on accent-solid. White measures only 2.66:1 there.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:38.fill"] } }
+        }
+      },
+      "border": {
+        "separator": {
+          "$value": "{primitive.color.neutral.100}",
+          "$description": "Lines that divide content, such as the rule above a hint.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:19.fill"] } }
+        },
+        "subtle": {
+          "$value": "{primitive.color.neutral.100}",
+          "$description": "Hairline edge of raised surfaces. The ring inside shadow-raised uses the same colour.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:4.effects.0.color"] } }
+        },
+        "default": {
+          "$value": "{primitive.color.neutral.200}",
+          "$description": "Borders that enclose a control where the border is decoration, not its only edge.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "strong": {
+          "$value": "{primitive.color.neutral.400}",
+          "$description": "Borders that are the only visible edge of a control. At least 3:1 on page and raised.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "focus": {
+          "$value": "{primitive.color.coral.400}",
+          "$description": "Focus indicators. At least 3:1 on page and raised.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        }
+      },
+      "accent": {
+        "solid": {
+          "$value": "{primitive.color.coral.300}",
+          "$description": "The one filled primary action in a view, such as send.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:36.fill"] } }
+        },
+        "solid-hover": {
+          "$value": "{primitive.color.coral.350}",
+          "$description": "accent-solid under the pointer. text-on-accent stays at least 4.5:1 on it.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "subtle": {
+          "$value": "{primitive.color.coral.50}",
+          "$description": "Tinted background for selected or highlighted items.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "border": {
+          "$value": "{primitive.color.coral.200}",
+          "$description": "Border of accent-tinted items.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        },
+        "text": {
+          "$value": "{primitive.color.coral.500}",
+          "$description": "Accent text and icons, such as links. At least 4.5:1 on page and raised.",
+          "$extensions": { "sklop": { "origin": "generated" } }
+        }
+      }
+    },
+    "font": {
+      "family": {
+        "$type": "fontFamily",
+        "base": {
+          "$value": "{primitive.font.family.figtree}",
+          "$description": "The UI typeface. Load Figtree in the app; without it, text falls back to system-ui.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:11.fontFamily",
+                "1:12.fontFamily",
+                "1:17.fontFamily",
+                "1:18.fontFamily",
+                "1:21.fontFamily",
+                "1:27.fontFamily",
+                "1:30.fontFamily"
+              ]
+            }
+          }
+        }
+      },
+      "label": {
+        "$type": "typography",
+        "md": {
+          "$value": {
+            "fontFamily": "{primitive.font.family.figtree}",
+            "fontSize": "{primitive.font.size.14}",
+            "fontWeight": "{primitive.font.weight.semibold}",
+            "letterSpacing": "{primitive.font.letter-spacing.0}",
+            "lineHeight": 1.1428571428571428
+          },
+          "$description": "Labels and item titles. 14px on a 16px line box.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:11", "1:17"] } }
+        },
+        "sm": {
+          "$value": {
+            "fontFamily": "{primitive.font.family.figtree}",
+            "fontSize": "{primitive.font.size.12}",
+            "fontWeight": "{primitive.font.weight.semibold}",
+            "letterSpacing": "{primitive.font.letter-spacing.0}",
+            "lineHeight": 1.3333333333333333
+          },
+          "$description": "Compact control labels, such as a model picker. 12px on a 16px line box.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:30"] } }
+        }
+      },
+      "body": {
+        "$type": "typography",
+        "md": {
+          "$value": {
+            "fontFamily": "{primitive.font.family.figtree}",
+            "fontSize": "{primitive.font.size.14}",
+            "fontWeight": "{primitive.font.weight.regular}",
+            "letterSpacing": "{primitive.font.letter-spacing.0}",
+            "lineHeight": 1.1428571428571428
+          },
+          "$description": "Descriptions and body text. 14px on a 16px line box.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:12", "1:18"] } }
+        },
+        "sm": {
+          "$value": {
+            "fontFamily": "{primitive.font.family.figtree}",
+            "fontSize": "{primitive.font.size.12}",
+            "fontWeight": "{primitive.font.weight.regular}",
+            "letterSpacing": "{primitive.font.letter-spacing.0}",
+            "lineHeight": 1.3333333333333333
+          },
+          "$description": "Hints and helper text. 12px on a 16px line box.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:21"] } }
+        }
+      },
+      "input": {
+        "$type": "typography",
+        "md": {
+          "$value": {
+            "fontFamily": "{primitive.font.family.figtree}",
+            "fontSize": "{primitive.font.size.14}",
+            "fontWeight": "{primitive.font.weight.medium}",
+            "letterSpacing": "{primitive.font.letter-spacing.0}",
+            "lineHeight": 2
+          },
+          "$description": "Typed input text. 14px on a 28px line box, the height of size-control-sm.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:27"] } }
+        }
+      }
+    },
+    "space": {
+      "$type": "dimension",
+      "gap": {
+        "xs": {
+          "$value": "{primitive.space.4}",
+          "$description": "Tight gap between a label and its glyph, such as a chevron.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:29.gap"] } }
+        },
+        "sm": {
+          "$value": "{primitive.space.8}",
+          "$description": "Default gap between items in a row or a stack.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:4.gap",
+                "1:5.gap",
+                "1:6.gap",
+                "1:7.gap",
+                "1:13.gap",
+                "1:23.gap",
+                "1:28.gap"
+              ]
+            }
+          }
+        }
+      },
+      "inset": {
+        "sm": {
+          "$value": "{primitive.space.8}",
+          "$description": "Padding inside surfaces and around lists.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:5.padding.0",
+                "1:5.padding.2",
+                "1:6.padding.1",
+                "1:6.padding.3",
+                "1:22.padding.1",
+                "1:22.padding.3"
+              ]
+            }
+          }
+        },
+        "lg": {
+          "$value": "{primitive.space.16}",
+          "$description": "Padding for text set directly against a surface edge, such as a hint.",
+          "$extensions": {
+            "sklop": { "origin": "sample", "figma": ["1:20.padding.1", "1:20.padding.3"] }
+          }
+        }
+      }
+    },
+    "size": {
+      "$type": "dimension",
+      "icon": {
+        "sm": {
+          "$value": "{primitive.size.12}",
+          "$description": "Small glyphs beside text, such as a chevron.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:31.width", "1:31.height"] } }
+        },
+        "md": {
+          "$value": "{primitive.size.16}",
+          "$description": "Default icon size.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:9.width",
+                "1:9.height",
+                "1:15.width",
+                "1:15.height",
+                "1:25.width",
+                "1:25.height",
+                "1:34.width",
+                "1:34.height",
+                "1:37.width",
+                "1:37.height"
+              ]
+            }
+          }
+        }
+      },
+      "control": {
+        "sm": {
+          "$value": "{primitive.size.28}",
+          "$description": "Icon buttons and single-line rows.",
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": [
+                "1:8.width",
+                "1:8.height",
+                "1:14.width",
+                "1:14.height",
+                "1:24.width",
+                "1:24.height",
+                "1:33.width",
+                "1:33.height",
+                "1:36.width",
+                "1:36.height",
+                "1:7.height",
+                "1:13.height"
+              ]
+            }
+          }
+        },
+        "lg": {
+          "$value": "{primitive.size.44}",
+          "$description": "Large input containers, such as the prompt bar.",
+          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:22.height"] } }
+        }
+      }
+    },
+    "radius": {
+      "$type": "dimension",
+      "lg": {
+        "$value": "{primitive.radius.12}",
+        "$description": "Raised surfaces such as popovers.",
+        "$extensions": { "sklop": { "origin": "sample", "figma": ["1:5.radius"] } }
+      },
+      "full": {
+        "$value": "{primitive.radius.9999}",
+        "$description": "Pills and circles.",
+        "$extensions": {
+          "sklop": { "origin": "sample", "figma": ["1:22.radius", "1:24.radius", "1:36.radius"] }
+        }
+      }
+    },
+    "border": {
+      "width": {
+        "$type": "dimension",
+        "default": {
+          "$value": "{primitive.border.width.1}",
+          "$description": "Hairline borders and separators.",
+          "$extensions": {
+            "sklop": { "origin": "sample", "figma": ["1:19.height", "1:4.effects.0.spread"] }
+          }
+        }
+      }
+    },
+    "shadow": {
+      "$type": "shadow",
+      "raised": {
+        "$value": [
+          {
+            "color": "{primitive.color.black-alpha.1}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 0.5, "unit": "px" },
+            "blur": { "value": 1.3, "unit": "px" },
+            "spread": { "value": 0, "unit": "px" }
+          },
+          {
+            "color": "{primitive.color.black-alpha.1}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 1.2, "unit": "px" },
+            "blur": { "value": 3.1, "unit": "px" },
+            "spread": { "value": 0, "unit": "px" }
+          },
+          {
+            "color": "{primitive.color.black-alpha.1}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 2.3, "unit": "px" },
+            "blur": { "value": 5.8, "unit": "px" },
+            "spread": { "value": 0, "unit": "px" }
+          },
+          {
+            "color": "{primitive.color.black-alpha.2}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 4, "unit": "px" },
+            "blur": { "value": 10.5, "unit": "px" },
+            "spread": { "value": 0, "unit": "px" }
+          },
+          {
+            "color": "{primitive.color.black-alpha.2}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 7.5, "unit": "px" },
+            "blur": { "value": 19, "unit": "px" },
+            "spread": { "value": 0, "unit": "px" }
+          },
+          {
+            "color": "{primitive.color.black-alpha.3}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 18, "unit": "px" },
+            "blur": { "value": 47, "unit": "px" },
+            "spread": { "value": 0, "unit": "px" }
+          },
+          {
+            "color": "{primitive.color.neutral.100}",
+            "offsetX": { "value": 0, "unit": "px" },
+            "offsetY": { "value": 0, "unit": "px" },
+            "blur": { "value": 0, "unit": "px" },
+            "spread": { "value": 1, "unit": "px" }
+          }
+        ],
+        "$description": "Elevation for raised surfaces: the Figma effect style shadow. Six soft layers and a 1px ring, in CSS paint order.",
+        "$extensions": { "sklop": { "origin": "sample", "figma": ["1:4.effects"] } }
+      }
+    },
+    "motion": {
+      "duration": {
+        "$type": "duration",
+        "fast": {
+          "$value": "{primitive.motion.duration.100}",
+          "$description": "Small elements, such as a tooltip appearing or a chip dismissing.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+            }
+          }
+        },
+        "normal": {
+          "$value": "{primitive.motion.duration.200}",
+          "$description": "The default, such as a dropdown opening or a focus ring.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+            }
+          }
+        },
+        "moderate": {
+          "$value": "{primitive.motion.duration.300}",
+          "$description": "Medium elements, such as a dialog entering or a panel sliding in.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+            }
+          }
+        }
+      },
+      "easing": {
+        "$type": "cubicBezier",
+        "standard": {
+          "$value": "{primitive.motion.easing.standard}",
+          "$description": "Elements changing state or moving within the view.",
+          "$extensions": { "sklop": { "origin": "proposed" } }
+        },
+        "enter": {
+          "$value": "{primitive.motion.easing.decelerate}",
+          "$description": "Elements entering the view.",
+          "$extensions": { "sklop": { "origin": "proposed" } }
+        },
+        "exit": {
+          "$value": "{primitive.motion.easing.accelerate}",
+          "$description": "Elements leaving the view.",
+          "$extensions": { "sklop": { "origin": "proposed" } }
+        }
+      }
+    }
+  }
+}

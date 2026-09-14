@@ -1,0 +1,42 @@
+{
+  "name": "@sklop/tokens",
+  "version": "0.0.0",
+  "description": "Design tokens for Sklop as CSS custom properties.",
+  "license": "MIT",
+  "type": "module",
+  "keywords": [
+    "design-tokens",
+    "design-system",
+    "css-custom-properties",
+    "dtcg"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/stritar/sklop.git",
+    "directory": "packages/tokens"
+  },
+  "exports": {
+    "./tokens.css": "./dist/tokens.css",
+    "./tokens.json": "./dist/tokens.json",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": [
+    "*.css"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "generate:ramp": "node scripts/generate-ramp.mjs && biome format --write src/primitive.tokens.json",
+    "test": "vitest run",
+    "typecheck": "true",
+    "check:pack": "publint"
+  },
+  "devDependencies": {
+    "culori": "^4.0.2"
+  }
+}
