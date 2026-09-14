@@ -18,6 +18,11 @@
   "exports": {
     "./tokens.css": "./generated/tokens.css",
     "./tokens.json": "./generated/tokens.json",
+    "./presets.json": "./generated/presets.json",
+    "./theme": {
+      "types": "./generated/theme.d.ts",
+      "default": "./generated/theme.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
