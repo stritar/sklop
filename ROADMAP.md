@@ -150,7 +150,7 @@ agent push a proposed theme into a live preview.
 
 ### Phase 0: Rig `S`
 
-**Status.** In progress.
+**Status.** Done, 2026-09-14. No release yet; its changesets ship with the next one.
 
 **Goal.** Everything that makes later phases fast, in place before any component exists.
 
@@ -168,7 +168,7 @@ export returns with the first component.
 
 ### Phase 1: Theme engine `L`
 
-**Status.** In progress.
+**Status.** Done, 2026-09-14. No release yet; its changesets ship with the next one.
 
 **Goal.** The full token system with all six axes, generated and guarded.
 
