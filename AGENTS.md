@@ -72,7 +72,9 @@ ejected into an app with the CLI.
 ## Release
 
 Changesets + npm Trusted Publishing from `.github/workflows/publish.yml`. No npm tokens in the
-repo or CI secrets.
+repo or CI secrets. The workflow uses the `changesets/action` v2 sub-actions: v1 cannot read
+Changesets v3 output and pushes no tags or GitHub releases. `id-token: write` stays on the
+`publish` job, which runs no build and publishes the tarballs `pack` made after `pnpm check`.
 
 ## Roadmap
 
