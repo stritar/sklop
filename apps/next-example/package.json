@@ -1,0 +1,24 @@
+{
+  "name": "next-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "next dev --port 4001",
+    "build": "next build",
+    "start": "next start --hostname 127.0.0.1 --port 4001",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@fontsource/figtree": "^5.3.0",
+    "@sklop/react": "workspace:^",
+    "@sklop/tokens": "workspace:^",
+    "next": "^16.3.5",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "typescript": "6.0.3"
+  }
+}

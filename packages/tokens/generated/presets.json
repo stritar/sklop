@@ -1,0 +1,22 @@
+{
+  "neutral": {
+    "light": {
+      "--sk-color-text-on-accent": "#ffffff",
+      "--sk-color-border-focus": "#3d3c4a",
+      "--sk-color-accent-solid": "#3d3c4a",
+      "--sk-color-accent-solid-hover": "#25242e",
+      "--sk-color-accent-subtle": "#dddde4",
+      "--sk-color-accent-border": "#a4a3b4",
+      "--sk-color-accent-text": "#25242e"
+    },
+    "dark": {
+      "--sk-color-text-on-accent": "#191920",
+      "--sk-color-border-focus": "#f1f1f4",
+      "--sk-color-accent-solid": "#f1f1f4",
+      "--sk-color-accent-solid-hover": "#f7f7f9",
+      "--sk-color-accent-subtle": "#3d3c4a",
+      "--sk-color-accent-border": "#58576a",
+      "--sk-color-accent-text": "#f7f7f9"
+    }
+  }
+}

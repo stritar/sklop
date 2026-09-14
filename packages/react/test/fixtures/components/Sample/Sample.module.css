@@ -1,0 +1,23 @@
+/* @sklop:tokens:start. Generated from Sample.manifest.json by pnpm --filter @sklop/react generate:component-tokens */
+.root {
+  --_sk-sample-root-gap: var(--sk-sample-root-gap, var(--sk-space-gap-sm, 8px));
+}
+
+.bubble {
+  --_sk-sample-bubble-bg-agent: var(
+    --sk-sample-bubble-bg-agent,
+    var(--sk-color-bg-raised, #ffffff)
+  );
+  --_sk-sample-bubble-text: var(--sk-sample-bubble-text, var(--sk-color-text-primary, #3d3c4a));
+}
+/* @sklop:tokens:end */
+
+.root {
+  display: flex;
+  gap: var(--_sk-sample-root-gap, 8px);
+}
+
+.bubble {
+  background: var(--_sk-sample-bubble-bg-agent, #ffffff);
+  color: var(--_sk-sample-bubble-text, #3d3c4a);
+}

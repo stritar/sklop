@@ -6,37 +6,109 @@
         "page": {
           "$value": "{primitive.color.neutral.50}",
           "$description": "Page background.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:3.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:3.fill"],
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.850}"
+                }
+              }
+            }
+          }
         },
         "surface": {
           "$value": "{primitive.color.white}",
           "$description": "Flat surfaces on the page, such as cards and panels. The same white as raised, without the shadow.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.800}"
+                }
+              }
+            }
+          }
         },
         "raised": {
           "$value": "{primitive.color.white}",
           "$description": "Surfaces that float above the page: popovers, menus, the prompt bar. Pair with shadow-raised.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:5.fill", "1:22.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:5.fill", "1:22.fill"],
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.800}"
+                }
+              }
+            }
+          }
         },
         "sunken": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Wells set into a surface, such as a code block.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.900}"
+                }
+              }
+            }
+          }
         },
         "hover": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Fill behind a transparent row or control under the pointer.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.750}"
+                }
+              }
+            }
+          }
         },
         "active": {
           "$value": "{primitive.color.neutral.150}",
           "$description": "Fill behind a transparent row or control while pressed or selected.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.700}"
+                }
+              }
+            }
+          }
         },
         "overlay": {
           "$value": "{primitive.color.neutral-alpha.40}",
           "$description": "Scrim behind modal layers.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral-alpha.60}"
+                }
+              }
+            }
+          }
         }
       },
       "text": {
@@ -53,23 +125,87 @@
                 "1:30.fill",
                 "1:10.fill",
                 "1:16.fill"
+              ],
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.100}"
+                }
+              },
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.hover",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.active",
+                  "min": 4.5
+                },
+                {
+                  "on": "accent.subtle",
+                  "min": 4.5
+                }
               ]
             }
           }
         },
         "secondary": {
-          "$value": "{primitive.color.neutral.500}",
-          "$description": "Supporting text and icons: descriptions, hints, toolbar icons. Meets 4.5:1 on raised and surface only.",
+          "$value": "{primitive.color.neutral.600}",
+          "$description": "Supporting text and icons: descriptions, hints, toolbar icons. At least 4.5:1 on every background fill.",
           "$extensions": {
             "sklop": {
-              "origin": "sample",
-              "figma": [
-                "1:12.fill",
-                "1:18.fill",
-                "1:21.fill",
-                "1:26.fill",
-                "1:32.fill",
-                "1:35.fill"
+              "origin": "generated",
+              "diverges": {
+                "from": [
+                  "1:12.fill",
+                  "1:18.fill",
+                  "1:21.fill",
+                  "1:26.fill",
+                  "1:32.fill",
+                  "1:35.fill"
+                ],
+                "reason": "The sampled grey #767587 measured 4.21:1 on bg-page and 3.99:1 on bg-hover, below 4.5:1 for text.",
+                "date": "2026-09-14"
+              },
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.250}"
+                }
+              },
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.hover",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.active",
+                  "min": 4.5
+                }
               ]
             }
           }
@@ -77,71 +213,322 @@
         "disabled": {
           "$value": "{primitive.color.neutral.300}",
           "$description": "Text and icons of disabled controls.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.600}"
+                }
+              },
+              "contrast": [
+                {
+                  "on": "bg.raised",
+                  "exempt": "Disabled controls are exempt from WCAG 1.4.3."
+                }
+              ]
+            }
+          }
         },
         "inverse": {
           "$value": "{primitive.color.white}",
           "$description": "Text and icons on dark fills.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.850}"
+                }
+              }
+            }
+          }
         },
         "on-accent": {
           "$value": "{primitive.color.coral.950}",
           "$description": "Text and icons on accent-solid. White measures only 2.66:1 there.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:38.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:38.fill"],
+              "approved": "2026-09-14",
+              "axes": {
+                "preset": {
+                  "neutral": "{primitive.color.white}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.850}"
+              },
+              "contrast": [
+                {
+                  "on": "accent.solid",
+                  "min": 4.5
+                },
+                {
+                  "on": "accent.solid-hover",
+                  "min": 4.5
+                }
+              ]
+            }
+          }
         }
       },
       "border": {
         "separator": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Lines that divide content, such as the rule above a hint.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:19.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:19.fill"],
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.750}"
+                }
+              }
+            }
+          }
         },
         "subtle": {
           "$value": "{primitive.color.neutral.100}",
           "$description": "Hairline edge of raised surfaces. The ring inside shadow-raised uses the same colour.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:4.effects.0.color"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:4.effects.0.color"],
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.750}"
+                }
+              }
+            }
+          }
         },
         "default": {
           "$value": "{primitive.color.neutral.200}",
           "$description": "Borders that enclose a control where the border is decoration, not its only edge.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.700}"
+                }
+              },
+              "contrast": [
+                {
+                  "on": "bg.raised",
+                  "exempt": "Decoration: the control keeps another visible edge. Use border-strong when the border is the only one."
+                }
+              ]
+            }
+          }
         },
         "strong": {
           "$value": "{primitive.color.neutral.400}",
-          "$description": "Borders that are the only visible edge of a control. At least 3:1 on page and raised.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$description": "Borders that are the only visible edge of a control. At least 3:1 on page, surface and raised.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.neutral.500}"
+                }
+              },
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "min": 3
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 3
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 3
+                }
+              ]
+            }
+          }
         },
         "focus": {
           "$value": "{primitive.color.coral.400}",
-          "$description": "Focus indicators. At least 3:1 on page and raised.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$description": "Focus indicators. At least 3:1 on page, surface and raised.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.500}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.700}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.100}"
+              },
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "min": 3
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 3
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 3
+                }
+              ]
+            }
+          }
         }
       },
       "accent": {
         "solid": {
           "$value": "{primitive.color.coral.300}",
           "$description": "The one filled primary action in a view, such as send.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:36.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:36.fill"],
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.250}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.700}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.100}"
+              },
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "exempt": "The glyph identifies the control, and text-on-accent carries its contrast on the fill."
+                },
+                {
+                  "on": "bg.raised",
+                  "exempt": "The glyph identifies the control, and text-on-accent carries its contrast on the fill."
+                }
+              ]
+            }
+          }
         },
         "solid-hover": {
           "$value": "{primitive.color.coral.350}",
           "$description": "accent-solid under the pointer. text-on-accent stays at least 4.5:1 on it.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.200}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.800}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.50}"
+              }
+            }
+          }
         },
         "subtle": {
           "$value": "{primitive.color.coral.50}",
           "$description": "Tinted background for selected or highlighted items.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.800}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.150}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.700}"
+              }
+            }
+          }
         },
         "border": {
           "$value": "{primitive.color.coral.200}",
           "$description": "Border of accent-tinted items.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.700}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.300}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.600}"
+              }
+            }
+          }
         },
         "text": {
           "$value": "{primitive.color.coral.500}",
-          "$description": "Accent text and icons, such as links. At least 4.5:1 on page and raised.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$description": "Accent text and icons, such as links. At least 4.5:1 on page, surface, raised and accent-subtle.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "approved": "2026-09-14",
+              "axes": {
+                "theme": {
+                  "dark": "{primitive.color.coral.250}"
+                },
+                "preset": {
+                  "neutral": "{primitive.color.neutral.800}"
+                }
+              },
+              "cross": {
+                "theme.dark+preset.neutral": "{primitive.color.neutral.50}"
+              },
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.surface",
+                  "min": 4.5
+                },
+                {
+                  "on": "bg.raised",
+                  "min": 4.5
+                },
+                {
+                  "on": "accent.subtle",
+                  "min": 4.5
+                }
+              ]
+            }
+          }
         }
       }
     },
@@ -178,7 +565,38 @@
             "lineHeight": 1.1428571428571428
           },
           "$description": "Labels and item titles. 14px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:11", "1:17"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:11", "1:17"],
+              "approved": "2026-09-14",
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.13}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.2307692307692308
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.16}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.25
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.18}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.1111111111111112
+                  }
+                }
+              }
+            }
+          }
         },
         "sm": {
           "$value": {
@@ -189,7 +607,38 @@
             "lineHeight": 1.3333333333333333
           },
           "$description": "Compact control labels, such as a model picker. 12px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:30"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:30"],
+              "approved": "2026-09-14",
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.11}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4545454545454546
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.14}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4285714285714286
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.15}",
+                    "fontWeight": "{primitive.font.weight.semibold}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.3333333333333333
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "body": {
@@ -203,7 +652,38 @@
             "lineHeight": 1.1428571428571428
           },
           "$description": "Descriptions and body text. 14px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:12", "1:18"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:12", "1:18"],
+              "approved": "2026-09-14",
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.13}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.2307692307692308
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.16}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.25
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.18}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.1111111111111112
+                  }
+                }
+              }
+            }
+          }
         },
         "sm": {
           "$value": {
@@ -214,7 +694,38 @@
             "lineHeight": 1.3333333333333333
           },
           "$description": "Hints and helper text. 12px on a 16px line box.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:21"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:21"],
+              "approved": "2026-09-14",
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.11}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4545454545454546
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.14}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.4285714285714286
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.15}",
+                    "fontWeight": "{primitive.font.weight.regular}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.3333333333333333
+                  }
+                }
+              }
+            }
+          }
         }
       },
       "input": {
@@ -228,7 +739,38 @@
             "lineHeight": 2
           },
           "$description": "Typed input text. 14px on a 28px line box, the height of size-control-sm.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:27"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:27"],
+              "approved": "2026-09-14",
+              "axes": {
+                "font-scale": {
+                  "small": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.13}",
+                    "fontWeight": "{primitive.font.weight.medium}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 2.1538461538461537
+                  },
+                  "large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.16}",
+                    "fontWeight": "{primitive.font.weight.medium}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.75
+                  },
+                  "extra-large": {
+                    "fontFamily": "{primitive.font.family.figtree}",
+                    "fontSize": "{primitive.font.size.18}",
+                    "fontWeight": "{primitive.font.weight.medium}",
+                    "letterSpacing": "{primitive.font.letter-spacing.0}",
+                    "lineHeight": 1.5555555555555556
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -238,7 +780,19 @@
         "xs": {
           "$value": "{primitive.space.4}",
           "$description": "Tight gap between a label and its glyph, such as a chevron.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:29.gap"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:29.gap"],
+              "approved": "2026-09-14",
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.2}",
+                  "spacious": "{primitive.space.6}"
+                }
+              }
+            }
+          }
         },
         "sm": {
           "$value": "{primitive.space.8}",
@@ -254,7 +808,15 @@
                 "1:13.gap",
                 "1:23.gap",
                 "1:28.gap"
-              ]
+              ],
+              "approved": "2026-09-14",
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.6}",
+                  "comfortable": "{primitive.space.10}",
+                  "spacious": "{primitive.space.12}"
+                }
+              }
             }
           }
         }
@@ -273,7 +835,15 @@
                 "1:6.padding.3",
                 "1:22.padding.1",
                 "1:22.padding.3"
-              ]
+              ],
+              "approved": "2026-09-14",
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.6}",
+                  "comfortable": "{primitive.space.10}",
+                  "spacious": "{primitive.space.12}"
+                }
+              }
             }
           }
         },
@@ -281,7 +851,18 @@
           "$value": "{primitive.space.16}",
           "$description": "Padding for text set directly against a surface edge, such as a hint.",
           "$extensions": {
-            "sklop": { "origin": "sample", "figma": ["1:20.padding.1", "1:20.padding.3"] }
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:20.padding.1", "1:20.padding.3"],
+              "approved": "2026-09-14",
+              "axes": {
+                "density": {
+                  "compact": "{primitive.space.12}",
+                  "comfortable": "{primitive.space.20}",
+                  "spacious": "{primitive.space.24}"
+                }
+              }
+            }
           }
         }
       }
@@ -292,7 +873,12 @@
         "sm": {
           "$value": "{primitive.size.12}",
           "$description": "Small glyphs beside text, such as a chevron.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:31.width", "1:31.height"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:31.width", "1:31.height"]
+            }
+          }
         },
         "md": {
           "$value": "{primitive.size.16}",
@@ -336,14 +922,35 @@
                 "1:36.height",
                 "1:7.height",
                 "1:13.height"
-              ]
+              ],
+              "approved": "2026-09-14",
+              "axes": {
+                "density": {
+                  "compact": "{primitive.size.24}",
+                  "comfortable": "{primitive.size.32}",
+                  "spacious": "{primitive.size.36}"
+                }
+              }
             }
           }
         },
         "lg": {
           "$value": "{primitive.size.44}",
           "$description": "Large input containers, such as the prompt bar.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:22.height"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:22.height"],
+              "approved": "2026-09-14",
+              "axes": {
+                "density": {
+                  "compact": "{primitive.size.36}",
+                  "comfortable": "{primitive.size.48}",
+                  "spacious": "{primitive.size.52}"
+                }
+              }
+            }
+          }
         }
       }
     },
@@ -352,13 +959,45 @@
       "lg": {
         "$value": "{primitive.radius.12}",
         "$description": "Raised surfaces such as popovers.",
-        "$extensions": { "sklop": { "origin": "sample", "figma": ["1:5.radius"] } }
-      },
-      "full": {
-        "$value": "{primitive.radius.9999}",
-        "$description": "Pills and circles.",
         "$extensions": {
-          "sklop": { "origin": "sample", "figma": ["1:22.radius", "1:24.radius", "1:36.radius"] }
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:5.radius"],
+            "approved": "2026-09-14",
+            "axes": {
+              "radius": {
+                "sharp": "{primitive.radius.4}",
+                "soft": "{primitive.radius.16}",
+                "round": "{primitive.radius.20}"
+              }
+            }
+          }
+        }
+      },
+      "pill": {
+        "$value": "{primitive.radius.9999}",
+        "$description": "Pills: controls and bars with fully round ends, such as the prompt bar. Only the sharp radius scale squares them off.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:22.radius"],
+            "approved": "2026-09-14",
+            "axes": {
+              "radius": {
+                "sharp": "{primitive.radius.8}"
+              }
+            }
+          }
+        }
+      },
+      "circle": {
+        "$value": "{primitive.radius.9999}",
+        "$description": "Circles: square controls and avatars, such as icon buttons. Round on every radius scale.",
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:24.radius", "1:36.radius"]
+          }
         }
       }
     },
@@ -369,7 +1008,10 @@
           "$value": "{primitive.border.width.1}",
           "$description": "Hairline borders and separators.",
           "$extensions": {
-            "sklop": { "origin": "sample", "figma": ["1:19.height", "1:4.effects.0.spread"] }
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:19.height", "1:4.effects.0.spread"]
+            }
           }
         }
       }
@@ -380,56 +1022,285 @@
         "$value": [
           {
             "color": "{primitive.color.black-alpha.1}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 0.5, "unit": "px" },
-            "blur": { "value": 1.3, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0.5,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 1.3,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.1}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 1.2, "unit": "px" },
-            "blur": { "value": 3.1, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 1.2,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 3.1,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.1}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 2.3, "unit": "px" },
-            "blur": { "value": 5.8, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 2.3,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 5.8,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.2}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 4, "unit": "px" },
-            "blur": { "value": 10.5, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 4,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 10.5,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.2}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 7.5, "unit": "px" },
-            "blur": { "value": 19, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 7.5,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 19,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.black-alpha.3}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 18, "unit": "px" },
-            "blur": { "value": 47, "unit": "px" },
-            "spread": { "value": 0, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 18,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 47,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 0,
+              "unit": "px"
+            }
           },
           {
             "color": "{primitive.color.neutral.100}",
-            "offsetX": { "value": 0, "unit": "px" },
-            "offsetY": { "value": 0, "unit": "px" },
-            "blur": { "value": 0, "unit": "px" },
-            "spread": { "value": 1, "unit": "px" }
+            "offsetX": {
+              "value": 0,
+              "unit": "px"
+            },
+            "offsetY": {
+              "value": 0,
+              "unit": "px"
+            },
+            "blur": {
+              "value": 0,
+              "unit": "px"
+            },
+            "spread": {
+              "value": 1,
+              "unit": "px"
+            }
           }
         ],
         "$description": "Elevation for raised surfaces: the Figma effect style shadow. Six soft layers and a 1px ring, in CSS paint order.",
-        "$extensions": { "sklop": { "origin": "sample", "figma": ["1:4.effects"] } }
+        "$extensions": {
+          "sklop": {
+            "origin": "sample",
+            "figma": ["1:4.effects"],
+            "approved": "2026-09-14",
+            "axes": {
+              "theme": {
+                "dark": [
+                  {
+                    "color": "{primitive.color.black-alpha.1}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 0.5,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 1.3,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.1}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 1.2,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 3.1,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.1}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 2.3,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 5.8,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.2}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 4,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 10.5,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.2}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 7.5,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 19,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.black-alpha.3}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 18,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 47,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 0,
+                      "unit": "px"
+                    }
+                  },
+                  {
+                    "color": "{primitive.color.neutral.750}",
+                    "offsetX": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "offsetY": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "blur": {
+                      "value": 0,
+                      "unit": "px"
+                    },
+                    "spread": {
+                      "value": 1,
+                      "unit": "px"
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
       }
     },
     "motion": {
@@ -437,51 +1308,489 @@
         "$type": "duration",
         "fast": {
           "$value": "{primitive.motion.duration.100}",
-          "$description": "Small elements, such as a tooltip appearing or a chip dismissing.",
+          "$description": "Small elements, such as a tooltip appearing.",
           "$extensions": {
             "sklop": {
               "origin": "proposed",
-              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.150}",
+                  "playful": "{primitive.motion.duration.120}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
             }
           }
         },
         "normal": {
           "$value": "{primitive.motion.duration.200}",
-          "$description": "The default, such as a dropdown opening or a focus ring.",
+          "$description": "The default, such as a dropdown opening.",
           "$extensions": {
             "sklop": {
               "origin": "proposed",
-              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.220}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
             }
           }
         },
         "moderate": {
-          "$value": "{primitive.motion.duration.300}",
-          "$description": "Medium elements, such as a dialog entering or a panel sliding in.",
+          "$value": "{primitive.motion.duration.250}",
+          "$description": "Medium elements, such as a dialog entering. UI motion stays under 300ms.",
           "$extensions": {
             "sklop": {
               "origin": "proposed",
-              "modes": { "reduced-motion": "{primitive.motion.duration.1}" }
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.280}",
+                  "playful": "{primitive.motion.duration.260}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
             }
           }
         }
       },
       "easing": {
-        "$type": "cubicBezier",
+        "$type": "easing",
         "standard": {
           "$value": "{primitive.motion.easing.standard}",
           "$description": "Elements changing state or moving within the view.",
-          "$extensions": { "sklop": { "origin": "proposed" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.easing.gentle-standard}"
+                }
+              }
+            }
+          }
         },
         "enter": {
           "$value": "{primitive.motion.easing.decelerate}",
-          "$description": "Elements entering the view.",
-          "$extensions": { "sklop": { "origin": "proposed" } }
+          "$description": "Elements entering the view. Never an ease-in.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.easing.gentle-decelerate}",
+                  "playful": "{primitive.motion.easing.spring}"
+                }
+              }
+            }
+          }
         },
         "exit": {
           "$value": "{primitive.motion.easing.accelerate}",
           "$description": "Elements leaving the view.",
-          "$extensions": { "sklop": { "origin": "proposed" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.easing.gentle-accelerate}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "transition": {
+        "$type": "transition",
+        "hover": {
+          "$value": {
+            "properties": ["background-color", "border-color", "color"],
+            "duration": "{primitive.motion.duration.100}",
+            "timingFunction": "{primitive.motion.easing.standard}"
+          },
+          "$description": "Colour changes under the pointer. Gate it behind (hover: hover).",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": {
+                    "properties": ["background-color", "border-color", "color"],
+                    "duration": "{primitive.motion.duration.150}",
+                    "timingFunction": "{primitive.motion.easing.gentle-standard}"
+                  },
+                  "playful": {
+                    "properties": ["background-color", "border-color", "color"],
+                    "duration": "{primitive.motion.duration.120}",
+                    "timingFunction": "{primitive.motion.easing.standard}"
+                  }
+                },
+                "motion": {
+                  "off": {
+                    "properties": ["background-color", "border-color", "color"],
+                    "duration": "{primitive.motion.duration.1}",
+                    "timingFunction": "{primitive.motion.easing.standard}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "focus": {
+          "$value": {
+            "properties": ["outline-color", "outline-offset"],
+            "duration": "{primitive.motion.duration.1}",
+            "timingFunction": "{primitive.motion.easing.standard}"
+          },
+          "$description": "Focus rings appear at once: keyboard-driven changes get no motion.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14"
+            }
+          }
+        },
+        "base": {
+          "$value": {
+            "properties": ["opacity", "transform", "translate", "scale"],
+            "duration": "{primitive.motion.duration.200}",
+            "timingFunction": "{primitive.motion.easing.standard}"
+          },
+          "$description": "Opacity and transform changes within the view.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": {
+                    "properties": ["opacity", "transform", "translate", "scale"],
+                    "duration": "{primitive.motion.duration.220}",
+                    "timingFunction": "{primitive.motion.easing.gentle-standard}"
+                  }
+                },
+                "motion": {
+                  "off": {
+                    "properties": ["opacity", "transform", "translate", "scale"],
+                    "duration": "{primitive.motion.duration.1}",
+                    "timingFunction": "{primitive.motion.easing.standard}"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "enter": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{primitive.motion.duration.200}",
+          "$description": "How long an element takes to arrive.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.220}",
+                  "playful": "{primitive.motion.duration.260}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
+            }
+          }
+        },
+        "easing": {
+          "$type": "easing",
+          "$value": "{primitive.motion.easing.decelerate}",
+          "$description": "How an element arrives.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.easing.gentle-decelerate}",
+                  "playful": "{primitive.motion.easing.spring}"
+                }
+              }
+            }
+          }
+        },
+        "travel": {
+          "$type": "dimension",
+          "$value": "{primitive.motion.travel.4}",
+          "$description": "How far an element travels as it arrives. None under reduced motion.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.travel.6}",
+                  "playful": "{primitive.motion.travel.8}"
+                },
+                "motion": {
+                  "reduced": "{primitive.motion.travel.0}",
+                  "off": "{primitive.motion.travel.0}"
+                }
+              }
+            }
+          }
+        },
+        "scale": {
+          "$type": "number",
+          "$value": "{primitive.motion.scale.96}",
+          "$description": "The scale an element grows from as it arrives, never from 0.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.scale.98}",
+                  "playful": "{primitive.motion.scale.94}"
+                },
+                "motion": {
+                  "reduced": "{primitive.motion.scale.100}",
+                  "off": "{primitive.motion.scale.100}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "exit": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{primitive.motion.duration.150}",
+          "$description": "How long an element takes to leave. Shorter than arriving.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.160}",
+                  "playful": "{primitive.motion.duration.120}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
+            }
+          }
+        },
+        "easing": {
+          "$type": "easing",
+          "$value": "{primitive.motion.easing.accelerate}",
+          "$description": "How an element leaves.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.easing.gentle-accelerate}"
+                }
+              }
+            }
+          }
+        },
+        "travel": {
+          "$type": "dimension",
+          "$value": "{primitive.motion.travel.4}",
+          "$description": "How far an element travels as it leaves. None under reduced motion.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.travel.6}",
+                  "playful": "{primitive.motion.travel.8}"
+                },
+                "motion": {
+                  "reduced": "{primitive.motion.travel.0}",
+                  "off": "{primitive.motion.travel.0}"
+                }
+              }
+            }
+          }
+        },
+        "scale": {
+          "$type": "number",
+          "$value": "{primitive.motion.scale.96}",
+          "$description": "The scale an element shrinks to as it leaves.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.scale.98}",
+                  "playful": "{primitive.motion.scale.94}"
+                },
+                "motion": {
+                  "reduced": "{primitive.motion.scale.100}",
+                  "off": "{primitive.motion.scale.100}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "press": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{primitive.motion.duration.120}",
+          "$description": "How long a control takes to press in. Slower than release.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.160}",
+                  "playful": "{primitive.motion.duration.140}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
+            }
+          }
+        },
+        "scale": {
+          "$type": "number",
+          "$value": "{primitive.motion.scale.97}",
+          "$description": "The scale a pressed control shrinks to.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.scale.98}",
+                  "playful": "{primitive.motion.scale.95}"
+                },
+                "motion": {
+                  "reduced": "{primitive.motion.scale.100}",
+                  "off": "{primitive.motion.scale.100}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "release": {
+        "duration": {
+          "$type": "duration",
+          "$value": "{primitive.motion.duration.80}",
+          "$description": "How long a pressed control takes to spring back.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.110}",
+                  "playful": "{primitive.motion.duration.90}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.1}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "stagger": {
+        "step": {
+          "$type": "duration",
+          "$value": "{primitive.motion.duration.30}",
+          "$description": "Delay between related elements entering together. A sequence stays under 500ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.40}",
+                  "playful": "{primitive.motion.duration.50}"
+                },
+                "motion": {
+                  "off": "{primitive.motion.duration.0}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "stream": {
+        "cadence": {
+          "$type": "duration",
+          "$value": "{primitive.motion.duration.30}",
+          "$description": "Interval between streamed text chunks. Phase 5 sets the streaming feel.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14",
+              "axes": {
+                "motion-personality": {
+                  "soft": "{primitive.motion.duration.45}"
+                }
+              }
+            }
+          }
+        }
+      },
+      "loop": {
+        "$type": "duration",
+        "pulse": {
+          "$value": "{primitive.motion.duration.1200}",
+          "$description": "One cycle of the thinking pulse. Loops keep running under reduced motion.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14"
+            }
+          }
+        },
+        "shimmer": {
+          "$value": "{primitive.motion.duration.1600}",
+          "$description": "One cycle of the loading shimmer.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14"
+            }
+          }
+        },
+        "indeterminate": {
+          "$value": "{primitive.motion.duration.1400}",
+          "$description": "One cycle of indeterminate progress.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed",
+              "approved": "2026-09-14"
+            }
+          }
         }
       }
     }

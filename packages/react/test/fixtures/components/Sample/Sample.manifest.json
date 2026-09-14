@@ -1,0 +1,11 @@
+{
+  "name": "Sample",
+  "description": "Fixture for the component token generator. Not a real component.",
+  "parts": ["root", "bubble"],
+  "states": ["default", "agent"],
+  "tokens": {
+    "root-gap": { "part": "root", "default": "space.gap.sm" },
+    "bubble-bg-agent": { "part": "bubble", "default": "color.bg.raised" },
+    "bubble-text": { "part": "bubble", "default": "color.text.primary" }
+  }
+}

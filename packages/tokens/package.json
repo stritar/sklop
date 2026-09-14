@@ -16,12 +16,17 @@
     "directory": "packages/tokens"
   },
   "exports": {
-    "./tokens.css": "./dist/tokens.css",
-    "./tokens.json": "./dist/tokens.json",
+    "./tokens.css": "./generated/tokens.css",
+    "./tokens.json": "./generated/tokens.json",
+    "./presets.json": "./generated/presets.json",
+    "./theme": {
+      "types": "./generated/theme.d.ts",
+      "default": "./generated/theme.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "generated"
   ],
   "sideEffects": [
     "*.css"
@@ -30,7 +35,8 @@
     "access": "public"
   },
   "scripts": {
-    "build": "node scripts/build.mjs",
+    "build": "node scripts/build.mjs --check",
+    "generate:tokens": "node scripts/build.mjs",
     "generate:ramp": "node scripts/generate-ramp.mjs && biome format --write src/primitive.tokens.json",
     "test": "vitest run",
     "typecheck": "true",

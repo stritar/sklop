@@ -28,15 +28,17 @@ describe('primitive colours', () => {
     });
 
     it('pins sampled steps to the Figma fills', () => {
-      for (const [step, id] of Object.entries(ANCHORS[ramp])) {
-        expect(colors[ramp][step].$value.hex).toBe(fixture.nodes[id].fill);
-        expect(colors[ramp][step].$extensions.sklop.origin).toBe('sample');
+      for (const [step, nodes] of Object.entries(ANCHORS[ramp])) {
+        const { $value, $extensions } = colors[ramp][step];
+        for (const id of [nodes].flat()) expect($value.hex).toBe(fixture.nodes[id].fill);
+        expect($extensions.sklop).toMatchObject({ origin: 'sample', anchor: true });
+        expect($extensions.sklop.figma).toEqual([nodes].flat().map((id) => `${id}.fill`));
       }
     });
 
     it('keeps the ramp hue on vivid generated steps', () => {
       const anchorHues = HUE_FROM[ramp].map(
-        (step) => toOklch(fixture.nodes[ANCHORS[ramp][step]].fill).h,
+        (step) => toOklch(fixture.nodes[[ANCHORS[ramp][step]].flat()[0]].fill).h,
       );
       const hue = anchorHues.reduce((a, b) => a + b, 0) / anchorHues.length;
       for (const [, token] of steps.filter(([, t]) => t.$extensions.sklop.origin === 'generated')) {

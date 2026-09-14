@@ -15,12 +15,13 @@ export default defineConfig({
     cssCodeSplit: false,
     sourcemap: true,
     rollupOptions: {
-      external: [/^react($|\/)/, /^react-dom($|\/)/],
+      external: [/^react($|\/)/, /^react-dom($|\/)/, /^@sklop\/tokens($|\/)/],
       output: { preserveModules: true, preserveModulesRoot: 'src', entryFileNames: '[name].js' },
     },
   },
   test: {
     environment: 'jsdom',
+    setupFiles: ['./test/setup.ts'],
     // 'scoped' makes Vitest use generateScopedName, so tests see real class names.
     css: { include: /.+/, modules: { classNameStrategy: 'scoped' } },
   },

@@ -1,14 +1,56 @@
+import { cpSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { gzipSync } from 'node:zlib';
 import { describe, expect, it } from 'vitest';
-import { buildTokens, MODES, readSource } from '../scripts/build.mjs';
+import { AXES, buildTokens, CROSS, readSource, staleFiles } from '../scripts/build.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
+const DEFAULTS = Object.fromEntries(Object.entries(AXES).map(([axis, def]) => [axis, def.default]));
 
-describe('source', () => {
+/** Top-level rules at one indent: selector, raw body and declarations. */
+function blocks(css, indent) {
+  const pattern = new RegExp(
+    `^ {${indent}}(\\S[^\\n{]*) \\{\\n([\\s\\S]*?)\\n {${indent}}\\}$`,
+    'gm',
+  );
+  return [...css.matchAll(pattern)].map(([, selector, body]) => ({
+    selector,
+    body,
+    declarations: Object.fromEntries(
+      [...body.matchAll(/^\s+([a-z-]+): ([^;]+);$/gm)].map(([, name, value]) => [name, value]),
+    ),
+  }));
+}
+
+/** The value a token should declare for concrete axis values. A pair's winning axis overrides the other. */
+const valueIn = (token, combo) => {
+  const active = token.varies.filter((axis) => combo[axis] !== DEFAULTS[axis]);
+  const variant = (...axes) =>
+    token.variants[axes.map((axis) => `${axis}.${combo[axis]}`).join('+')];
+  if (active.length === 2) {
+    const wins = CROSS.find((pair) => pair.axes.join() === active.join())?.wins;
+    const other = active.find((axis) => axis !== wins);
+    return variant(...active) ?? (wins && (variant(wins) ?? variant(other))) ?? token.value;
+  }
+  return (active.length === 1 && variant(active[0])) || token.value;
+};
+const expectedBlock = (tokens, combo, scheme) => ({
+  ...(scheme ? { 'color-scheme': scheme } : {}),
+  ...Object.fromEntries(tokens.map((t) => [t.name, valueIn(t, combo)])),
+});
+
+describe('generated CSS', () => {
   const { css, json } = buildTokens(readSource(root));
   const semantic = json.filter((t) => t.tier === 'semantic');
-  const [base, reduced] = css.split(MODES['reduced-motion']);
-  const declared = (block) => [...block.matchAll(/^\s+(--sk-[a-z0-9-]+): ([^;]+);$/gm)];
+  const top = blocks(css, 2);
+  const block = (selector) => top.find((b) => b.selector === selector)?.declarations;
+  const mediaRule = top.find((b) => b.selector === '@media (prefers-color-scheme: dark)');
+  const inMedia = (selector) =>
+    blocks(mediaRule.body, 4).find((b) => b.selector === selector)?.declarations;
+  const variedBy = (...axes) =>
+    semantic.filter((t) => axes.every((axis) => t.varies.includes(axis)));
 
   it('declares the layer order before any tokens', () => {
     expect(css.indexOf('@layer sklop.tokens, sklop.components;')).toBeLessThan(
@@ -16,27 +58,190 @@ describe('source', () => {
     );
   });
 
-  it('emits every semantic token once, as a literal', () => {
-    const names = declared(base).map(([, name]) => name);
-    expect(names).toEqual(semantic.map((t) => t.name));
+  it('puts every semantic default on :root, and only custom properties', () => {
+    expect(block(':root')).toEqual(expectedBlock(semantic, DEFAULTS));
     expect(css).not.toContain('var(');
-  });
-
-  it('keeps primitives out of the CSS', () => {
-    expect(json.filter((t) => t.tier === 'primitive').every((t) => t.name === null)).toBe(true);
     expect(css).not.toContain('primitive');
+    expect(json.filter((t) => t.tier === 'primitive').every((t) => t.name === null)).toBe(true);
   });
 
-  it('sets nothing on :root except custom properties', () => {
-    const lines = css.split('\n').filter((line) => /^\s+(?!--)[a-z-]+:/.test(line));
-    expect(lines).toEqual([]);
-  });
-
-  it('collapses every duration, and only durations, under reduced motion', () => {
-    const durations = semantic.filter((t) => t.type === 'duration');
-    expect(declared(reduced).map(([, name, value]) => [name, value])).toEqual(
-      durations.map((t) => [t.name, '1ms']),
+  it('gives every theme a complete block that declares its colour scheme', () => {
+    const themed = variedBy('theme');
+    for (const theme of ['light', 'dark']) {
+      expect(block(`[data-sk-theme="${theme}"]`)).toEqual(
+        expectedBlock(themed, { ...DEFAULTS, theme }, theme),
+      );
+    }
+    expect(block('[data-sk-theme="system"]')).toEqual(expectedBlock(themed, DEFAULTS, 'light'));
+    expect(inMedia('[data-sk-theme="system"]')).toEqual(
+      expectedBlock(themed, { ...DEFAULTS, theme: 'dark' }, 'dark'),
     );
+  });
+
+  it('gives every preset a block, and every explicit theme and preset pair a compound block', () => {
+    const preset = variedBy('preset');
+    const both = variedBy('theme', 'preset');
+    for (const value of ['default', 'neutral']) {
+      expect(block(`[data-sk-preset="${value}"]`)).toEqual(
+        expectedBlock(preset, { ...DEFAULTS, preset: value }),
+      );
+      for (const theme of ['light', 'dark', 'system']) {
+        const selector = `[data-sk-theme="${theme}"][data-sk-preset="${value}"]`;
+        if (theme === 'light' && value === 'default') {
+          expect(block(selector)).toBeUndefined();
+          continue;
+        }
+        const concrete = theme === 'system' ? 'light' : theme;
+        expect(block(selector)).toEqual(
+          expectedBlock(both, { ...DEFAULTS, theme: concrete, preset: value }),
+        );
+      }
+      expect(inMedia(`[data-sk-theme="system"][data-sk-preset="${value}"]`)).toEqual(
+        expectedBlock(both, { ...DEFAULTS, theme: 'dark', preset: value }),
+      );
+    }
+  });
+
+  it('gives every density, font scale and radius value a complete block', () => {
+    for (const axis of ['density', 'font-scale', 'radius']) {
+      const varied = variedBy(axis);
+      expect(varied.length, axis).toBeGreaterThan(0);
+      for (const value of AXES[axis].values) {
+        expect(block(`[${AXES[axis].attribute}="${value}"]`), `${axis} ${value}`).toEqual(
+          expectedBlock(varied, { ...DEFAULTS, [axis]: value }),
+        );
+      }
+    }
+  });
+
+  it('gives every motion personality and level a block, and each explicit pair a compound', () => {
+    for (const axis of ['motion-personality', 'motion']) {
+      for (const value of AXES[axis].values) {
+        expect(block(`[${AXES[axis].attribute}="${value}"]`), `${axis} ${value}`).toEqual(
+          expectedBlock(variedBy(axis), { ...DEFAULTS, [axis]: value }),
+        );
+      }
+    }
+    const both = variedBy('motion-personality', 'motion');
+    for (const personality of AXES['motion-personality'].values) {
+      for (const level of [...AXES.motion.values, 'system']) {
+        if (personality === 'crisp' && level === 'full') continue;
+        const selector = `[data-sk-motion-personality="${personality}"][data-sk-motion="${level}"]`;
+        const combo = {
+          ...DEFAULTS,
+          'motion-personality': personality,
+          motion: level === 'system' ? 'full' : level,
+        };
+        expect(block(selector), selector).toEqual(expectedBlock(both, combo));
+      }
+    }
+  });
+
+  it('follows the reduced-motion preference when no level is set', () => {
+    const reduce = top.find((b) => b.selector === '@media (prefers-reduced-motion: reduce)');
+    const rule = (selector) =>
+      blocks(reduce.body, 4).find((b) => b.selector === selector)?.declarations;
+    const reduced = { ...DEFAULTS, motion: 'reduced' };
+    expect(rule(':root:not([data-sk-motion])')).toEqual(expectedBlock(variedBy('motion'), reduced));
+    expect(rule('[data-sk-motion="system"]')).toEqual(expectedBlock(variedBy('motion'), reduced));
+    for (const personality of AXES['motion-personality'].values) {
+      const combo = { ...reduced, 'motion-personality': personality };
+      const both = variedBy('motion-personality', 'motion');
+      expect(rule(`[data-sk-motion-personality="${personality}"]:not([data-sk-motion])`)).toEqual(
+        expectedBlock(both, combo),
+      );
+    }
+  });
+
+  it('drops travel and scale but keeps timing under reduced motion, and is instant when off', () => {
+    const motion = semantic.filter((t) => t.path.startsWith('semantic.motion.'));
+    for (const personality of AXES['motion-personality'].values) {
+      const at = (level) => (t) =>
+        valueIn(t, { ...DEFAULTS, 'motion-personality': personality, motion: level });
+      for (const token of motion) {
+        const [full, reduced, off] = ['full', 'reduced', 'off'].map((level) => at(level)(token));
+        const where = `${personality}: ${token.path}`;
+        if (token.path.endsWith('.travel')) {
+          expect([reduced, off], where).toEqual(['0px', '0px']);
+        } else if (token.path.endsWith('.scale')) {
+          expect([reduced, off], where).toEqual(['1', '1']);
+        } else {
+          expect(reduced, where).toBe(full);
+        }
+        if (
+          ['duration', 'transition'].includes(token.type) &&
+          !/\.(loop|stream)\./.test(token.path)
+        ) {
+          expect(
+            [...off.matchAll(/(\d+)ms/g)].map(([, ms]) => ms),
+            where,
+          ).toEqual(expect.arrayContaining([expect.stringMatching(/^[01]$/)]));
+          expect(
+            [...off.matchAll(/(\d+)ms/g)].every(([, ms]) => Number(ms) <= 1),
+            where,
+          ).toBe(true);
+        }
+      }
+    }
+  });
+
+  it('emits motion levels after personalities', () => {
+    expect(css.indexOf('[data-sk-motion-personality="playful"] {')).toBeLessThan(
+      css.indexOf('[data-sk-motion="reduced"] {'),
+    );
+  });
+
+  it('stays within its compressed size budget', () => {
+    expect(gzipSync(css).length).toBeLessThan(6000);
+  });
+
+  it('keeps circles round on every radius scale', () => {
+    expect(semantic.find((t) => t.path === 'semantic.radius.circle').varies).toEqual([]);
+    expect(variedBy('radius').map((t) => t.path)).toEqual([
+      'semantic.radius.lg',
+      'semantic.radius.pill',
+    ]);
+  });
+
+  it('keeps color-scheme out of :root and preset blocks', () => {
+    const withScheme = top
+      .filter((b) => !b.selector.startsWith('@media') && 'color-scheme' in b.declarations)
+      .map((b) => b.selector);
+    expect(withScheme).toEqual([
+      '[data-sk-theme="light"]',
+      '[data-sk-theme="dark"]',
+      '[data-sk-theme="system"]',
+    ]);
+  });
+
+  it('varies every colour and the shadow by theme, and only accent roles by preset', () => {
+    const colours = semantic.filter((t) => ['color', 'shadow'].includes(t.type));
+    expect(colours.filter((t) => !t.varies.includes('theme')).map((t) => t.path)).toEqual([]);
+    expect(variedBy('preset').map((t) => t.path)).toEqual([
+      'semantic.color.text.on-accent',
+      'semantic.color.border.focus',
+      'semantic.color.accent.solid',
+      'semantic.color.accent.solid-hover',
+      'semantic.color.accent.subtle',
+      'semantic.color.accent.border',
+      'semantic.color.accent.text',
+    ]);
+  });
+});
+
+describe('drift check', () => {
+  it('finds the committed generated files up to date', () => {
+    expect(staleFiles(root)).toEqual([]);
+  });
+
+  it('flags a hand-edited or missing generated file', () => {
+    const copy = mkdtempSync(join(tmpdir(), 'sklop-tokens-'));
+    cpSync(join(root, 'src'), join(copy, 'src'), { recursive: true });
+    cpSync(join(root, 'generated'), join(copy, 'generated'), { recursive: true });
+    expect(staleFiles(copy)).toEqual([]);
+    writeFileSync(join(copy, 'generated', 'tokens.css'), '/* edited by hand */\n');
+    rmSync(join(copy, 'generated', 'tokens.json'));
+    expect(staleFiles(copy)).toEqual(['tokens.css', 'tokens.json']);
   });
 });
 
@@ -57,10 +262,10 @@ describe('guards', () => {
       color: { $type: 'color', text: { $value: '{primitive.color.black}', ...meta() } },
     },
   });
-  const build = (edit) => {
+  const build = (edit, registry) => {
     const source = minimal();
     edit(source);
-    return () => buildTokens(source);
+    return () => buildTokens(source, registry);
   };
 
   it('builds the minimal source', () => {
@@ -75,6 +280,36 @@ describe('guards', () => {
     expect(
       build((s) => Object.assign(s.semantic.space.gap, { Tight: s.semantic.space.gap.xs })),
     ).toThrow(/lowercase/);
+  });
+
+  it('rejects names outside the grammar', () => {
+    expect(
+      build((s) =>
+        Object.assign(s.semantic, {
+          mood: { $type: 'color', calm: { $value: '{primitive.color.black}', ...meta() } },
+        }),
+      ),
+    ).toThrow(/"mood" is not a category/);
+    expect(
+      build((s) =>
+        Object.assign(s.semantic.space, {
+          one: { two: { three: { four: { $value: '{primitive.space.4}', ...meta() } } } },
+        }),
+      ),
+    ).toThrow(/\{category\}\.\{role\}\[\.\{variant\}\]\[\.\{state\}\]/);
+  });
+
+  it('rejects a physical direction in a name', () => {
+    expect(
+      build((s) =>
+        Object.assign(s.semantic.space.gap, {
+          'inset-left': { $value: '{primitive.space.4}', ...meta() },
+        }),
+      ),
+    ).toThrow(/"inset-left" names a physical direction/);
+    expect(
+      build((s) => Object.assign(s.primitive.space, { top: { $value: px(4), ...meta() } })),
+    ).toThrow(/"top" names a physical direction/);
   });
 
   it('rejects a token without $type, $description or origin', () => {
@@ -172,29 +407,236 @@ describe('guards', () => {
     ).toThrow(/already the name/);
   });
 
-  it('rejects unknown modes and modes on primitives', () => {
-    expect(
-      build((s) =>
-        Object.assign(
-          s.semantic.space.gap.xs,
-          meta('proposed', { modes: { dark: '{primitive.space.4}' } }),
-        ),
-      ),
-    ).toThrow(/unknown mode/);
-    expect(
-      build((s) =>
-        Object.assign(
-          s.primitive.space[4],
-          meta('proposed', { modes: { 'reduced-motion': px(0) } }),
-        ),
-      ),
-    ).toThrow(/only semantic tokens take modes/);
-  });
-
   it('rejects an unused primitive', () => {
     expect(
       build((s) => Object.assign(s.primitive.space, { 8: { $value: px(8), ...meta() } })),
     ).toThrow(/unused primitive/);
+  });
+
+  it('keeps unused sampled anchors, and allows anchors on primitives only', () => {
+    const anchor = { $value: px(8), ...meta('sample', { anchor: true }) };
+    expect(build((s) => Object.assign(s.primitive.space, { 8: anchor }))).not.toThrow();
+    expect(
+      build((s) => Object.assign(s.semantic.space.gap.xs, meta('proposed', { anchor: true }))),
+    ).toThrow(/anchor/);
+  });
+
+  it('rejects malformed approval and divergence records', () => {
+    const on = (extra) => (s) => Object.assign(s.semantic.color.text, meta('generated', extra));
+    expect(build(on({ approved: '2026-09-14' }))).not.toThrow();
+    expect(build(on({ approved: 'yesterday' }))).toThrow(/approved/);
+    expect(build(on({ diverges: { from: [], reason: 'Too light.', date: '2026-09-14' } }))).toThrow(
+      /diverges/,
+    );
+    expect(build(on({ diverges: { from: ['1:12.fill'], reason: 'Too light.' } }))).toThrow(
+      /diverges.date/,
+    );
+  });
+
+  describe('axes', () => {
+    const white = (s) =>
+      Object.assign(s.primitive.color, {
+        white: { $value: color('#ffffff', [1, 1, 1]), ...meta() },
+      });
+    const vary = (sklop, registry) =>
+      build((s) => {
+        white(s);
+        Object.assign(s.semantic.color.text, meta('proposed', sklop));
+      }, registry);
+    const W = '{primitive.color.white}';
+
+    it('accept a dark value and a complete cross product', () => {
+      expect(vary({ axes: { theme: { dark: W } } })).not.toThrow();
+      expect(
+        vary({
+          axes: { preset: { neutral: W } },
+          cross: { 'theme.dark+preset.neutral': '{primitive.color.black}' },
+        }),
+      ).not.toThrow();
+    });
+
+    it('reject modes, axis values on primitives, unknown axes and default values', () => {
+      expect(vary({ modes: { 'reduced-motion': W } })).toThrow(/sklop.modes/);
+      expect(
+        build((s) =>
+          Object.assign(
+            s.primitive.space[4],
+            meta('proposed', { axes: { theme: { dark: px(8) } } }),
+          ),
+        ),
+      ).toThrow(/only semantic tokens vary/);
+      expect(vary({ axes: { mood: { dark: W } } })).toThrow(/unknown axis "mood"/);
+      expect(vary({ axes: { theme: { light: W } } })).toThrow(/no non-default value "light"/);
+    });
+
+    it('reject an axis varying a category it does not own', () => {
+      expect(
+        build((s) =>
+          Object.assign(
+            s.semantic.space.gap.xs,
+            meta('proposed', { axes: { theme: { dark: '{primitive.space.4}' } } }),
+          ),
+        ),
+      ).toThrow(/theme axis does not vary space tokens/);
+    });
+
+    it('require every cross value, under a well-formed key', () => {
+      expect(vary({ axes: { theme: { dark: W }, preset: { neutral: W } } })).toThrow(
+        /needs cross "theme\.dark\+preset\.neutral"/,
+      );
+      expect(vary({ cross: { 'preset.neutral+theme.dark': W } })).toThrow(/cross key/);
+    });
+
+    it('reject two axes that are not a declared pair', () => {
+      const mood = {
+        attribute: 'data-sk-mood',
+        values: ['calm', 'loud'],
+        default: 'calm',
+        categories: ['color'],
+      };
+      const registry = { axes: { ...AXES, mood }, cross: CROSS };
+      expect(vary({ axes: { theme: { dark: W }, mood: { loud: W } } }, registry)).toThrow(
+        /axes theme, mood vary this token together, but only a declared pair may/,
+      );
+    });
+
+    it('gate documented pairs in every theme and preset', () => {
+      expect(
+        build((s) => {
+          white(s);
+          Object.assign(s.semantic.color, {
+            page: {
+              $value: W,
+              ...meta('proposed', { axes: { theme: { dark: '{primitive.color.black}' } } }),
+            },
+          });
+          Object.assign(
+            s.semantic.color.text,
+            meta('proposed', { contrast: [{ on: 'page', min: 4.5 }] }),
+          );
+        }),
+      ).toThrow(
+        /semantic\.color\.text on page \(theme dark\): 1\.00:1 is below the documented 4\.5:1/,
+      );
+    });
+  });
+
+  describe('motion types', () => {
+    const ms = (value) => ({ value, unit: 'ms' });
+    const P = (path) => `{primitive.motion.${path}}`;
+    const withMotion = (edit = () => {}) =>
+      build((s) => {
+        Object.assign(s.primitive, {
+          motion: {
+            duration: {
+              $type: 'duration',
+              100: { $value: ms(100), ...meta() },
+              300: { $value: ms(300), ...meta() },
+            },
+            easing: {
+              $type: 'cubicBezier',
+              standard: { $value: [0.2, 0, 0, 1], ...meta() },
+              spring: { $type: 'linear', $value: { points: [0, 1.1, 1] }, ...meta() },
+            },
+          },
+        });
+        Object.assign(s.semantic, {
+          motion: {
+            duration: { $type: 'duration', fast: { $value: P('duration.100'), ...meta() } },
+            loop: { $type: 'duration', pulse: { $value: P('duration.300'), ...meta() } },
+            easing: {
+              $type: 'easing',
+              standard: { $value: P('easing.standard'), ...meta() },
+              enter: { $value: P('easing.spring'), ...meta() },
+            },
+            transition: {
+              $type: 'transition',
+              base: {
+                $value: {
+                  properties: ['opacity', 'color'],
+                  duration: P('duration.100'),
+                  timingFunction: P('easing.standard'),
+                },
+                ...meta(),
+              },
+            },
+          },
+        });
+        edit(s);
+      });
+
+    it('formats cubic and spring easings and transition lists', () => {
+      const { css } = withMotion()();
+      expect(css).toContain('--sk-motion-easing-standard: cubic-bezier(0.2, 0, 0, 1);');
+      expect(css).toContain('--sk-motion-easing-enter: linear(0, 1.1, 1);');
+      expect(css).toContain(
+        '--sk-motion-transition-base: opacity 100ms cubic-bezier(0.2, 0, 0, 1), color 100ms cubic-bezier(0.2, 0, 0, 1);',
+      );
+    });
+
+    it('rejects UI motion of 300ms or more, but lets loops run longer', () => {
+      expect(
+        withMotion((s) =>
+          Object.assign(s.semantic.motion.duration, {
+            slow: { $value: P('duration.300'), ...meta() },
+          }),
+        ),
+      ).toThrow(/300ms; UI motion stays under 300ms/);
+    });
+
+    it('rejects a malformed spring, a physical transition property and a wrong easing type', () => {
+      expect(
+        withMotion((s) =>
+          Object.assign(s.primitive.motion.easing.spring, { $value: { points: [0, 1] } }),
+        ),
+      ).toThrow(/linear needs/);
+      expect(
+        withMotion((s) => {
+          s.semantic.motion.transition.base.$value.properties = ['margin-left'];
+        }),
+      ).toThrow(/logical CSS property names/);
+      expect(
+        withMotion((s) =>
+          Object.assign(s.semantic.motion.easing.standard, { $value: P('duration.100') }),
+        ),
+      ).toThrow(/expects easing but \{primitive\.motion\.duration\.100\} is duration/);
+    });
+  });
+
+  describe('documented contrast pairs', () => {
+    const paper = (hex, components) => (s) => {
+      Object.assign(s.primitive.color, { paper: { $value: color(hex, components), ...meta() } });
+      Object.assign(s.semantic.color, { bg: { $value: '{primitive.color.paper}', ...meta() } });
+    };
+    const pair = (contrast, hex = '#ffffff', components = [1, 1, 1]) =>
+      build((s) => {
+        paper(hex, components)(s);
+        Object.assign(s.semantic.color.text, meta('proposed', { contrast }));
+      });
+
+    it('pass when they meet their minimum or carry an exemption', () => {
+      expect(pair([{ on: 'bg', min: 4.5 }])).not.toThrow();
+      expect(pair([{ on: 'bg', exempt: 'Decoration.' }], '#333333', [0.2, 0.2, 0.2])).not.toThrow();
+    });
+
+    it('fail below their minimum', () => {
+      expect(pair([{ on: 'bg', min: 4.5 }], '#333333', [0.2, 0.2, 0.2])).toThrow(
+        /1\.66:1 is below the documented 4\.5:1/,
+      );
+    });
+
+    it('reject unknown roles, ambiguous pairs and non-colour tokens', () => {
+      expect(pair([{ on: 'bg.nope', min: 3 }])).toThrow(/unknown colour role/);
+      expect(pair([{ on: 'bg', min: 3, exempt: 'Both.' }])).toThrow(/each contrast pair/);
+      expect(
+        build((s) =>
+          Object.assign(
+            s.semantic.space.gap.xs,
+            meta('proposed', { contrast: [{ on: 'bg', min: 3 }] }),
+          ),
+        ),
+      ).toThrow(/semantic colour tokens/);
+    });
   });
 
   it('rejects sampled semantic tokens that cite no Figma node', () => {

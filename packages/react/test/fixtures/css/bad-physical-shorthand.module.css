@@ -1,0 +1,4 @@
+.root {
+  padding: 0 var(--sk-space-gap-sm, 0.5rem) 0 0;
+  border-radius: var(--sk-radius-lg, 0.75rem) 0;
+}

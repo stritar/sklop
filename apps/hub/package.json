@@ -1,0 +1,29 @@
+{
+  "name": "hub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 4002",
+    "build": "vite build",
+    "preview": "vite preview --host 127.0.0.1 --port 4002 --strictPort",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@fontsource/figtree": "^5.3.0",
+    "@sklop/react": "workspace:^",
+    "@sklop/tokens": "workspace:^",
+    "react": "^19.3.0",
+    "react-dom": "^19.3.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.1",
+    "jsdom": "^30.0.1",
+    "vite": "^8.3.0",
+    "vitest": "^5.0.0"
+  }
+}

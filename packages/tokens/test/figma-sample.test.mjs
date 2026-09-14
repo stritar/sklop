@@ -68,6 +68,18 @@ describe('sampled tokens match the Figma sample', () => {
   });
 });
 
+describe('divergences from the sample', () => {
+  const diverged = json.filter((t) => t.diverges);
+
+  it.each(diverged.map((t) => [t.path, t]))('%s cites nodes that exist', (_, token) => {
+    for (const cite of token.diverges.from) expect(read(cite).value, cite).toBeDefined();
+  });
+
+  it('records text-secondary moving off the sampled grey', () => {
+    expect(diverged.map((t) => t.path)).toContain('semantic.color.text.secondary');
+  });
+});
+
 describe('the sample is fully covered', () => {
   const cited = new Set(sampled.flatMap((t) => t.figma));
   const nodes = Object.entries(fixture.nodes);

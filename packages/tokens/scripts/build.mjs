@@ -1,16 +1,96 @@
 #!/usr/bin/env node
-// DTCG source → dist/tokens.css (semantic custom properties, resolved to literals) + dist/tokens.json.
-// Zero dependencies; throws on any rule break.
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+// DTCG source → generated/tokens.css (semantic custom properties, resolved to literals, one block per axis
+// value) + generated/tokens.json. `--check` fails when the committed files differ. Zero dependencies.
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 export const TIERS = ['primitive', 'semantic'];
-export const MODES = { 'reduced-motion': '@media (prefers-reduced-motion: reduce)' };
+export const CATEGORIES = [
+  'color',
+  'font',
+  'space',
+  'size',
+  'radius',
+  'border',
+  'shadow',
+  'motion',
+];
+/**
+ * Runtime axes, each a data attribute. An element without the attribute takes the default. `system`, where
+ * present, follows a media query. The provider writes every attribute on one element, because a token two
+ * axes vary is only right when both attributes sit together.
+ */
+export const AXES = {
+  theme: {
+    attribute: 'data-sk-theme',
+    values: ['light', 'dark'],
+    default: 'light',
+    categories: ['color', 'shadow'],
+    colorScheme: true,
+    system: { query: '(prefers-color-scheme: dark)', value: 'dark' },
+  },
+  preset: {
+    attribute: 'data-sk-preset',
+    values: ['default', 'neutral'],
+    default: 'default',
+    categories: ['color'],
+  },
+  density: {
+    attribute: 'data-sk-density',
+    values: ['compact', 'default', 'comfortable', 'spacious'],
+    default: 'default',
+    categories: ['space', 'size'],
+  },
+  // rem cannot scale a subtree, so each step re-emits the typography shorthands as literals.
+  'font-scale': {
+    attribute: 'data-sk-font-scale',
+    values: ['small', 'medium', 'large', 'extra-large'],
+    default: 'medium',
+    categories: ['font'],
+  },
+  radius: {
+    attribute: 'data-sk-radius',
+    values: ['sharp', 'default', 'soft', 'round'],
+    default: 'default',
+    categories: ['radius'],
+  },
+  'motion-personality': {
+    attribute: 'data-sk-motion-personality',
+    values: ['crisp', 'soft', 'playful'],
+    default: 'crisp',
+    categories: ['motion'],
+  },
+  // Reduced keeps durations, so fades and colour changes stay visible, and drops travel and scale.
+  // Off is instant. An element without the attribute follows the system preference.
+  motion: {
+    attribute: 'data-sk-motion',
+    values: ['full', 'reduced', 'off'],
+    default: 'full',
+    categories: ['motion'],
+    system: { query: '(prefers-reduced-motion: reduce)', value: 'reduced' },
+    absent: 'system',
+  },
+};
+/**
+ * Axis pairs that may vary one token together, in registry order. Every combination of non-default values
+ * needs a cross value, unless the pair names an axis that `wins`: its value then applies whatever the
+ * other axis says, as the motion level does over the personality.
+ */
+export const CROSS = [
+  { axes: ['theme', 'preset'] },
+  { axes: ['motion-personality', 'motion'], wins: 'motion' },
+];
+/** Semantic types that may alias a primitive of another type. */
+const COMPATIBLE = { easing: ['cubicBezier', 'linear'] };
+/** UI motion stays under this; looping animations are exempt. */
+const MAX_UI_MS = 300;
+const PHYSICAL = /(^|-)(left|right|top|bottom|horizontal|vertical)(-|$)/;
 const ORIGINS = ['sample', 'generated', 'proposed'];
 const SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ALIAS = /^\{([^{}]+)\}$/;
 const HEX = /^#[0-9a-f]{6}$/;
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ROOT_PX = 16;
 const GENERIC_FAMILIES = new Set([
   'serif',
@@ -51,6 +131,12 @@ const COMPOSITES = {
     },
     optional: {},
     literal: ['lineHeight'],
+  },
+  // DTCG's transition has no property list; a component writes one `transition` declaration.
+  transition: {
+    parts: { properties: 'properties', duration: 'duration', timingFunction: 'easing' },
+    optional: {},
+    literal: ['properties'],
   },
 };
 
@@ -146,6 +232,26 @@ function checkLiteral(type, value, where) {
         fail('cubicBezier needs [x1, y1, x2, y2] with both x from 0 to 1');
       }
       return;
+    case 'linear':
+      if (
+        !Array.isArray(value?.points) ||
+        value.points.length < 3 ||
+        value.points.some((n) => typeof n !== 'number') ||
+        value.points[0] !== 0 ||
+        value.points.at(-1) !== 1
+      ) {
+        fail('linear needs { points: [0, …, 1] }: evenly spaced outputs from 0 to 1');
+      }
+      return;
+    case 'properties':
+      if (
+        !Array.isArray(value) ||
+        !value.length ||
+        value.some((name) => typeof name !== 'string' || !SEGMENT.test(name) || PHYSICAL.test(name))
+      ) {
+        fail('properties needs a list of logical CSS property names');
+      }
+      return;
     case 'fontFamily':
       if (
         typeof value !== 'string' &&
@@ -173,6 +279,71 @@ function checkLiteral(type, value, where) {
 const family = (name) =>
   GENERIC_FAMILIES.has(name) || /^[A-Za-z][A-Za-z0-9-]*$/.test(name) ? name : `'${name}'`;
 
+const luminance = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = Number.parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+/** WCAG 2 contrast ratio of two opaque hex colours. */
+export function contrastRatio(a, b) {
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+/** Name grammar: {tier}.{category}.{role}[.{variant}][.{state}], never a physical direction. */
+function checkName(token) {
+  const [tier, category, ...rest] = token.path;
+  if (!CATEGORIES.includes(category)) {
+    throw new Error(`${token.id}: "${category}" is not a category (${CATEGORIES.join(', ')})`);
+  }
+  if (tier === 'semantic' && (rest.length < 1 || rest.length > 3)) {
+    throw new Error(`${token.id}: semantic names are {category}.{role}[.{variant}][.{state}]`);
+  }
+  const physical = token.path.find((segment) => PHYSICAL.test(segment));
+  if (physical) {
+    throw new Error(
+      `${token.id}: "${physical}" names a physical direction; use start, end, block or inline`,
+    );
+  }
+}
+
+/** Provenance and documented pairs, checked for shape. */
+function checkMetadata(token) {
+  const { anchor, diverges, approved, contrast } = token.sklop;
+  const fail = (why) => {
+    throw new Error(`${token.id}: ${why}`);
+  };
+  if (anchor !== undefined && (anchor !== true || token.tier !== 'primitive')) {
+    fail('anchor: true marks sampled primitives only');
+  }
+  if (approved !== undefined && !DATE.test(approved)) fail('approved must be a YYYY-MM-DD date');
+  if (diverges !== undefined) {
+    const citesOk =
+      Array.isArray(diverges.from) &&
+      diverges.from.length > 0 &&
+      diverges.from.every((cite) => typeof cite === 'string');
+    if (!citesOk || typeof diverges.reason !== 'string' || !diverges.reason.trim()) {
+      fail('diverges needs { from: [Figma cites], reason, date }');
+    }
+    if (!DATE.test(diverges.date ?? '')) fail('diverges.date must be a YYYY-MM-DD date');
+  }
+  if (contrast !== undefined) {
+    if (token.tier !== 'semantic' || token.type !== 'color') {
+      fail('contrast pairs belong on semantic colour tokens');
+    }
+    for (const pair of Array.isArray(contrast) ? contrast : [null]) {
+      const hasMin = typeof pair?.min === 'number' && pair.min > 1;
+      const hasExempt = typeof pair?.exempt === 'string' && pair.exempt.trim() !== '';
+      if (typeof pair?.on !== 'string' || hasMin === hasExempt) {
+        fail('each contrast pair is { on: "group.role", min } or { on, exempt: reason }');
+      }
+    }
+  }
+}
+
 function format(type, value) {
   switch (type) {
     case 'color':
@@ -184,6 +355,14 @@ function format(type, value) {
       return `${num(value.value)}${value.unit}`;
     case 'cubicBezier':
       return `cubic-bezier(${value.map(num).join(', ')})`;
+    case 'linear':
+      return `linear(${value.points.map(num).join(', ')})`;
+    case 'easing':
+      return Array.isArray(value) ? format('cubicBezier', value) : format('linear', value);
+    case 'transition': {
+      const timing = `${format('duration', value.duration)} ${format('easing', value.timingFunction)}`;
+      return value.properties.map((property) => `${property} ${timing}`).join(', ');
+    }
     case 'fontFamily':
       return [value].flat().map(family).join(', ');
     case 'fontWeight':
@@ -219,7 +398,27 @@ function format(type, value) {
 
 export const cssName = (path) => `--sk-${path.slice(1).join('-')}`;
 
-export function buildTokens(source) {
+const variantKey = (entries) => entries.map(([axis, value]) => `${axis}.${value}`).join('+');
+
+/** The resolved value a semantic token takes for concrete axis values. */
+function pick(token, combo, { axes, cross }) {
+  const active = token.varies.filter((axis) => combo[axis] !== axes[axis].default);
+  const variant = (...list) => token.variants.get(variantKey(list.map((a) => [a, combo[a]])));
+  if (active.length === 2) {
+    const wins = cross.find((pair) => pair.axes.join() === active.join())?.wins;
+    const other = active.find((axis) => axis !== wins);
+    return variant(...active) ?? (wins && (variant(wins) ?? variant(other))) ?? token.base;
+  }
+  return (active.length === 1 && variant(active[0])) || token.base;
+}
+
+/** Milliseconds a duration or transition value runs for. */
+const runtime = (type, value) => {
+  const duration = type === 'transition' ? value.duration : value;
+  return duration.unit === 's' ? duration.value * 1000 : duration.value;
+};
+
+export function buildTokens(source, { axes = AXES, cross = CROSS } = {}) {
   for (const key of Object.keys(source)) {
     if (!TIERS.includes(key)) throw new Error(`${key}: unknown tier; use primitive or semantic`);
   }
@@ -239,6 +438,10 @@ export function buildTokens(source) {
         `${token.id}: $extensions.sklop.origin must be sample, generated or proposed`,
       );
     }
+    checkMetadata(token);
+    checkName(token);
+    if ('modes' in token.sklop)
+      throw new Error(`${token.id}: sklop.modes is replaced by sklop.axes`);
   }
 
   const aliasTarget = (ref, type, where) => {
@@ -247,7 +450,7 @@ export function buildTokens(source) {
     if (target.tier !== 'primitive') {
       throw new Error(`${where}: ${ref} is not a primitive; semantic tokens alias primitives only`);
     }
-    if (target.type !== type)
+    if (target.type !== type && !COMPATIBLE[type]?.includes(target.type))
       throw new Error(`${where}: expects ${type} but ${ref} is ${target.type}`);
     used.add(target.id);
     return target;
@@ -305,12 +508,16 @@ export function buildTokens(source) {
       throw new Error(`${token.id}: composites belong in the semantic tier`);
     if (containsAlias(token.raw))
       throw new Error(`${token.id}: primitives hold literals, not aliases`);
-    if (token.sklop.modes) throw new Error(`${token.id}: only semantic tokens take modes`);
+    if (token.sklop.axes || token.sklop.cross) {
+      throw new Error(`${token.id}: only semantic tokens vary by axis`);
+    }
     checkLiteral(token.type, token.raw, token.id);
     token.css = format(token.type, token.raw);
     token.alias = null;
-    token.modes = {};
   }
+
+  const nonDefault = (axis) => axes[axis].values.filter((value) => value !== axes[axis].default);
+  const pairOf = (a, b) => cross.find(({ axes: [x, y] }) => x === a && y === b);
 
   const names = new Map();
   for (const token of tokens.filter((t) => t.tier === 'semantic')) {
@@ -324,18 +531,84 @@ export function buildTokens(source) {
     if (clash) throw new Error(`${token.id}: ${token.name} is already the name of ${clash}`);
     names.set(token.name, token.id);
 
-    const { value, alias } = resolve(token, token.raw, token.id);
-    token.css = format(token.type, value);
-    token.alias = alias;
-    token.modes = {};
-    for (const [mode, raw] of Object.entries(token.sklop.modes ?? {})) {
-      if (!MODES[mode]) throw new Error(`${token.id}: unknown mode "${mode}"`);
-      token.modes[mode] = format(token.type, resolve(token, raw, `${token.id} (${mode})`).value);
+    const resolved = (raw, where) => {
+      const { value, alias } = resolve(token, raw, where);
+      return { value, alias, css: format(token.type, value) };
+    };
+    token.base = resolved(token.raw, token.id);
+    token.css = token.base.css;
+    token.variants = new Map();
+    const varied = new Set();
+    const vary = (axis) => {
+      if (!axes[axis]) throw new Error(`${token.id}: unknown axis "${axis}"`);
+      if (!axes[axis].categories.includes(token.path[1])) {
+        throw new Error(`${token.id}: the ${axis} axis does not vary ${token.path[1]} tokens`);
+      }
+      varied.add(axis);
+    };
+    for (const [axis, values] of Object.entries(token.sklop.axes ?? {})) {
+      vary(axis);
+      for (const [value, raw] of Object.entries(values)) {
+        if (!nonDefault(axis).includes(value)) {
+          throw new Error(`${token.id}: ${axis} has no non-default value "${value}"`);
+        }
+        token.variants.set(`${axis}.${value}`, resolved(raw, `${token.id} (${axis} ${value})`));
+      }
+    }
+    for (const [key, raw] of Object.entries(token.sklop.cross ?? {})) {
+      const parts = key.split('+').map((part) => part.split('.'));
+      const valid =
+        parts.length === 2 &&
+        pairOf(parts[0][0], parts[1][0]) &&
+        parts.every(
+          ([axis, value, extra]) => extra === undefined && nonDefault(axis).includes(value),
+        );
+      if (!valid) {
+        throw new Error(
+          `${token.id}: cross key "${key}" must be axis.value+axis.value for a declared pair, with non-default values`,
+        );
+      }
+      for (const [axis] of parts) vary(axis);
+      token.variants.set(key, resolved(raw, `${token.id} (${key})`));
+    }
+    token.varies = Object.keys(axes).filter((axis) => varied.has(axis));
+    if (['duration', 'transition'].includes(token.type) && token.path[2] !== 'loop') {
+      for (const { value } of [token.base, ...token.variants.values()]) {
+        const ms = runtime(token.type, value);
+        if (ms >= MAX_UI_MS) {
+          throw new Error(
+            `${token.id}: ${ms}ms; UI motion stays under ${MAX_UI_MS}ms, and only motion.loop tokens run longer`,
+          );
+        }
+      }
+    }
+    if (token.varies.length > 1) {
+      const [a, b, extra] = token.varies;
+      const pair = !extra && pairOf(a, b);
+      if (!pair) {
+        throw new Error(
+          `${token.id}: axes ${token.varies.join(', ')} vary this token together, but only a declared pair may`,
+        );
+      }
+      for (const va of pair.wins ? [] : nonDefault(a)) {
+        for (const vb of nonDefault(b)) {
+          const key = variantKey([
+            [a, va],
+            [b, vb],
+          ]);
+          if (!token.variants.has(key)) {
+            throw new Error(
+              `${token.id}: ${a} and ${b} both vary this token, so it needs cross "${key}"`,
+            );
+          }
+        }
+      }
     }
   }
 
   for (const token of tokens.filter((t) => t.tier === 'primitive')) {
-    if (!used.has(token.id)) {
+    // Sampled anchors stay as evidence of the sample even when no role uses them.
+    if (!used.has(token.id) && !token.sklop.anchor) {
       throw new Error(
         `${token.id}: unused primitive; every primitive needs a semantic token using it`,
       );
@@ -343,62 +616,279 @@ export function buildTokens(source) {
   }
 
   const semantic = tokens.filter((t) => t.tier === 'semantic');
-  const declarations = (list, pick, indent) =>
-    list
-      .map((token, i) => {
-        const gap = i > 0 && list[i - 1].path[1] !== token.path[1] ? '\n' : '';
-        return `${gap}${indent}${token.name}: ${pick(token)};`;
-      })
-      .join('\n');
+  const defaults = Object.fromEntries(
+    Object.entries(axes).map(([axis, def]) => [axis, def.default]),
+  );
+
+  // Every documented pair holds in every combination of the axes that vary colour.
+  const colorAxes = Object.keys(axes).filter((axis) => axes[axis].categories.includes('color'));
+  const combos = colorAxes.reduce(
+    (list, axis) =>
+      list.flatMap((combo) => axes[axis].values.map((value) => ({ ...combo, [axis]: value }))),
+    [defaults],
+  );
+  for (const combo of combos) {
+    const label = colorAxes
+      .filter((axis) => combo[axis] !== axes[axis].default)
+      .map((axis) => `${axis} ${combo[axis]}`)
+      .join(', ');
+    for (const token of semantic.filter((t) => t.sklop.contrast)) {
+      for (const pair of token.sklop.contrast) {
+        const background = byId.get(`semantic.color.${pair.on}`);
+        if (background?.type !== 'color') {
+          throw new Error(`${token.id}: contrast pair names unknown colour role "${pair.on}"`);
+        }
+        const where = `${token.id} on ${pair.on}${label ? ` (${label})` : ''}`;
+        const registry = { axes, cross };
+        const colors = [
+          pick(token, combo, registry).value,
+          pick(background, combo, registry).value,
+        ];
+        if (colors.some((color) => color.alpha !== undefined && color.alpha !== 1)) {
+          throw new Error(`${where}: contrast needs opaque colours`);
+        }
+        const ratio = contrastRatio(colors[0].hex, colors[1].hex);
+        if (pair.min && ratio < pair.min) {
+          throw new Error(`${where}: ${ratio.toFixed(2)}:1 is below the documented ${pair.min}:1`);
+        }
+      }
+    }
+  }
+
+  // Each non-default preset as flat override maps, one per theme: valid Theme values for JavaScript and URLs.
+  const presets = {};
+  for (const preset of axes.preset && axes.theme ? nonDefault('preset') : []) {
+    presets[preset] = Object.fromEntries(
+      axes.theme.values.map((theme) => [
+        theme,
+        Object.fromEntries(
+          semantic
+            .filter((t) => t.varies.includes('preset'))
+            .map((t) => [t.name, pick(t, { ...defaults, theme, preset }, { axes, cross }).css]),
+        ),
+      ]),
+    );
+  }
+
+  return {
+    css: emitCss(semantic, { axes, cross, defaults }),
+    json: tokens.map(toJson),
+    presets,
+  };
+}
+
+/**
+ * `:root` holds every default. Each axis value gets a block declaring every token that axis varies, so a
+ * nested scope restores what an ancestor changed. Declared pairs get compound blocks, which outrank the
+ * single ones, and `system` values repeat inside their media query. An axis that follows the system when
+ * its attribute is absent also gets `:not([attribute])` blocks there.
+ */
+function emitCss(semantic, { axes, cross, defaults }) {
+  const attr = (axis, value) => `[${axes[axis].attribute}="${value}"]`;
+  const choices = (axis) => [...axes[axis].values, ...(axes[axis].system ? ['system'] : [])];
+  const concrete = (axis, value, inMedia) =>
+    value !== 'system' ? value : inMedia ? axes[axis].system.value : axes[axis].default;
+  const lines = (list, combo, indent) =>
+    list.map((token, i) => {
+      const gap = i > 0 && list[i - 1].path[1] !== token.path[1] ? '\n' : '';
+      return `${gap}${indent}${token.name}: ${pick(token, combo, { axes, cross }).css};`;
+    });
+  const block = (selector, body, indent) =>
+    `${indent}${selector} {\n${body.join('\n')}\n${indent}}\n`;
+
+  const rules = [block(':root', lines(semantic, defaults, '    '), '  ')];
+  const media = new Map();
+  const place = (query, text) => {
+    if (query) media.set(query, [...(media.get(query) ?? []), text]);
+    else rules.push(text);
+  };
+
+  for (const axis of Object.keys(axes)) {
+    const varied = semantic.filter((t) => t.varies.includes(axis));
+    if (!varied.length) continue;
+    for (const value of choices(axis)) {
+      for (const inMedia of value === 'system' ? [false, true] : [false]) {
+        const combo = { ...defaults, [axis]: concrete(axis, value, inMedia) };
+        const indent = inMedia ? '    ' : '  ';
+        const scheme = axes[axis].colorScheme ? [`${indent}  color-scheme: ${combo[axis]};`] : [];
+        const body = [...scheme, ...lines(varied, combo, `${indent}  `)];
+        place(inMedia && axes[axis].system.query, block(attr(axis, value), body, indent));
+      }
+    }
+  }
+  for (const {
+    axes: [a, b],
+  } of cross) {
+    if (axes[a].system && axes[b].system)
+      throw new Error(`${a} and ${b} cannot both follow the system`);
+    const varied = semantic.filter((t) => t.varies.includes(a) && t.varies.includes(b));
+    for (const va of varied.length ? choices(a) : []) {
+      for (const vb of choices(b)) {
+        if (va === axes[a].default && vb === axes[b].default) continue;
+        const system = va === 'system' ? a : vb === 'system' ? b : null;
+        for (const inMedia of system ? [false, true] : [false]) {
+          const combo = {
+            ...defaults,
+            [a]: concrete(a, va, inMedia),
+            [b]: concrete(b, vb, inMedia),
+          };
+          const indent = inMedia ? '    ' : '  ';
+          const text = block(
+            attr(a, va) + attr(b, vb),
+            lines(varied, combo, `${indent}  `),
+            indent,
+          );
+          place(inMedia && axes[system].system.query, text);
+        }
+      }
+    }
+  }
+  for (const [axis, def] of Object.entries(axes)) {
+    if (def.absent !== 'system') continue;
+    const absent = `:not([${def.attribute}])`;
+    const varied = semantic.filter((t) => t.varies.includes(axis));
+    const combo = { ...defaults, [axis]: def.system.value };
+    if (varied.length)
+      place(def.system.query, block(`:root${absent}`, lines(varied, combo, '      '), '    '));
+    for (const { axes: pair } of cross.filter(({ axes: pair }) => pair.includes(axis))) {
+      const other = pair.find((a) => a !== axis);
+      const both = varied.filter((t) => t.varies.includes(other));
+      for (const value of both.length ? axes[other].values : []) {
+        const text = block(
+          `${attr(other, value)}${absent}`,
+          lines(both, { ...combo, [other]: value }, '      '),
+          '    ',
+        );
+        place(def.system.query, text);
+      }
+    }
+  }
 
   let css = `/* Generated by @sklop/tokens. Do not edit. */
 @layer sklop.tokens, sklop.components;
 
 @layer sklop.tokens {
-  :root {
-${declarations(semantic, (t) => t.css, '    ')}
-  }
-`;
-  for (const [mode, query] of Object.entries(MODES)) {
-    const moded = semantic.filter((t) => t.modes[mode]);
-    if (!moded.length) continue;
-    css += `
-  ${query} {
-    :root {
-${declarations(moded, (t) => t.modes[mode], '      ')}
-    }
-  }
-`;
-  }
-  css += '}\n';
-
-  const json = tokens.map((token) => ({
-    name: token.name ?? null,
-    path: token.id,
-    tier: token.tier,
-    type: token.type,
-    value: token.css,
-    alias: token.alias,
-    origin: token.sklop.origin,
-    figma: token.sklop.figma ?? [],
-    description: token.description,
-    modes: token.modes,
-  }));
-
-  return { css, json };
+${rules.join('\n')}`;
+  for (const [query, blocks] of media) css += `\n  @media ${query} {\n${blocks.join('\n')}  }\n`;
+  return `${css}}\n`;
 }
+
+const toJson = (token) => ({
+  name: token.name ?? null,
+  path: token.id,
+  tier: token.tier,
+  type: token.type,
+  value: token.css,
+  alias: token.tier === 'semantic' ? token.base.alias : null,
+  varies: token.varies ?? [],
+  variants: Object.fromEntries([...(token.variants ?? [])].map(([key, v]) => [key, v.css])),
+  origin: token.sklop.origin,
+  figma: token.sklop.figma ?? [],
+  diverges: token.sklop.diverges ?? null,
+  approved: token.sklop.approved ?? null,
+  contrast: token.sklop.contrast ?? [],
+  description: token.description,
+});
 
 export function readSource(root) {
   const read = (file) => JSON.parse(readFileSync(join(root, 'src', file), 'utf8'));
   return { ...read('primitive.tokens.json'), ...read('semantic.tokens.json') };
 }
 
+/** The committed files under generated/, as text. */
+export function generateFiles(source) {
+  const { css, json, presets } = buildTokens(source);
+  const names = json.filter((t) => t.tier === 'semantic').map((t) => t.name);
+  return {
+    'tokens.css': css,
+    'tokens.json': `${JSON.stringify(json, null, 2)}\n`,
+    'presets.json': `${JSON.stringify(presets, null, 2)}\n`,
+    'theme.js': themeModule(names),
+    'theme.d.ts': themeTypes(names),
+  };
+}
+
+const GENERATED = '/* Generated by @sklop/tokens. Do not edit. */';
+/** The registry as runtime code needs it: categories are a build concern. */
+const runtimeAxes = () =>
+  Object.fromEntries(Object.entries(AXES).map(([name, { categories, ...axis }]) => [name, axis]));
+
+function themeModule(names) {
+  return `${GENERATED}
+/** Every public token name, for checking a Theme at runtime. */
+export const tokenNames = ${JSON.stringify(names, null, 2)};
+
+/** The runtime axes: data attribute, values, default and, where one applies, the system media query. */
+export const axes = ${JSON.stringify(runtimeAxes(), null, 2)};
+`;
+}
+
+function themeTypes(names) {
+  const union = (values) => values.map((value) => `'${value}'`).join(' | ');
+  const axisValues = Object.entries(AXES)
+    .map(([name, axis]) => {
+      const values = [...axis.values, ...(axis.system ? ['system'] : [])];
+      return `  '${name}': ${union(values)};`;
+    })
+    .join('\n');
+  return `${GENERATED}
+export type SklopTokenName =
+${names.map((name) => `  | '${name}'`).join('\n')};
+
+/** A flat map of token names to CSS values: a theme, a preset, or a set of overrides. */
+export type Theme = Partial<Record<SklopTokenName, string>>;
+
+/** Each axis and the values its attribute accepts. \`system\` follows the operating system. */
+export interface AxisValues {
+${axisValues}
+}
+
+export type AxisName = keyof AxisValues;
+
+export interface AxisDefinition<A extends AxisName = AxisName> {
+  attribute: string;
+  values: readonly Exclude<AxisValues[A], 'system'>[];
+  default: Exclude<AxisValues[A], 'system'>;
+  colorScheme?: boolean;
+  system?: { query: string; value: Exclude<AxisValues[A], 'system'> };
+  /** When 'system', an element without the attribute follows the system preference. */
+  absent?: 'system';
+}
+
+export declare const tokenNames: readonly SklopTokenName[];
+export declare const axes: { readonly [A in AxisName]: AxisDefinition<A> };
+`;
+}
+
+/** Generated files that are missing or differ from a fresh build of `root`'s source. */
+export function staleFiles(root) {
+  const fresh = generateFiles(readSource(root));
+  return Object.keys(fresh).filter((file) => {
+    const path = join(root, 'generated', file);
+    return !existsSync(path) || readFileSync(path, 'utf8') !== fresh[file];
+  });
+}
+
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-  const { css, json } = buildTokens(readSource(root));
-  mkdirSync(join(root, 'dist'), { recursive: true });
-  writeFileSync(join(root, 'dist', 'tokens.css'), css);
-  writeFileSync(join(root, 'dist', 'tokens.json'), `${JSON.stringify(json, null, 2)}\n`);
-  const count = json.filter((t) => t.tier === 'semantic').length;
-  console.log(`@sklop/tokens: ${count} semantic tokens from ${json.length - count} primitives`);
+  if (process.argv.includes('--check')) {
+    const stale = staleFiles(root);
+    if (stale.length) {
+      console.error(
+        `@sklop/tokens: ${stale.map((file) => `generated/${file}`).join(', ')} does not match src/. Run pnpm --filter @sklop/tokens generate:tokens and commit the result.`,
+      );
+      process.exit(1);
+    }
+    console.log('@sklop/tokens: generated/ matches src/');
+  } else {
+    const files = generateFiles(readSource(root));
+    mkdirSync(join(root, 'generated'), { recursive: true });
+    for (const [file, text] of Object.entries(files))
+      writeFileSync(join(root, 'generated', file), text);
+    console.log(
+      `@sklop/tokens: wrote ${Object.keys(files)
+        .map((file) => `generated/${file}`)
+        .join(', ')}`,
+    );
+  }
 }

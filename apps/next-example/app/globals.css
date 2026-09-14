@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  background: var(--sk-color-bg-page, #f7f7f9);
+  color: var(--sk-color-text-primary, #3d3c4a);
+  font: var(--sk-font-body-md, 400 0.875rem / 1rem Figtree, system-ui, sans-serif);
+}
+
+main {
+  padding: var(--sk-space-inset-lg, 1rem);
+}
+
+h1 {
+  margin-block: 0 var(--sk-space-gap-sm, 0.5rem);
+  font: var(--sk-font-label-md, 600 0.875rem / 1rem Figtree, system-ui, sans-serif);
+}
+
+p {
+  margin-block: 0 var(--sk-space-inset-lg, 1rem);
+  color: var(--sk-color-text-secondary, #58576a);
+}
+
+fieldset {
+  display: flex;
+  gap: var(--sk-space-gap-sm, 0.5rem);
+  margin: 0;
+  padding: var(--sk-space-inset-sm, 0.5rem);
+  border: var(--sk-border-width-default, 1px) solid var(--sk-color-border-default, #cac9d4);
+  border-radius: var(--sk-radius-lg, 0.75rem);
+  background: var(--sk-color-bg-raised, #ffffff);
+}
+
+legend {
+  font: var(--sk-font-label-sm, 600 0.75rem / 1rem Figtree, system-ui, sans-serif);
+}
+
+label {
+  display: flex;
+  gap: var(--sk-space-gap-xs, 0.25rem);
+  align-items: center;
+}

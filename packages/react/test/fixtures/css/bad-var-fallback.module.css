@@ -1,0 +1,4 @@
+.root {
+  color: var(--sk-color-text-primary);
+  background: var(--sk-color-bg-raised, var(--sk-color-bg-page));
+}

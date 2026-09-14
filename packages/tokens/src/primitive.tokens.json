@@ -27,7 +27,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:3.fill"]
+              "figma": ["1:3.fill"],
+              "anchor": true
             }
           }
         },
@@ -41,7 +42,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:19.fill"]
+              "figma": ["1:19.fill"],
+              "anchor": true
             }
           }
         },
@@ -65,6 +67,19 @@
             "hex": "#cac9d4"
           },
           "$description": "Generated on the shared lightness ladder: oklch(0.84 0.0152 290.3).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "250": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.7176, 0.7137, 0.7686],
+            "hex": "#b7b6c4"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.7814 0.0197 289.2).",
           "$extensions": {
             "sklop": {
               "origin": "generated"
@@ -103,11 +118,32 @@
             "components": [0.4627, 0.4588, 0.5294],
             "hex": "#767587"
           },
-          "$description": "Sampled from Figma node 1:12.",
+          "$description": "Sampled from Figma nodes 1:12, 1:18, 1:21, 1:26, 1:32, 1:35.",
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:12.fill"]
+              "figma": [
+                "1:12.fill",
+                "1:18.fill",
+                "1:21.fill",
+                "1:26.fill",
+                "1:32.fill",
+                "1:35.fill"
+              ],
+              "anchor": true
+            }
+          }
+        },
+        "600": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.3451, 0.3412, 0.4157],
+            "hex": "#58576a"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.4649 0.0306 287.6).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
             }
           }
         },
@@ -121,7 +157,60 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:11.fill"]
+              "figma": ["1:11.fill"],
+              "anchor": true
+            }
+          }
+        },
+        "750": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.1882, 0.1882, 0.2353],
+            "hex": "#30303c"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.3142 0.0213 285.1).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "800": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.1451, 0.1412, 0.1804],
+            "hex": "#25242e"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.2657 0.0185 289.7).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "850": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.098, 0.098, 0.1255],
+            "hex": "#191920"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.2166 0.0136 285.2).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "900": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0588, 0.0549, 0.0784],
+            "hex": "#0f0e14"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.1679 0.0125 292.6).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
             }
           }
         }
@@ -153,6 +242,19 @@
             }
           }
         },
+        "250": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [1, 0.5804, 0.6118],
+            "hex": "#ff949c"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.7812 0.1288 15.7).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
         "300": {
           "$value": {
             "colorSpace": "srgb",
@@ -163,7 +265,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:36.fill"]
+              "figma": ["1:36.fill"],
+              "anchor": true
             }
           }
         },
@@ -206,6 +309,32 @@
             }
           }
         },
+        "700": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.3961, 0.149, 0.1765],
+            "hex": "#65262d"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.3628 0.091 16.1).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "800": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.2353, 0.0941, 0.1098],
+            "hex": "#3c181c"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.2641 0.0568 14.9).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
         "950": {
           "$value": {
             "colorSpace": "srgb",
@@ -216,7 +345,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:38.fill"]
+              "figma": ["1:38.fill"],
+              "anchor": true
             }
           }
         }
@@ -230,6 +360,20 @@
             "hex": "#0f0e14"
           },
           "$description": "Generated: neutral step 900 at 40% alpha.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
+            }
+          }
+        },
+        "60": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.0196, 0.0196, 0.0314],
+            "alpha": 0.6,
+            "hex": "#050508"
+          },
+          "$description": "Generated: neutral step 950 at 60% alpha.",
           "$extensions": {
             "sklop": {
               "origin": "generated"
@@ -299,6 +443,18 @@
         }
       },
       "size": {
+        "11": {
+          "$value": {
+            "value": 11,
+            "unit": "px"
+          },
+          "$description": "11px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
         "12": {
           "$value": {
             "value": 12,
@@ -311,6 +467,18 @@
             }
           }
         },
+        "13": {
+          "$value": {
+            "value": 13,
+            "unit": "px"
+          },
+          "$description": "13px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
         "14": {
           "$value": {
             "value": 14,
@@ -320,6 +488,42 @@
           "$extensions": {
             "sklop": {
               "origin": "sample"
+            }
+          }
+        },
+        "15": {
+          "$value": {
+            "value": 15,
+            "unit": "px"
+          },
+          "$description": "15px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "16": {
+          "$value": {
+            "value": 16,
+            "unit": "px"
+          },
+          "$description": "16px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "18": {
+          "$value": {
+            "value": 18,
+            "unit": "px"
+          },
+          "$description": "18px type size, for the font scale axis.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
             }
           }
         },
@@ -372,6 +576,18 @@
       }
     },
     "space": {
+      "2": {
+        "$value": {
+          "value": 2,
+          "unit": "px"
+        },
+        "$description": "2px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "4": {
         "$value": {
           "value": 4,
@@ -381,6 +597,18 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "6": {
+        "$value": {
+          "value": 6,
+          "unit": "px"
+        },
+        "$description": "6px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -396,6 +624,30 @@
           }
         }
       },
+      "10": {
+        "$value": {
+          "value": 10,
+          "unit": "px"
+        },
+        "$description": "10px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "12": {
+        "$value": {
+          "value": 12,
+          "unit": "px"
+        },
+        "$description": "12px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "16": {
         "$value": {
           "value": 16,
@@ -405,6 +657,30 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "20": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "20px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "24": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "24px spacing, for the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -435,6 +711,18 @@
           }
         }
       },
+      "24": {
+        "$value": {
+          "value": 24,
+          "unit": "px"
+        },
+        "$description": "24px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "28": {
         "$value": {
           "value": 28,
@@ -444,6 +732,30 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "32": {
+        "$value": {
+          "value": 32,
+          "unit": "px"
+        },
+        "$description": "32px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "36": {
+        "$value": {
+          "value": 36,
+          "unit": "px"
+        },
+        "$description": "36px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -459,9 +771,57 @@
           }
         }
       },
+      "48": {
+        "$value": {
+          "value": 48,
+          "unit": "px"
+        },
+        "$description": "48px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "52": {
+        "$value": {
+          "value": 52,
+          "unit": "px"
+        },
+        "$description": "52px, for control heights on the density axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "$type": "dimension"
     },
     "radius": {
+      "4": {
+        "$value": {
+          "value": 4,
+          "unit": "px"
+        },
+        "$description": "4px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "8": {
+        "$value": {
+          "value": 8,
+          "unit": "px"
+        },
+        "$description": "8px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
       "12": {
         "$value": {
           "value": 12,
@@ -471,6 +831,30 @@
         "$extensions": {
           "sklop": {
             "origin": "sample"
+          }
+        }
+      },
+      "16": {
+        "$value": {
+          "value": 16,
+          "unit": "px"
+        },
+        "$description": "16px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
+          }
+        }
+      },
+      "20": {
+        "$value": {
+          "value": 20,
+          "unit": "px"
+        },
+        "$description": "20px corner radius, for the radius axis.",
+        "$extensions": {
+          "sklop": {
+            "origin": "proposed"
           }
         }
       },
@@ -507,12 +891,96 @@
     },
     "motion": {
       "duration": {
+        "0": {
+          "$value": {
+            "value": 0,
+            "unit": "ms"
+          },
+          "$description": "0ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
         "1": {
           "$value": {
             "value": 1,
             "unit": "ms"
           },
-          "$description": "Effectively instant. Reduced motion uses it so transition and animation end events still fire.",
+          "$description": "1ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "30": {
+          "$value": {
+            "value": 30,
+            "unit": "ms"
+          },
+          "$description": "30ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "40": {
+          "$value": {
+            "value": 40,
+            "unit": "ms"
+          },
+          "$description": "40ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "45": {
+          "$value": {
+            "value": 45,
+            "unit": "ms"
+          },
+          "$description": "45ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "50": {
+          "$value": {
+            "value": 50,
+            "unit": "ms"
+          },
+          "$description": "50ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "80": {
+          "$value": {
+            "value": 80,
+            "unit": "ms"
+          },
+          "$description": "80ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "90": {
+          "$value": {
+            "value": 90,
+            "unit": "ms"
+          },
+          "$description": "90ms.",
           "$extensions": {
             "sklop": {
               "origin": "proposed"
@@ -531,6 +999,66 @@
             }
           }
         },
+        "110": {
+          "$value": {
+            "value": 110,
+            "unit": "ms"
+          },
+          "$description": "110ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "120": {
+          "$value": {
+            "value": 120,
+            "unit": "ms"
+          },
+          "$description": "120ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "140": {
+          "$value": {
+            "value": 140,
+            "unit": "ms"
+          },
+          "$description": "140ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "150": {
+          "$value": {
+            "value": 150,
+            "unit": "ms"
+          },
+          "$description": "150ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "160": {
+          "$value": {
+            "value": 160,
+            "unit": "ms"
+          },
+          "$description": "160ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
         "200": {
           "$value": {
             "value": 200,
@@ -543,12 +1071,84 @@
             }
           }
         },
-        "300": {
+        "220": {
           "$value": {
-            "value": 300,
+            "value": 220,
             "unit": "ms"
           },
-          "$description": "300ms.",
+          "$description": "220ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "250": {
+          "$value": {
+            "value": 250,
+            "unit": "ms"
+          },
+          "$description": "250ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "260": {
+          "$value": {
+            "value": 260,
+            "unit": "ms"
+          },
+          "$description": "260ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "280": {
+          "$value": {
+            "value": 280,
+            "unit": "ms"
+          },
+          "$description": "280ms.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "1200": {
+          "$value": {
+            "value": 1200,
+            "unit": "ms"
+          },
+          "$description": "1200ms, for looping animations only.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "1400": {
+          "$value": {
+            "value": 1400,
+            "unit": "ms"
+          },
+          "$description": "1400ms, for looping animations only.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "1600": {
+          "$value": {
+            "value": 1600,
+            "unit": "ms"
+          },
+          "$description": "1600ms, for looping animations only.",
           "$extensions": {
             "sklop": {
               "origin": "proposed"
@@ -561,7 +1161,7 @@
         "$type": "cubicBezier",
         "standard": {
           "$value": [0.2, 0, 0, 1],
-          "$description": "Quick start, long gentle settle.",
+          "$description": "Changes of state within the view.",
           "$extensions": {
             "sklop": {
               "origin": "proposed"
@@ -570,7 +1170,7 @@
         },
         "decelerate": {
           "$value": [0, 0, 0.2, 1],
-          "$description": "Starts at full speed and slows to a stop.",
+          "$description": "Arrivals: starts fast, settles.",
           "$extensions": {
             "sklop": {
               "origin": "proposed"
@@ -579,13 +1179,163 @@
         },
         "accelerate": {
           "$value": [0.3, 0, 1, 0.3],
-          "$description": "Starts slowly and speeds up until it leaves.",
+          "$description": "Departures: starts slow, leaves fast.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "gentle-standard": {
+          "$value": [0.4, 0, 0.2, 1],
+          "$description": "A softer change of state.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "gentle-decelerate": {
+          "$value": [0.25, 0.46, 0.45, 0.94],
+          "$description": "A softer arrival.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "gentle-accelerate": {
+          "$value": [0.55, 0.085, 0.68, 0.53],
+          "$description": "A softer departure.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "spring": {
+          "$type": "linear",
+          "$value": {
+            "points": [
+              0, 0.098, 0.306, 0.531, 0.726, 0.871, 0.965, 1.018, 1.042, 1.046, 1.04, 1.03, 1.02,
+              1.011, 1.005, 1.001, 0.999, 0.998, 0.998, 0.998, 1
+            ]
+          },
+          "$description": "A spring with a small overshoot: damping 0.7, sampled at 21 points.",
           "$extensions": {
             "sklop": {
               "origin": "proposed"
             }
           }
         }
+      },
+      "travel": {
+        "0": {
+          "$value": {
+            "value": 0,
+            "unit": "px"
+          },
+          "$description": "0px of travel.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "4": {
+          "$value": {
+            "value": 4,
+            "unit": "px"
+          },
+          "$description": "4px of travel.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "6": {
+          "$value": {
+            "value": 6,
+            "unit": "px"
+          },
+          "$description": "6px of travel.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "8": {
+          "$value": {
+            "value": 8,
+            "unit": "px"
+          },
+          "$description": "8px of travel.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "$type": "dimension"
+      },
+      "scale": {
+        "94": {
+          "$value": 0.94,
+          "$description": "Scale 0.94.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "95": {
+          "$value": 0.95,
+          "$description": "Scale 0.95.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "96": {
+          "$value": 0.96,
+          "$description": "Scale 0.96.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "97": {
+          "$value": 0.97,
+          "$description": "Scale 0.97.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "98": {
+          "$value": 0.98,
+          "$description": "Scale 0.98.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "100": {
+          "$value": 1,
+          "$description": "Scale 1.",
+          "$extensions": {
+            "sklop": {
+              "origin": "proposed"
+            }
+          }
+        },
+        "$type": "number"
       }
     }
   }
