@@ -34,6 +34,7 @@ Recorded so they are not re-argued later.
 | Layers | `@layer sklop.tokens, sklop.components`. | Consumer styles win without a specificity fight. |
 | Tokens | A separate `@sklop/tokens` package: DTCG JSON source with Figma provenance, generated `tokens.css` and `tokens.json`, guards in the build. | One source of truth that both the CSS and the hub can read. |
 | Theming | CSS custom properties only. A typed `Theme` is a flat map of variable names to values, never a nested object. Presets are JSON override maps. | Works from plain CSS, from JavaScript, and from a URL. |
+| Default theme | The canonical Sklop theme is the default: coral accent and violet-grey neutrals from the Figma sample. Presets, starting with neutral, are override maps on top of it. | Sklop presents with its own identity, and the neutral preset proves rebranding works. |
 | Motion | CSS-first: tokens, transitions, `@starting-style`, `linear()` springs, View Transitions. An optional `@sklop/react/motion` subpath wraps the `motion` library only for gesture, layout and reorder animation. | Rich motion for most components at zero dependency cost; the expensive engine only where it earns its weight. |
 | Foundations | Button, IconButton, Tooltip, Popover, Menu, Avatar, Badge, Field and ScrollArea are public exports, documented as a Foundations section. | Adopters get one coherent set. Accepting a consumer's own Button through slots can be added later. |
 | Icons | Components accept icons as props. Built-in glyphs (dismiss, send, chevron) are a handful of inline SVGs. The hub uses lucide for its own chrome. | No ongoing icon design work, and no icon set to keep current. |
@@ -56,7 +57,8 @@ hub:
 5. Motion level (full, reduced, off) plus a personality preset
 6. Direction (LTR, RTL)
 
-`SklopProvider` sets them as `data-sk-*` attributes and ships a no-flash head script.
+`SklopProvider` sets them as `data-sk-*` attributes, all together on one element, and ships a
+no-flash head script.
 `color-scheme` is declared with the theme so scrollbars and form controls follow it.
 
 **Three tiers.** Components never reach past their own tier.
@@ -148,7 +150,7 @@ agent push a proposed theme into a live preview.
 
 ### Phase 0: Rig `S`
 
-**Status.** Partly done.
+**Status.** In progress.
 
 **Goal.** Everything that makes later phases fast, in place before any component exists.
 
@@ -547,7 +549,6 @@ Not a phase, a constraint on every phase.
 | --- | --- | --- |
 | Hub hosting: GitHub Pages on a custom domain, or Vercel? | Deploy pipeline, and whether server-side features are possible later. | Phase 2 |
 | Is the hub public from Phase 2, or only from `0.2.0`? | Whether early phases are reviewed on a public URL. | Phase 2 |
-| One canonical Sklop theme with presets, or a neutral default? | What the hub looks like and how the library is presented. | Phase 1 |
 | Publish `@sklop/tokens` separately, or bundle it into `@sklop/react`? | A separate package needs its own trusted publisher on npm. | Phase 4 |
 | Which SDK adapter ships first? | Decides which example app is written first. | Phase 5 |
 | Should Sklop components accept a consumer's own Button and Icon through slots? | Decides whether adoption is all-or-nothing for teams already on another library. | Phase 6 |
