@@ -197,6 +197,62 @@ describe('guards', () => {
     ).toThrow(/unused primitive/);
   });
 
+  it('keeps unused sampled anchors, and allows anchors on primitives only', () => {
+    const anchor = { $value: px(8), ...meta('sample', { anchor: true }) };
+    expect(build((s) => Object.assign(s.primitive.space, { 8: anchor }))).not.toThrow();
+    expect(
+      build((s) => Object.assign(s.semantic.space.gap.xs, meta('proposed', { anchor: true }))),
+    ).toThrow(/anchor/);
+  });
+
+  it('rejects malformed approval and divergence records', () => {
+    const on = (extra) => (s) => Object.assign(s.semantic.color.text, meta('generated', extra));
+    expect(build(on({ approved: '2026-09-14' }))).not.toThrow();
+    expect(build(on({ approved: 'yesterday' }))).toThrow(/approved/);
+    expect(build(on({ diverges: { from: [], reason: 'Too light.', date: '2026-09-14' } }))).toThrow(
+      /diverges/,
+    );
+    expect(build(on({ diverges: { from: ['1:12.fill'], reason: 'Too light.' } }))).toThrow(
+      /diverges.date/,
+    );
+  });
+
+  describe('documented contrast pairs', () => {
+    const paper = (hex, components) => (s) => {
+      Object.assign(s.primitive.color, { paper: { $value: color(hex, components), ...meta() } });
+      Object.assign(s.semantic.color, { bg: { $value: '{primitive.color.paper}', ...meta() } });
+    };
+    const pair = (contrast, hex = '#ffffff', components = [1, 1, 1]) =>
+      build((s) => {
+        paper(hex, components)(s);
+        Object.assign(s.semantic.color.text, meta('proposed', { contrast }));
+      });
+
+    it('pass when they meet their minimum or carry an exemption', () => {
+      expect(pair([{ on: 'bg', min: 4.5 }])).not.toThrow();
+      expect(pair([{ on: 'bg', exempt: 'Decoration.' }], '#333333', [0.2, 0.2, 0.2])).not.toThrow();
+    });
+
+    it('fail below their minimum', () => {
+      expect(pair([{ on: 'bg', min: 4.5 }], '#333333', [0.2, 0.2, 0.2])).toThrow(
+        /1\.66:1 is below the documented 4\.5:1/,
+      );
+    });
+
+    it('reject unknown roles, ambiguous pairs and non-colour tokens', () => {
+      expect(pair([{ on: 'bg.nope', min: 3 }])).toThrow(/unknown colour role/);
+      expect(pair([{ on: 'bg', min: 3, exempt: 'Both.' }])).toThrow(/each contrast pair/);
+      expect(
+        build((s) =>
+          Object.assign(
+            s.semantic.space.gap.xs,
+            meta('proposed', { contrast: [{ on: 'bg', min: 3 }] }),
+          ),
+        ),
+      ).toThrow(/semantic colour tokens/);
+    });
+  });
+
   it('rejects sampled semantic tokens that cite no Figma node', () => {
     expect(build((s) => Object.assign(s.semantic.space.gap.xs, meta('sample')))).toThrow(
       /cite their Figma/,

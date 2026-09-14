@@ -53,23 +53,43 @@
                 "1:30.fill",
                 "1:10.fill",
                 "1:16.fill"
+              ],
+              "contrast": [
+                { "on": "bg.page", "min": 4.5 },
+                { "on": "bg.surface", "min": 4.5 },
+                { "on": "bg.raised", "min": 4.5 },
+                { "on": "bg.hover", "min": 4.5 },
+                { "on": "bg.active", "min": 4.5 },
+                { "on": "accent.subtle", "min": 4.5 }
               ]
             }
           }
         },
         "secondary": {
-          "$value": "{primitive.color.neutral.500}",
-          "$description": "Supporting text and icons: descriptions, hints, toolbar icons. Meets 4.5:1 on raised and surface only.",
+          "$value": "{primitive.color.neutral.600}",
+          "$description": "Supporting text and icons: descriptions, hints, toolbar icons. At least 4.5:1 on every background fill.",
           "$extensions": {
             "sklop": {
-              "origin": "sample",
-              "figma": [
-                "1:12.fill",
-                "1:18.fill",
-                "1:21.fill",
-                "1:26.fill",
-                "1:32.fill",
-                "1:35.fill"
+              "origin": "generated",
+              "diverges": {
+                "from": [
+                  "1:12.fill",
+                  "1:18.fill",
+                  "1:21.fill",
+                  "1:26.fill",
+                  "1:32.fill",
+                  "1:35.fill"
+                ],
+                "reason": "The sampled grey #767587 measured 4.21:1 on bg-page and 3.99:1 on bg-hover, below 4.5:1 for text.",
+                "date": "2026-09-14"
+              },
+              "approved": "2026-09-14",
+              "contrast": [
+                { "on": "bg.page", "min": 4.5 },
+                { "on": "bg.surface", "min": 4.5 },
+                { "on": "bg.raised", "min": 4.5 },
+                { "on": "bg.hover", "min": 4.5 },
+                { "on": "bg.active", "min": 4.5 }
               ]
             }
           }
@@ -77,7 +97,14 @@
         "disabled": {
           "$value": "{primitive.color.neutral.300}",
           "$description": "Text and icons of disabled controls.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "contrast": [
+                { "on": "bg.raised", "exempt": "Disabled controls are exempt from WCAG 1.4.3." }
+              ]
+            }
+          }
         },
         "inverse": {
           "$value": "{primitive.color.white}",
@@ -87,7 +114,16 @@
         "on-accent": {
           "$value": "{primitive.color.coral.950}",
           "$description": "Text and icons on accent-solid. White measures only 2.66:1 there.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:38.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:38.fill"],
+              "contrast": [
+                { "on": "accent.solid", "min": 4.5 },
+                { "on": "accent.solid-hover", "min": 4.5 }
+              ]
+            }
+          }
         }
       },
       "border": {
@@ -104,24 +140,67 @@
         "default": {
           "$value": "{primitive.color.neutral.200}",
           "$description": "Borders that enclose a control where the border is decoration, not its only edge.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "contrast": [
+                {
+                  "on": "bg.raised",
+                  "exempt": "Decoration: the control keeps another visible edge. Use border-strong when the border is the only one."
+                }
+              ]
+            }
+          }
         },
         "strong": {
           "$value": "{primitive.color.neutral.400}",
-          "$description": "Borders that are the only visible edge of a control. At least 3:1 on page and raised.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$description": "Borders that are the only visible edge of a control. At least 3:1 on page, surface and raised.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "contrast": [
+                { "on": "bg.page", "min": 3 },
+                { "on": "bg.surface", "min": 3 },
+                { "on": "bg.raised", "min": 3 }
+              ]
+            }
+          }
         },
         "focus": {
           "$value": "{primitive.color.coral.400}",
-          "$description": "Focus indicators. At least 3:1 on page and raised.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$description": "Focus indicators. At least 3:1 on page, surface and raised.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "contrast": [
+                { "on": "bg.page", "min": 3 },
+                { "on": "bg.surface", "min": 3 },
+                { "on": "bg.raised", "min": 3 }
+              ]
+            }
+          }
         }
       },
       "accent": {
         "solid": {
           "$value": "{primitive.color.coral.300}",
           "$description": "The one filled primary action in a view, such as send.",
-          "$extensions": { "sklop": { "origin": "sample", "figma": ["1:36.fill"] } }
+          "$extensions": {
+            "sklop": {
+              "origin": "sample",
+              "figma": ["1:36.fill"],
+              "contrast": [
+                {
+                  "on": "bg.page",
+                  "exempt": "The glyph identifies the control, and text-on-accent carries its contrast on the fill."
+                },
+                {
+                  "on": "bg.raised",
+                  "exempt": "The glyph identifies the control, and text-on-accent carries its contrast on the fill."
+                }
+              ]
+            }
+          }
         },
         "solid-hover": {
           "$value": "{primitive.color.coral.350}",
@@ -140,8 +219,18 @@
         },
         "text": {
           "$value": "{primitive.color.coral.500}",
-          "$description": "Accent text and icons, such as links. At least 4.5:1 on page and raised.",
-          "$extensions": { "sklop": { "origin": "generated" } }
+          "$description": "Accent text and icons, such as links. At least 4.5:1 on page, surface, raised and accent-subtle.",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated",
+              "contrast": [
+                { "on": "bg.page", "min": 4.5 },
+                { "on": "bg.surface", "min": 4.5 },
+                { "on": "bg.raised", "min": 4.5 },
+                { "on": "accent.subtle", "min": 4.5 }
+              ]
+            }
+          }
         }
       }
     },

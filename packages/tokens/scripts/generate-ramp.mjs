@@ -8,9 +8,17 @@ import { clampChroma, converter, formatHex, wcagContrast } from 'culori';
 
 const toOklch = converter('oklch');
 
-/** Sampled fills pinned to ramp steps, by Figma node. */
+/**
+ * Sampled fills pinned to ramp steps, by Figma node. A list names every node sharing the fill, so the
+ * step still cites the sample when no semantic token does (neutral.500 since text-secondary diverged).
+ */
 export const ANCHORS = {
-  neutral: { 50: '1:3', 100: '1:19', 500: '1:12', 700: '1:11' },
+  neutral: {
+    50: '1:3',
+    100: '1:19',
+    500: ['1:12', '1:18', '1:21', '1:26', '1:32', '1:35'],
+    700: '1:11',
+  },
   coral: { 300: '1:36', 950: '1:38' },
 };
 /** Anchors whose mean hue the generated steps of a ramp keep. */
@@ -36,7 +44,7 @@ const round = (n, places = 4) => Number(n.toFixed(places));
 const mean = (list) => list.reduce((a, b) => a + b, 0) / list.length;
 const maxChroma = (l, h) => clampChroma({ mode: 'oklch', l, c: 0.4, h }, 'oklch').c ?? 0;
 
-function colorToken(hex, { alpha, origin, description, figma }) {
+function colorToken(hex, { alpha, origin, description, figma, anchor }) {
   const components = [1, 3, 5].map((i) => round(Number.parseInt(hex.slice(i, i + 2), 16) / 255));
   return {
     $value: {
@@ -46,7 +54,9 @@ function colorToken(hex, { alpha, origin, description, figma }) {
       hex,
     },
     $description: description,
-    $extensions: { sklop: { origin, ...(figma ? { figma } : {}) } },
+    $extensions: {
+      sklop: { origin, ...(figma ? { figma } : {}), ...(anchor ? { anchor: true } : {}) },
+    },
   };
 }
 
@@ -131,10 +141,18 @@ export function generateColors({ fixture, semantic }) {
     Object.entries(ANCHORS).map(([ramp, steps]) => [
       ramp,
       Object.fromEntries(
-        Object.entries(steps).map(([step, id]) => [
-          step,
-          { id, hex: fill(id), ...toOklch(fill(id)) },
-        ]),
+        Object.entries(steps).map(([step, nodes]) => {
+          const ids = [nodes].flat();
+          const hex = fill(ids[0]);
+          for (const id of ids) {
+            if (fill(id) !== hex) {
+              throw new Error(
+                `${ramp}.${step}: node ${id} is ${fill(id)}, not ${hex} like ${ids[0]}`,
+              );
+            }
+          }
+          return [step, { ids, hex, ...toOklch(hex) }];
+        }),
       ),
     ]),
   );
@@ -169,8 +187,9 @@ export function generateColors({ fixture, semantic }) {
       tree[ramp][step] = pinned[step]
         ? colorToken(pinned[step].hex, {
             origin: 'sample',
-            description: `Sampled from Figma node ${pinned[step].id}.`,
-            figma: [`${pinned[step].id}.fill`],
+            description: `Sampled from Figma node${pinned[step].ids.length > 1 ? 's' : ''} ${pinned[step].ids.join(', ')}.`,
+            figma: pinned[step].ids.map((id) => `${id}.fill`),
+            anchor: true,
           })
         : colorToken(slots[ramp][step], {
             origin: 'generated',

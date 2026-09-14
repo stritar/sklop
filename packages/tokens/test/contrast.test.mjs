@@ -1,56 +1,45 @@
 import { fileURLToPath } from 'node:url';
 import { wcagContrast } from 'culori';
 import { describe, expect, it } from 'vitest';
-import { buildTokens, readSource } from '../scripts/build.mjs';
+import { buildTokens, contrastRatio, readSource } from '../scripts/build.mjs';
 
 const root = fileURLToPath(new URL('..', import.meta.url));
 const { json } = buildTokens(readSource(root));
-const color = (role) => {
-  const token = json.find((t) => t.path === `semantic.color.${role}`);
-  if (!token) throw new Error(`semantic.color.${role} does not exist`);
-  return token.value;
-};
+const value = (role) => json.find((t) => t.path === `semantic.color.${role}`).value;
+const pairs = json.flatMap((t) =>
+  t.contrast.map((pair) => ({ ...pair, fg: t.path.replace('semantic.color.', '') })),
+);
+const gated = pairs.filter((p) => p.min).map((p) => [p.fg, p.on, p.min]);
+const exempt = pairs.filter((p) => p.exempt);
 
-// Pairs that render, or that a role promises in its description. WCAG 2: text 4.5:1, UI and focus 3:1.
-const REQUIRED = [
-  ['text.primary', 'bg.page', 4.5],
-  ['text.primary', 'bg.surface', 4.5],
-  ['text.primary', 'bg.raised', 4.5],
-  ['text.primary', 'bg.hover', 4.5],
-  ['text.primary', 'bg.active', 4.5],
-  ['text.secondary', 'bg.surface', 4.5],
-  ['text.secondary', 'bg.raised', 4.5],
-  ['text.on-accent', 'accent.solid', 4.5],
-  ['text.on-accent', 'accent.solid-hover', 4.5],
-  ['accent.text', 'bg.page', 4.5],
-  ['accent.text', 'bg.raised', 4.5],
-  ['border.strong', 'bg.page', 3],
-  ['border.strong', 'bg.raised', 3],
-  ['border.focus', 'bg.page', 3],
-  ['border.focus', 'bg.raised', 3],
-];
-
-// Measured and reported, never gated: they fail or have no threshold, and the colours are a design decision.
-const ADVISORY = [
-  ['text.secondary', 'bg.page'],
-  ['text.secondary', 'bg.hover'],
-  ['text.primary', 'accent.subtle'],
-  ['accent.text', 'accent.subtle'],
-  ['accent.solid', 'bg.raised'],
-  ['text.disabled', 'bg.raised'],
-  ['border.default', 'bg.raised'],
-];
-
-describe('contrast', () => {
-  it.each(REQUIRED)('%s on %s meets %s:1', (fg, bg, min) => {
-    expect(wcagContrast(color(fg), color(bg))).toBeGreaterThanOrEqual(min);
+describe('documented contrast pairs', () => {
+  it.each(gated)('%s on %s meets %s:1', (fg, bg, min) => {
+    expect(wcagContrast(value(fg), value(bg))).toBeGreaterThanOrEqual(min);
   });
 
-  it('reports advisory pairs', () => {
-    const rows = ADVISORY.map(
-      ([fg, bg]) => `${fg} on ${bg}: ${wcagContrast(color(fg), color(bg)).toFixed(2)}:1`,
+  it('covers every foreground role the components need', () => {
+    const documented = new Set(pairs.map((p) => p.fg));
+    for (const role of ['text.primary', 'text.secondary', 'text.on-accent', 'accent.text']) {
+      expect(documented).toContain(role);
+    }
+  });
+
+  it('reports exempt pairs with their reasons', () => {
+    const rows = exempt.map(
+      (p) =>
+        `${p.fg} on ${p.on}: ${wcagContrast(value(p.fg), value(p.on)).toFixed(2)}:1 (${p.exempt})`,
     );
-    console.info(`Advisory contrast\n${rows.join('\n')}`);
-    expect(rows).toHaveLength(ADVISORY.length);
+    console.info(`Exempt contrast pairs\n${rows.join('\n')}`);
+    expect(exempt.every((p) => p.exempt.trim().length > 0)).toBe(true);
+  });
+
+  it('computes WCAG ratios the way culori does', () => {
+    for (const [a, b] of [
+      ['#58576a', '#f7f7f9'],
+      ['#0b0402', '#ff7080'],
+      ['#ffffff', '#000000'],
+    ]) {
+      expect(contrastRatio(a, b)).toBeCloseTo(wcagContrast(a, b), 6);
+    }
   });
 });

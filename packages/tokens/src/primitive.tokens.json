@@ -27,7 +27,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:3.fill"]
+              "figma": ["1:3.fill"],
+              "anchor": true
             }
           }
         },
@@ -41,7 +42,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:19.fill"]
+              "figma": ["1:19.fill"],
+              "anchor": true
             }
           }
         },
@@ -103,11 +105,32 @@
             "components": [0.4627, 0.4588, 0.5294],
             "hex": "#767587"
           },
-          "$description": "Sampled from Figma node 1:12.",
+          "$description": "Sampled from Figma nodes 1:12, 1:18, 1:21, 1:26, 1:32, 1:35.",
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:12.fill"]
+              "figma": [
+                "1:12.fill",
+                "1:18.fill",
+                "1:21.fill",
+                "1:26.fill",
+                "1:32.fill",
+                "1:35.fill"
+              ],
+              "anchor": true
+            }
+          }
+        },
+        "600": {
+          "$value": {
+            "colorSpace": "srgb",
+            "components": [0.3451, 0.3412, 0.4157],
+            "hex": "#58576a"
+          },
+          "$description": "Generated on the shared lightness ladder: oklch(0.4649 0.0306 287.6).",
+          "$extensions": {
+            "sklop": {
+              "origin": "generated"
             }
           }
         },
@@ -121,7 +144,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:11.fill"]
+              "figma": ["1:11.fill"],
+              "anchor": true
             }
           }
         }
@@ -163,7 +187,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:36.fill"]
+              "figma": ["1:36.fill"],
+              "anchor": true
             }
           }
         },
@@ -216,7 +241,8 @@
           "$extensions": {
             "sklop": {
               "origin": "sample",
-              "figma": ["1:38.fill"]
+              "figma": ["1:38.fill"],
+              "anchor": true
             }
           }
         }

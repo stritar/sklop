@@ -11,6 +11,7 @@ const ORIGINS = ['sample', 'generated', 'proposed'];
 const SEGMENT = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 const ALIAS = /^\{([^{}]+)\}$/;
 const HEX = /^#[0-9a-f]{6}$/;
+const DATE = /^\d{4}-\d{2}-\d{2}$/;
 const ROOT_PX = 16;
 const GENERIC_FAMILIES = new Set([
   'serif',
@@ -173,6 +174,54 @@ function checkLiteral(type, value, where) {
 const family = (name) =>
   GENERIC_FAMILIES.has(name) || /^[A-Za-z][A-Za-z0-9-]*$/.test(name) ? name : `'${name}'`;
 
+const luminance = (hex) => {
+  const [r, g, b] = [1, 3, 5].map((i) => {
+    const c = Number.parseInt(hex.slice(i, i + 2), 16) / 255;
+    return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+  });
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+};
+
+/** WCAG 2 contrast ratio of two opaque hex colours. */
+export function contrastRatio(a, b) {
+  const [light, dark] = [luminance(a), luminance(b)].sort((x, y) => y - x);
+  return (light + 0.05) / (dark + 0.05);
+}
+
+/** Provenance and documented pairs, checked for shape. */
+function checkMetadata(token) {
+  const { anchor, diverges, approved, contrast } = token.sklop;
+  const fail = (why) => {
+    throw new Error(`${token.id}: ${why}`);
+  };
+  if (anchor !== undefined && (anchor !== true || token.tier !== 'primitive')) {
+    fail('anchor: true marks sampled primitives only');
+  }
+  if (approved !== undefined && !DATE.test(approved)) fail('approved must be a YYYY-MM-DD date');
+  if (diverges !== undefined) {
+    const citesOk =
+      Array.isArray(diverges.from) &&
+      diverges.from.length > 0 &&
+      diverges.from.every((cite) => typeof cite === 'string');
+    if (!citesOk || typeof diverges.reason !== 'string' || !diverges.reason.trim()) {
+      fail('diverges needs { from: [Figma cites], reason, date }');
+    }
+    if (!DATE.test(diverges.date ?? '')) fail('diverges.date must be a YYYY-MM-DD date');
+  }
+  if (contrast !== undefined) {
+    if (token.tier !== 'semantic' || token.type !== 'color') {
+      fail('contrast pairs belong on semantic colour tokens');
+    }
+    for (const pair of Array.isArray(contrast) ? contrast : [null]) {
+      const hasMin = typeof pair?.min === 'number' && pair.min > 1;
+      const hasExempt = typeof pair?.exempt === 'string' && pair.exempt.trim() !== '';
+      if (typeof pair?.on !== 'string' || hasMin === hasExempt) {
+        fail('each contrast pair is { on: "group.role", min } or { on, exempt: reason }');
+      }
+    }
+  }
+}
+
 function format(type, value) {
   switch (type) {
     case 'color':
@@ -239,6 +288,7 @@ export function buildTokens(source) {
         `${token.id}: $extensions.sklop.origin must be sample, generated or proposed`,
       );
     }
+    checkMetadata(token);
   }
 
   const aliasTarget = (ref, type, where) => {
@@ -325,6 +375,7 @@ export function buildTokens(source) {
     names.set(token.name, token.id);
 
     const { value, alias } = resolve(token, token.raw, token.id);
+    token.value = value;
     token.css = format(token.type, value);
     token.alias = alias;
     token.modes = {};
@@ -335,7 +386,8 @@ export function buildTokens(source) {
   }
 
   for (const token of tokens.filter((t) => t.tier === 'primitive')) {
-    if (!used.has(token.id)) {
+    // Sampled anchors stay as evidence of the sample even when no role uses them.
+    if (!used.has(token.id) && !token.sklop.anchor) {
       throw new Error(
         `${token.id}: unused primitive; every primitive needs a semantic token using it`,
       );
@@ -343,6 +395,25 @@ export function buildTokens(source) {
   }
 
   const semantic = tokens.filter((t) => t.tier === 'semantic');
+  for (const token of semantic.filter((t) => t.sklop.contrast)) {
+    for (const pair of token.sklop.contrast) {
+      const background = byId.get(`semantic.color.${pair.on}`);
+      if (background?.type !== 'color') {
+        throw new Error(`${token.id}: contrast pair names unknown colour role "${pair.on}"`);
+      }
+      for (const color of [token.value, background.value]) {
+        if (color.alpha !== undefined && color.alpha !== 1) {
+          throw new Error(`${token.id} on ${pair.on}: contrast needs opaque colours`);
+        }
+      }
+      const ratio = contrastRatio(token.value.hex, background.value.hex);
+      if (pair.min && ratio < pair.min) {
+        throw new Error(
+          `${token.id} on ${pair.on}: ${ratio.toFixed(2)}:1 is below the documented ${pair.min}:1`,
+        );
+      }
+    }
+  }
   const declarations = (list, pick, indent) =>
     list
       .map((token, i) => {
@@ -381,6 +452,9 @@ ${declarations(moded, (t) => t.modes[mode], '      ')}
     alias: token.alias,
     origin: token.sklop.origin,
     figma: token.sklop.figma ?? [],
+    diverges: token.sklop.diverges ?? null,
+    approved: token.sklop.approved ?? null,
+    contrast: token.sklop.contrast ?? [],
     description: token.description,
     modes: token.modes,
   }));

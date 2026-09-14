@@ -78,12 +78,17 @@ these tokens.
 
 ## Contrast
 
-Measured with WCAG 2:
+Each foreground role lists the backgrounds it is used on in `$extensions.sklop.contrast`, and
+`tokens.json` carries the same list. The build fails when a pair falls below its WCAG 2 minimum:
+4.5:1 for text, 3:1 for borders and focus. A pair below AA records why instead:
 
-- `text-secondary` reaches 4.5:1 on `bg-raised` and `bg-surface` only. On `bg-page` it measures
-  4.21:1 and on `bg-hover` 3.99:1, below the 4.5:1 needed for text.
-- `accent-solid` against `bg-raised` measures 2.66:1, so the glyph on it identifies the control.
-  Use `text-on-accent` there. White would measure 2.66:1.
+- `accent-solid` measures 2.66:1 on `bg-raised`. The glyph identifies the control, and
+  `text-on-accent` carries the contrast on the fill. White there would also measure 2.66:1.
+- `text-disabled`: disabled controls are exempt from WCAG 1.4.3.
+- `border-default`: decoration. Use `border-strong` when a border is the only visible edge.
+
+`text-secondary` diverges from the sample. The sampled grey `#767587` measured 4.21:1 on `bg-page`
+and 3.99:1 on `bg-hover`, so the role uses a darker step that reaches 4.5:1 on every background.
 
 ## Not designed yet
 
